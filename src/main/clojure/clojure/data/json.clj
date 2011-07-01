@@ -328,7 +328,7 @@
         to turn off \\uXXXX escapes of Unicode characters."
   [x & options]
   (let [{:keys [escape-unicode] :or {escape-unicode true}} options]
-    (write-json x *out* escape-unicode)))
+    (write-json x (PrintWriter. *out*) escape-unicode)))
 
 
 ;;; JSON PRETTY-PRINTER
