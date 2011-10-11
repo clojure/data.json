@@ -20,8 +20,7 @@
    "Converts x to a JSON-formatted string.\n\nValid options are:\n  :escape-unicode false\n      to turn of \\uXXXX escapes of Unicode characters.",
    :var-type "function",
    :line 310,
-   :file
-   "/home/tom/src/clj/autodoc/../autodoc-work-area/data.json/src/src/main/clojure/clojure/data/json.clj"}
+   :file "src/main/clojure/clojure/data/json.clj"}
   {:arglists ([x & options]),
    :name "pprint-json",
    :namespace "clojure.data.json",
@@ -35,8 +34,7 @@
    "Pretty-prints JSON representation of x to *out*.\n\nValid options are:\n  :escape-unicode false\n      to turn off \\uXXXX escapes of Unicode characters.",
    :var-type "function",
    :line 357,
-   :file
-   "/home/tom/src/clj/autodoc/../autodoc-work-area/data.json/src/src/main/clojure/clojure/data/json.clj"}
+   :file "src/main/clojure/clojure/data/json.clj"}
   {:arglists ([x & options]),
    :name "print-json",
    :namespace "clojure.data.json",
@@ -50,8 +48,7 @@
    "Write JSON-formatted output to *out*.\n\nValid options are:\n  :escape-unicode false\n      to turn off \\uXXXX escapes of Unicode characters.",
    :var-type "function",
    :line 323,
-   :file
-   "/home/tom/src/clj/autodoc/../autodoc-work-area/data.json/src/src/main/clojure/clojure/data/json.clj"}
+   :file "src/main/clojure/clojure/data/json.clj"}
   {:arglists
    ([input]
     [input keywordize?]
@@ -68,9 +65,9 @@
    "Reads one JSON value from input String or Reader.\nIf keywordize? is true (default), object keys will be converted to\nkeywords.  If eof-error? is true (default), empty input will throw\nan EOFException; if false EOF will return eof-value. ",
    :var-type "function",
    :line 186,
-   :file
-   "/home/tom/src/clj/autodoc/../autodoc-work-area/data.json/src/src/main/clojure/clojure/data/json.clj"}
-  {:raw-source-url nil,
+   :file "src/main/clojure/clojure/data/json.clj"}
+  {:file nil,
+   :raw-source-url nil,
    :source-url nil,
    :wiki-url
    "http://clojure.github.com/data.json//json-api.html#clojure.data.json/read-json-from",
@@ -80,7 +77,8 @@
    :doc
    "Reads one JSON value from input String or Reader.\nIf keywordize? is true, object keys will be converted to keywords.\nIf eof-error? is true, empty input will throw an EOFException; if\nfalse EOF will return eof-value. ",
    :name "read-json-from"}
-  {:raw-source-url nil,
+  {:file nil,
+   :raw-source-url nil,
    :source-url nil,
    :wiki-url
    "http://clojure.github.com/data.json//json-api.html#clojure.data.json/write-json",
