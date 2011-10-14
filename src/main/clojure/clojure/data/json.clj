@@ -70,17 +70,14 @@
 (defn- read-json-hex-character [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial "\u".  Reads the next four characters from the stream.
-  (let [digits [(.read stream)
-                (.read stream)
-                (.read stream)
-                (.read stream)]]
-    (when (some neg? digits)
+  (let [a (.read stream)
+        b (.read stream)
+        c (.read stream)
+        d (.read stream)]
+    (when (or (neg? a) (neg? b) (neg? c) (neg? d))
       (throw (EOFException. "JSON error (end-of-file inside Unicode character escape)")))
-    (let [chars (map char digits)]
-      (when-not (every? #{\0 \1 \2 \3 \4 \5 \6 \7 \8 \9 \a \b \c \d \e \f \A \B \C \D \E \F}
-                        chars)
-        (throw (Exception. "JSON error (invalid hex character in Unicode character escape)")))
-      (char (Integer/parseInt (apply str chars) 16)))))
+    (let [s (str (char a) (char b) (char c) (char d))]
+      (char (Integer/parseInt s 16)))))
 
 (defn- read-json-escaped-character [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
