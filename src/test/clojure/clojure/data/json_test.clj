@@ -205,3 +205,10 @@
 
 (deftest can-pretty-print-nonescaped-unicode
   (is (= "\"\u1234\u4567\"" (with-out-str (pprint-json "\u1234\u4567" :escape-unicode false)))))
+
+(defn benchmark []
+  (dotimes [_ 8]
+    (time
+     (dotimes [_ 100]
+       (assert (= (read-json pass1-string false)
+                  (read-json (json-str (read-json pass1-string false)) false)))))))
