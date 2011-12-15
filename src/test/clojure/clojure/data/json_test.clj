@@ -27,6 +27,10 @@
 (deftest handles-unicode-escapes
   (is (= " \u0beb " (read-json "\" \\u0bEb \""))))
 
+(deftest handles-unicode-outside-bmp
+  (is (= "\"smiling face: \uD83D\uDE03\""
+         (json-str "smiling face: \uD83D\uDE03" :escape-unicode false))))
+
 (deftest handles-escaped-whitespace
   (is (= "foo\nbar" (read-json "\"foo\\nbar\"")))
   (is (= "foo\rbar" (read-json "\"foo\\rbar\"")))

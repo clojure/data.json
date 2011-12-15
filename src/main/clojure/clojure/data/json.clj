@@ -198,29 +198,42 @@
   (write-json [object out escape-unicode?]
               "Print object to PrintWriter out as JSON"))
 
+;; NB this was in contrib.string, but no longer in 1.3
+(defn- codepoints
+  "Returns a sequence of integer Unicode code points in s.  Handles
+  Unicode supplementary characters (above U+FFFF) correctly."
+  [^String s]
+  (let [len (.length s)
+        f (fn thisfn [^String s i]
+            (when (< i len)
+              (let [c (.charAt s i)]
+                (if (Character/isHighSurrogate c)
+                  (cons (.codePointAt s i) (thisfn s (+ 2 i)))
+                  (cons (int c) (thisfn s (inc i)))))))]
+    (lazy-seq (f s 0))))
+
 (defn- write-json-string [^CharSequence s ^PrintWriter out escape-unicode?]
   (let [sb (StringBuilder. ^Integer (count s))]
     (.append sb \")
-    (dotimes [i (count s)]
-      (let [cp (Character/codePointAt s i)]
-        (cond
-         ;; Handle printable JSON escapes before ASCII
-         (= cp 34) (.append sb "\\\"")
-         (= cp 92) (.append sb "\\\\")
-         (= cp 47) (.append sb "\\/")
-         ;; Print simple ASCII characters
-         (< 31 cp 127) (.append sb (.charAt s i))
-         ;; Handle non-printable JSON escapes
-         (= cp 8) (.append sb "\\b")
-         (= cp 12) (.append sb "\\f")
-         (= cp 10) (.append sb "\\n")
-         (= cp 13) (.append sb "\\r")
-         (= cp 9) (.append sb "\\t")
-	 ;; Any other character is Unicode
-         :else (if escape-unicode?
-		 ;; Hexadecimal-escaped
-		 (.append sb (format "\\u%04x" cp))
-		 (.appendCodePoint sb cp)))))
+    (doseq [cp (codepoints s)]
+      (cond
+       ;; Handle printable JSON escapes before ASCII
+       (= cp 34) (.append sb "\\\"")
+       (= cp 92) (.append sb "\\\\")
+       (= cp 47) (.append sb "\\/")
+       ;; Print simple ASCII characters
+       (< 31 cp 127) (.appendCodePoint sb cp)
+       ;; Handle non-printable JSON escapes
+       (= cp 8) (.append sb "\\b")
+       (= cp 12) (.append sb "\\f")
+       (= cp 10) (.append sb "\\n")
+       (= cp 13) (.append sb "\\r")
+       (= cp 9) (.append sb "\\t")
+       ;; Any other character is Unicode
+       :else (if escape-unicode?
+               ;; Hexadecimal-escaped
+               (.append sb (format "\\u%04x" cp))
+               (.appendCodePoint sb cp))))
     (.append sb \")
     (.print out (str sb))))
 
