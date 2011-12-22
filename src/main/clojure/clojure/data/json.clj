@@ -309,7 +309,7 @@
   Valid options are:
     :escape-unicode false
         to turn of \\uXXXX escapes of Unicode characters."
-  [x & options]
+  ^String [x & options]
   (let [{:keys [escape-unicode] :or {escape-unicode true}} options
 	sw (StringWriter.)
         out (PrintWriter. sw)]
