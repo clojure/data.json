@@ -11,12 +11,12 @@ clojure.data.json is available in the Maven central repositories.  Add it to you
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.2</version>
     </dependency>
 
 or your Leiningen `project.clj` as:
 
-    [org.clojure/data.json "0.1.1"]
+    [org.clojure/data.json "0.1.2"]
 
 Then load it in a Clojure namespace as:
 
@@ -49,6 +49,9 @@ Instructions:
 
 Change Log
 ====================
+Release 0.1.2 on 2011-10-14
+------------------------------
+...
 
 Release 0.1.1 on 2011-07-01
 ------------------------------
