@@ -1,20 +1,20 @@
 {:namespaces
  ({:source-url
-   "https://github.com/clojure/data.json/blob/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/blob/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json/clojure.data.json-api.html",
    :name "clojure.data.json",
    :author "Stuart Sierra",
    :doc
-   "JavaScript Object Notation (JSON) parser/writer.\nSee http://www.json.org/\nTo write JSON, use json-str, write-json, or write-json.\nTo read JSON, use read-json."}),
+   "JavaScript Object Notation (JSON) parser/writer.\nSee http://www.json.org/\nTo write JSON, use json-str, write-json, or print-json.\nTo read JSON, use read-json."}),
  :vars
  ({:arglists ([x & options]),
    :name "json-str",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj#L306",
+   "https://github.com/clojure/data.json/blob/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj#L306",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/json-str",
    :doc
@@ -26,9 +26,9 @@
    :name "pprint-json",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj#L353",
+   "https://github.com/clojure/data.json/blob/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj#L353",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/pprint-json",
    :doc
@@ -40,9 +40,9 @@
    :name "print-json",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj#L319",
+   "https://github.com/clojure/data.json/blob/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj#L319",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/print-json",
    :doc
@@ -57,9 +57,9 @@
    :name "read-json",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj#L182",
+   "https://github.com/clojure/data.json/blob/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj#L182",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/9515a71782aeb7f8c75d189584a652fb72decd18/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/11a9bfc7e8a79703bd93d895511a7fceacd913f5/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/read-json",
    :doc
