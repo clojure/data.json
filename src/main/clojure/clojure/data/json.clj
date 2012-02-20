@@ -202,7 +202,7 @@
   (let [sb (StringBuilder. ^Integer (count s))]
     (.append sb \")
     (dotimes [i (count s)]
-      (let [cp (Character/codePointAt s i)]
+      (let [cp (int (.charAt s i))]
         (cond
          ;; Handle printable JSON escapes before ASCII
          (= cp 34) (.append sb "\\\"")
