@@ -10,7 +10,7 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ========================================
 
-Latest stable release: 0.1.2
+Latest stable release: 0.1.3
 
 * [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
 
@@ -18,14 +18,14 @@ Latest stable release: 0.1.2
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-    [org.clojure/data.json "0.1.2"]
+    [org.clojure/data.json "0.1.3"]
 
 [Maven](http://maven.apache.org/) dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.1.2</version>
+      <version>0.1.3</version>
     </dependency>
 
 
@@ -43,6 +43,8 @@ Example Usage
 
 Refer to docstrings in the `clojure.data.json` namespace for
 additional documentation.
+
+[API Documentation](http://clojure.github.com/data.json/)
 
 
 
@@ -62,6 +64,8 @@ Developer Information
 Change Log
 ====================
 
+* Release 0.1.3 on 2012-03-09
+  * Fix writing strings containing characters outside the BMP
 * Release 0.1.2 on 2011-10-14
   * Better parsing of hexadecimal character escapes
   * Fix EOF-handling bug
