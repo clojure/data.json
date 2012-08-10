@@ -142,29 +142,26 @@
            \" (read-json-quoted-string stream)
 
            ;; Read null as nil
-           \n (let [ull [(.read stream)
-                         (.read stream)
-                         (.read stream)]]
-                (if (= ull [(codepoint \u) (codepoint \l) (codepoint \l)])
-                  nil
-                  (throw (Exception. (str "JSON error (expected null): " c ull)))))
+           \n (if (and (= (codepoint \u) (.read stream))
+                       (= (codepoint \l) (.read stream))
+                       (= (codepoint \l) (.read stream)))
+                nil
+                (throw (Exception. (str "JSON error (expected null)"))))
 
            ;; Read true
-           \t (let [rue [(.read stream)
-                         (.read stream)
-                         (.read stream)]]
-                (if (= rue [(codepoint \r) (codepoint \u) (codepoint \e)])
-                  true
-                  (throw (Exception. (str "JSON error (expected true): " c rue)))))
+           \t (if (and (= (codepoint \r) (.read stream))
+                       (= (codepoint \u) (.read stream))
+                       (= (codepoint \e) (.read stream)))
+                true
+                (throw (Exception. (str "JSON error (expected true)"))))
 
            ;; Read false
-           \f (let [alse [(.read stream)
-                          (.read stream)
-                          (.read stream)
-                          (.read stream)]]
-                (if (= alse [(codepoint \a) (codepoint \l) (codepoint \s) (codepoint \e)])
-                  false
-                  (throw (Exception. (str "JSON error (expected false): " c alse)))))
+           \f (if (and (= (codepoint \a) (.read stream))
+                       (= (codepoint \l) (.read stream))
+                       (= (codepoint \s) (.read stream))
+                       (= (codepoint \e) (.read stream)))
+                false
+                (throw (Exception. (str "JSON error (expected false)"))))
 
            ;; Read JSON objects
            \{ (read-json-object stream keywordize?)
