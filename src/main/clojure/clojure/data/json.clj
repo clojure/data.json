@@ -21,6 +21,8 @@
   (:import (java.io PrintWriter PushbackReader StringWriter
                     StringReader Reader EOFException)))
 
+(set! *warn-on-reflection* true)
+
 ;;; JSON READER
 
 (defmacro ^:private codepoint [c]
@@ -123,6 +125,24 @@
           (do (.append buffer (char c))
               (recur (.read stream)))))))
 
+(defn- read-json-number [^PushbackReader stream]
+  (let [buffer (StringBuilder.)
+        floating-point?
+          (loop [float? false]
+            (let [c (.read stream)]
+              (codepoint-case c
+                (\- \+ \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                (do (.append buffer (char c))
+                    (recur float?))
+                (\e \E \.)
+                (do (.append buffer (char c))
+                    (recur true))
+                (do (.unread stream c)
+                    float?))))]
+    (if floating-point?
+      (Double/valueOf (str buffer))
+      (Long/valueOf (str buffer)))))
+
 (defn- read-json-reader
   ([^PushbackReader stream keywordize? eof-error? eof-value]
      (loop [c (.read stream)]
@@ -133,10 +153,10 @@
 	 (codepoint-case c
            :whitespace (recur (.read stream))
 
-           ;; Read numbers with Clojure reader
+           ;; Read numbers
            (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
            (do (.unread stream c)
-               (read stream true nil))
+               (read-json-number stream))
 
            ;; Read strings
            \" (read-json-quoted-string stream)
@@ -171,39 +191,17 @@
 
            (throw (Exception. (str "JSON error (unexpected character): " (char c)))))))))
 
-(defprotocol Read-JSON-From
-  (read-json-from [input keywordize? eof-error? eof-value]
-                  "Reads one JSON value from input String or Reader.
-  If keywordize? is true, object keys will be converted to keywords.
-  If eof-error? is true, empty input will throw an EOFException; if
-  false EOF will return eof-value. "))
-
-(extend-protocol
- Read-JSON-From
- String
- (read-json-from [input keywordize? eof-error? eof-value]
-                 (read-json-reader (PushbackReader. (StringReader. input))
-                                   keywordize? eof-error? eof-value))
- PushbackReader
- (read-json-from [input keywordize? eof-error? eof-value]
-                 (read-json-reader input
-                                   keywordize? eof-error? eof-value))
- Reader
- (read-json-from [input keywordize? eof-error? eof-value]
-                 (read-json-reader (PushbackReader. input)
-                                   keywordize? eof-error? eof-value)))
-
-(defn read-json
-  "Reads one JSON value from input String or Reader.
+(defn read-json-string
+  "Reads one JSON value from input String.
   If keywordize? is true (default), object keys will be converted to
   keywords.  If eof-error? is true (default), empty input will throw
   an EOFException; if false EOF will return eof-value. "
   ([input]
-     (read-json-from input true true nil))
+     (read-json-string input true true nil))
   ([input keywordize?]
-     (read-json-from input keywordize? true nil))
+     (read-json-string input keywordize? true nil))
   ([input keywordize? eof-error? eof-value]
-     (read-json-from input keywordize? eof-error? eof-value)))
+     (read-json-reader (PushbackReader. (StringReader. input)) keywordize? eof-error? eof-value)))
 
 
 ;;; JSON PRINTER
