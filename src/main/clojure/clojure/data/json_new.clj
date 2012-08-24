@@ -12,7 +12,7 @@
   clojure.data.json-new
   (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
-                    StringReader EOFException)))
+                    Writer StringReader EOFException)))
 
 ;;; JSON READER
 
@@ -125,25 +125,34 @@
           (do (.append buffer (char c))
               (recur)))))))
 
+(defn- parse-integer [^String string]
+  (if (< (count string) 18)  ; definitely fits in a Long
+    (Long/valueOf string)
+    (or (try (Long/valueOf string)
+             (catch NumberFormatException e nil))
+        (bigint string))))
+
+(defn- parse-decimal [^String string]
+  (if *bigdec*
+    (bigdec string)
+    (Double/valueOf string)))
+
 (defn- parse-number [^PushbackReader stream]
   (let [buffer (StringBuilder.)
-        floating-point?
-        (loop [float? false]
-          (let [c (.read stream)]
-            (codepoint-case c
-              (\- \+ \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
-              (do (.append buffer (char c))
-                  (recur float?))
-              (\e \E \.)
-              (do (.append buffer (char c))
-                  (recur true))
-              (do (.unread stream c)
-                  float?))))]
-    (if floating-point?
-      (if *bigdec*
-        (bigdec (str buffer))
-        (Double/valueOf (str buffer)))
-      (Long/valueOf (str buffer)))))
+        decimal? (loop [decimal? false]
+                   (let [c (.read stream)]
+                     (codepoint-case c
+                       (\- \+ \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                       (do (.append buffer (char c))
+                           (recur decimal?))
+                       (\e \E \.)
+                       (do (.append buffer (char c))
+                           (recur true))
+                       (do (.unread stream c)
+                           decimal?))))]
+    (if decimal?
+      (parse-decimal (str buffer))
+      (parse-integer (str buffer)))))
 
 (defn- -parse
   [^PushbackReader stream eof-error? eof-value]
@@ -243,7 +252,7 @@
     "Print object to PrintWriter out as JSON"))
 
 (defn- write-json-string [^CharSequence s ^PrintWriter out]
-  (let [sb (StringBuilder. ^Integer (count s))]
+  (let [sb (StringBuilder. (count s))]
     (.append sb \")
     (dotimes [i (count s)]
       (let [cp (int (.charAt s i))]
@@ -310,7 +319,7 @@
 (defn- write-json-null [x ^PrintWriter out]
   (.print out "null"))
 
-(defn- write-json-named [x ^PrintWriter out]
+(defn- write-json-named [x out]
   (write-json-string (name x) out))
 
 (defn- write-json-generic [x out]
@@ -355,7 +364,7 @@
 
     :escape-slash false
         to turn of escaping / as \\/"
-  [x writer & options]
+  [x ^Writer writer & options]
   (let [{:keys [escape-unicode escape-slash]
          :or {escape-unicode true
               escape-slash true}} options]
