@@ -1,5 +1,5 @@
 (ns clojure.data.json-test
-  (:use clojure.test clojure.data.json))
+  (:use clojure.test clojure.data.json-new))
 
 #_(deftest can-read-from-pushback-reader
   (let [s (java.io.PushbackReader. (java.io.StringReader. "42"))]
@@ -10,22 +10,22 @@
     (is (= 42 (read-json s)))))
 
 (deftest can-read-numbers
-  (is (= 42 (read-json-string "42")))
-  (is (= -3 (read-json-string "-3")))
-  (is (= 3.14159 (read-json-string "3.14159")))
-  (is (= 6.022e23 (read-json-string "6.022e23"))))
+  (is (= 42 (parse-string "42")))
+  (is (= -3 (parse-string "-3")))
+  (is (= 3.14159 (parse-string "3.14159")))
+  (is (= 6.022e23 (parse-string "6.022e23"))))
 
 (deftest can-read-null
-  (is (= nil (read-json-string "null"))))
+  (is (= nil (parse-string "null"))))
 
 (deftest can-read-strings
-  (is (= "Hello, World!" (read-json-string "\"Hello, World!\""))))
+  (is (= "Hello, World!" (parse-string "\"Hello, World!\""))))
 
 (deftest handles-escaped-slashes-in-strings
-  (is (= "/foo/bar" (read-json-string "\"\\/foo\\/bar\""))))
+  (is (= "/foo/bar" (parse-string "\"\\/foo\\/bar\""))))
 
 (deftest handles-unicode-escapes
-  (is (= " \u0beb " (read-json-string "\" \\u0bEb \""))))
+  (is (= " \u0beb " (parse-string "\" \\u0bEb \""))))
 
 (deftest handles-unicode-outside-bmp
   (is (= "\"smiling face: \uD83D\uDE03\""
@@ -34,48 +34,50 @@
          (json-str "smiling face: \uD83D\uDE03" :escape-unicode true))))
 
 (deftest handles-escaped-whitespace
-  (is (= "foo\nbar" (read-json-string "\"foo\\nbar\"")))
-  (is (= "foo\rbar" (read-json-string "\"foo\\rbar\"")))
-  (is (= "foo\tbar" (read-json-string "\"foo\\tbar\""))))
+  (is (= "foo\nbar" (parse-string "\"foo\\nbar\"")))
+  (is (= "foo\rbar" (parse-string "\"foo\\rbar\"")))
+  (is (= "foo\tbar" (parse-string "\"foo\\tbar\""))))
 
 (deftest can-read-booleans
-  (is (= true (read-json-string "true")))
-  (is (= false (read-json-string "false"))))
+  (is (= true (parse-string "true")))
+  (is (= false (parse-string "false"))))
 
 (deftest can-ignore-whitespace
-  (is (= nil (read-json-string "\r\n   null"))))
+  (is (= nil (parse-string "\r\n   null"))))
 
 (deftest can-read-arrays
-  (is (= [1 2 3] (read-json-string "[1,2,3]")))
-  (is (= ["Ole" "Lena"] (read-json-string "[\"Ole\", \r\n \"Lena\"]"))))
+  (is (= [1 2 3] (parse-string "[1,2,3]")))
+  (is (= ["Ole" "Lena"] (parse-string "[\"Ole\", \r\n \"Lena\"]"))))
 
 (deftest can-read-objects
-  (is (= {:a 1, :b 2} (read-json-string "{\"a\": 1, \"b\": 2}"))))
+  (is (= {:a 1, :b 2} (parse-string "{\"a\": 1, \"b\": 2}"
+                                    :keywordize true))))
 
 (deftest can-read-nested-structures
   (is (= {:a [1 2 {:b [3 "four"]} 5.5]}
-         (read-json-string "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"))))
+         (parse-string "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"
+                       :keywordize true))))
 
 (deftest disallows-non-string-keys
-  (is (thrown? Exception (read-json-string "{26:\"z\""))))
+  (is (thrown? Exception (parse-string "{26:\"z\""))))
 
 (deftest disallows-barewords
-  (is (thrown? Exception (read-json-string "  foo  "))))
+  (is (thrown? Exception (parse-string "  foo  "))))
 
 (deftest disallows-unclosed-arrays
-  (is (thrown? Exception (read-json-string "[1, 2,  "))))
+  (is (thrown? Exception (parse-string "[1, 2,  "))))
 
 (deftest disallows-unclosed-objects
-  (is (thrown? Exception (read-json-string "{\"a\":1,  "))))
+  (is (thrown? Exception (parse-string "{\"a\":1,  "))))
 
 (deftest can-get-string-keys
   (is (= {"a" [1 2 {"b" [3 "four"]} 5.5]}
-         (read-json-string "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}" false true nil))))
+         (parse-string "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"))))
 
 (declare pass1-string)
 
 (deftest pass1-test
-  (let [input (read-json-string pass1-string false true nil)]
+  (let [input (parse-string pass1-string)]
     (is (= "JSON Test Pattern pass1" (first input)))
     (is (= "array with 1 element" (get-in input [1 "object with 1 member" 0])))
     (is (= 1234567890 (get-in input [8 "integer"])))
@@ -195,10 +197,10 @@
   (is (= "\"foo\\u1b1b\"" (json-str (symbol "foo\u1b1b")))))
 
 (deftest default-throws-on-eof
-  (is (thrown? java.io.EOFException (read-json-string ""))))
+  (is (thrown? java.io.EOFException (parse-string ""))))
 
 (deftest can-accept-eof
-  (is (= ::eof (read-json-string "" true false ::eof))))
+  (is (= ::eof (parse-string "" :eof-error? false :eof-value ::eof))))
 
 (deftest characters-in-map-keys-are-escaped
   (is (= (json-str {"\"" 42}) "{\"\\\"\":42}")))
@@ -206,8 +208,8 @@
 ;;; Pretty-printer
 
 (deftest pretty-printing
-  (let [x (read-json-string pass1-string false)]
-    (is (= x (read-json-string (with-out-str (pprint-json x)) false)))))
+  (let [x (parse-string pass1-string)]
+    (is (= x (parse-string (with-out-str (pprint-json x)))))))
 
 (deftest can-pretty-print-nonescaped-unicode
   (is (= "\"\u1234\u4567\"" (with-out-str (pprint-json "\u1234\u4567" :escape-unicode false)))))
@@ -216,5 +218,5 @@
   (dotimes [_ 8]
     (time
      (dotimes [_ 100]
-       (assert (= (read-json-string pass1-string false)
-                  (read-json-string (json-str (read-json-string pass1-string false)) false)))))))
+       (assert (= (parse-string pass1-string false)
+                  (parse-string (json-str (parse-string pass1-string false)) false)))))))
