@@ -251,7 +251,7 @@
   (-write-json [object out]
     "Print object to PrintWriter out as JSON"))
 
-(defn- write-json-string [^CharSequence s ^PrintWriter out]
+(defn- write-string [^CharSequence s ^PrintWriter out]
   (let [sb (StringBuilder. (count s))]
     (.append sb \")
     (dotimes [i (count s)]
@@ -282,14 +282,14 @@
     (name x)
     (str x)))
 
-(defn- write-json-object [m ^PrintWriter out] 
+(defn- write-object [m ^PrintWriter out] 
   (.print out \{)
   (loop [x m]
     (when (seq m)
       (let [[k v] (first x)]
         (when (nil? k)
           (throw (Exception. "JSON object keys cannot be nil/null")))
-	(write-json-string (as-str k) out)
+	(write-string (as-str k) out)
         (.print out \:)
         (-write-json v out))
       (let [nxt (next x)]
@@ -298,7 +298,7 @@
           (recur nxt)))))
   (.print out \}))
 
-(defn- write-json-array [s ^PrintWriter out]
+(defn- write-array [s ^PrintWriter out]
   (.print out \[)
   (loop [x s]
     (when (seq x)
@@ -310,60 +310,59 @@
           (recur nxt)))))
   (.print out \]))
 
-(defn- write-json-bignum [x ^PrintWriter out]
+(defn- write-bignum [x ^PrintWriter out]
   (.print out (str x)))
 
-(defn- write-json-plain [x ^PrintWriter out]
+(defn- write-plain [x ^PrintWriter out]
   (.print out x))
 
-(defn- write-json-null [x ^PrintWriter out]
+(defn- write-null [x ^PrintWriter out]
   (.print out "null"))
 
-(defn- write-json-named [x out]
-  (write-json-string (name x) out))
+(defn- write-named [x out]
+  (write-string (name x) out))
 
-(defn- write-json-generic [x out]
+(defn- write-generic [x out]
   (if (.isArray (class x))
     (-write-json (seq x) out)
     (throw (Exception. (str "Don't know how to write JSON of " (class x))))))
 
-(defn- write-json-ratio [x out]
+(defn- write-ratio [x out]
   (-write-json (double x) out))
 
-(extend nil JSONWriter
-        {:-write-json write-json-null})
-(extend clojure.lang.Named JSONWriter
-        {:-write-json write-json-named})
-(extend java.lang.Boolean JSONWriter
-        {:-write-json write-json-plain})
-(extend java.lang.Number JSONWriter
-        {:-write-json write-json-plain})
-(extend java.math.BigInteger JSONWriter
-        {:-write-json write-json-bignum})
-(extend java.math.BigDecimal JSONWriter
-        {:-write-json write-json-bignum})
-(extend clojure.lang.Ratio JSONWriter
-        {:-write-json write-json-ratio})
-(extend java.lang.CharSequence JSONWriter
-        {:-write-json write-json-string})
-(extend java.util.Map JSONWriter
-        {:-write-json write-json-object})
-(extend java.util.Collection JSONWriter
-        {:-write-json write-json-array})
-(extend clojure.lang.ISeq JSONWriter
-        {:-write-json write-json-array})
-(extend java.lang.Object JSONWriter
-        {:-write-json write-json-generic})
+;; nil, true, false
+(extend nil                    JSONWriter {:-write-json write-null})
+(extend java.lang.Boolean      JSONWriter {:-write-json write-plain})
+
+;; Numbers
+(extend java.lang.Number       JSONWriter {:-write-json write-plain})
+(extend clojure.lang.Ratio     JSONWriter {:-write-json write-ratio})
+(extend clojure.lang.BigInt    JSONWriter {:-write-json write-bignum})
+(extend java.math.BigInteger   JSONWriter {:-write-json write-bignum})
+(extend java.math.BigDecimal   JSONWriter {:-write-json write-bignum})
+
+;; Symbols, Keywords, and Strings
+(extend clojure.lang.Named     JSONWriter {:-write-json write-named})
+(extend java.lang.CharSequence JSONWriter {:-write-json write-string})
+
+;; Collections
+(extend java.util.Map          JSONWriter {:-write-json write-object})
+(extend java.util.Collection   JSONWriter {:-write-json write-array})
+
+;; Maybe a Java array, otherwise fail
+(extend java.lang.Object       JSONWriter {:-write-json write-generic})
 
 (defn write-json
   "Write JSON-formatted output to a java.io.Writer.
    Options are key-value pairs, valid options are:
 
-    :escape-unicode false
-        to turn off \\uXXXX escapes of Unicode characters
+    :escape-unicode boolean
 
-    :escape-slash false
-        to turn of escaping / as \\/"
+       If true (default) non-ASCII characters are escaped as \\uXXXX
+
+    :escape-slash boolean
+
+       If true (default) the slash / is escaped as \\/"
   [x ^Writer writer & options]
   (let [{:keys [escape-unicode escape-slash]
          :or {escape-unicode true
