@@ -1,8 +1,3 @@
-;;; json.clj: JavaScript Object Notation (JSON) parser/writer
-
-;; by Stuart Sierra, http://stuartsierra.com/
-;; January 30, 2010
-
 ;; Copyright (c) Stuart Sierra, 2010. All rights reserved.  The use
 ;; and distribution terms for this software are covered by the Eclipse
 ;; Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php)
@@ -12,17 +7,12 @@
 ;; remove this notice, or any other, from this software.
 
 (ns ^{:author "Stuart Sierra"
-      :doc "JavaScript Object Notation (JSON) parser/writer.
-  See http://www.json.org/
-  To write JSON, use json-str, write-json, or print-json.
-  To read JSON, use read-json."}
+      :doc "JavaScript Object Notation (JSON) parser/generator.
+  See http://www.json.org/"}
   clojure.data.json-new
-  (:use [clojure.pprint :only (write formatter-out)])
+  (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
                     StringReader Reader EOFException)))
-
-(def ^:dynamic ^:private *escape-unicode*)
-(def ^:dynamic ^:private *escape-solidus*)
 
 ;;; JSON READER
 
@@ -200,7 +190,8 @@
           ;; Read JSON arrays
           \[ (parse-array stream)
 
-          (throw (Exception. (str "JSON error (unexpected character): " (char c)))))))))
+          (throw (Exception.
+                  (str "JSON error (unexpected character): " (char c)))))))))
 
 (defn parse [rdr & options]
   (let [{:keys [keywordize eof-error? eof-value]
@@ -214,34 +205,36 @@
   ([string & options]
      (apply parse (PushbackReader. (StringReader. string)) options)))
 
-;;; JSON PRINTER
+;;; JSON WRITER
 
-(defprotocol Write-JSON
-  (write-json [object out escape-unicode?]
+(def ^:dynamic ^:private *escape-unicode*)
+(def ^:dynamic ^:private *escape-slash*)
+
+(defprotocol JSONWriter
+  (-write-json [object out]
     "Print object to PrintWriter out as JSON"))
 
-(defn- write-json-string [^CharSequence s ^PrintWriter out escape-unicode?]
+(defn- write-json-string [^CharSequence s ^PrintWriter out]
   (let [sb (StringBuilder. ^Integer (count s))]
     (.append sb \")
     (dotimes [i (count s)]
       (let [cp (int (.charAt s i))]
         (codepoint-case cp
-          ;; Handle printable JSON escapes before ASCII
+          ;; Printable JSON escapes
           \" (.append sb "\\\"")
           \\ (.append sb "\\\\")
-          \/ (.append sb "\\/")
-          ;; Print simple ASCII characters
+          \/ (.append sb (if *escape-slash* "\\/" "/"))
+          ;; Simple ASCII characters
           :simple-ascii (.append sb (.charAt s i))
-          ;; Handle JSON escapes
+          ;; JSON escapes
           \backspace (.append sb "\\b")
           \formfeed  (.append sb "\\f")
           \newline   (.append sb "\\n")
           \return    (.append sb "\\r")
           \tab       (.append sb "\\t")
           ;; Any other character is Unicode
-          (if escape-unicode?
-            ;; Hexadecimal-escaped
-            (.append sb (format "\\u%04x" cp))
+          (if *escape-unicode*
+            (.append sb (format "\\u%04x" cp)) ; Hexadecimal-escaped
             (.appendCodePoint sb cp)))))
     (.append sb \")
     (.print out (str sb))))
@@ -252,29 +245,29 @@
     (name x)
     (str x)))
 
-(defn- write-json-object [m ^PrintWriter out escape-unicode?] 
+(defn- write-json-object [m ^PrintWriter out] 
   (.print out \{)
   (loop [x m]
     (when (seq m)
       (let [[k v] (first x)]
         (when (nil? k)
           (throw (Exception. "JSON object keys cannot be nil/null")))
-	(write-json-string (as-str k) out escape-unicode?)
+	(write-json-string (as-str k) out)
         (.print out \:)
-        (write-json v out escape-unicode?))
+        (-write-json v out))
       (let [nxt (next x)]
         (when (seq nxt)
           (.print out \,)
           (recur nxt)))))
   (.print out \}))
 
-(defn- write-json-array [s ^PrintWriter out escape-unicode?]
+(defn- write-json-array [s ^PrintWriter out]
   (.print out \[)
   (loop [x s]
     (when (seq x)
       (let [fst (first x)
             nxt (next x)]
-        (write-json fst out escape-unicode?)
+        (-write-json fst out)
         (when (seq nxt)
           (.print out \,)
           (recur nxt)))))
@@ -283,81 +276,82 @@
 (defn- write-json-bignum [x ^PrintWriter out escape-unicode]
   (.print out (str x)))
 
-(defn- write-json-plain [x ^PrintWriter out escape-unicode?]
+(defn- write-json-plain [x ^PrintWriter out]
   (.print out x))
 
-(defn- write-json-null [x ^PrintWriter out escape-unicode?]
+(defn- write-json-null [x ^PrintWriter out]
   (.print out "null"))
 
-(defn- write-json-named [x ^PrintWriter out escape-unicode?]
-  (write-json-string (name x) out escape-unicode?))
+(defn- write-json-named [x ^PrintWriter out]
+  (write-json-string (name x) out))
 
-(defn- write-json-generic [x out escape-unicode?]
+(defn- write-json-generic [x out]
   (if (.isArray (class x))
-    (write-json (seq x) out escape-unicode?)
+    (-write-json (seq x) out)
     (throw (Exception. (str "Don't know how to write JSON of " (class x))))))
 
-(defn- write-json-ratio [x out escape-unicode?]
-  (write-json (double x) out escape-unicode?))
+(defn- write-json-ratio [x out]
+  (-write-json (double x) out))
 
-(extend nil Write-JSON
-        {:write-json write-json-null})
-(extend clojure.lang.Named Write-JSON
-        {:write-json write-json-named})
-(extend java.lang.Boolean Write-JSON
-        {:write-json write-json-plain})
-(extend java.lang.Number Write-JSON
-        {:write-json write-json-plain})
-(extend java.math.BigInteger Write-JSON
-        {:write-json write-json-bignum})
-(extend java.math.BigDecimal Write-JSON
-        {:write-json write-json-bignum})
-(extend clojure.lang.Ratio Write-JSON
-        {:write-json write-json-ratio})
-(extend java.lang.CharSequence Write-JSON
-        {:write-json write-json-string})
-(extend java.util.Map Write-JSON
-        {:write-json write-json-object})
-(extend java.util.Collection Write-JSON
-        {:write-json write-json-array})
-(extend clojure.lang.ISeq Write-JSON
-        {:write-json write-json-array})
-(extend java.lang.Object Write-JSON
-        {:write-json write-json-generic})
+(extend nil JSONWriter
+        {:-write-json write-json-null})
+(extend clojure.lang.Named JSONWriter
+        {:-write-json write-json-named})
+(extend java.lang.Boolean JSONWriter
+        {:-write-json write-json-plain})
+(extend java.lang.Number JSONWriter
+        {:-write-json write-json-plain})
+(extend java.math.BigInteger JSONWriter
+        {:-write-json write-json-bignum})
+(extend java.math.BigDecimal JSONWriter
+        {:-write-json write-json-bignum})
+(extend clojure.lang.Ratio JSONWriter
+        {:-write-json write-json-ratio})
+(extend java.lang.CharSequence JSONWriter
+        {:-write-json write-json-string})
+(extend java.util.Map JSONWriter
+        {:-write-json write-json-object})
+(extend java.util.Collection JSONWriter
+        {:-write-json write-json-array})
+(extend clojure.lang.ISeq JSONWriter
+        {:-write-json write-json-array})
+(extend java.lang.Object JSONWriter
+        {:-write-json write-json-generic})
+
+(defn write-json
+  "Write JSON-formatted output to a java.io.Writer.
+   Options are key-value pairs, valid options are:
+
+    :escape-unicode false
+        to turn off \\uXXXX escapes of Unicode characters
+
+    :escape-slash false
+        to turn of escaping / as \\/"
+  [x writer & options]
+  (let [{:keys [escape-unicode escape-slash]
+         :or {escape-unicode true
+              escape-slash true}} options]
+    (binding [*escape-unicode* escape-unicode
+              *escape-slash* escape-slash]
+      (-write-json x (PrintWriter. writer)))))
 
 (defn json-str
-  "Converts x to a JSON-formatted string.
-
-  Valid options are:
-    :escape-unicode false
-        to turn of \\uXXXX escapes of Unicode characters."
+  "Converts x to a JSON-formatted string. Options are the same as
+  write-json."
   [x & options]
-  (let [{:keys [escape-unicode] :or {escape-unicode true}} options
-	sw (StringWriter.)
-        out (PrintWriter. sw)]
-    (write-json x out escape-unicode)
+  (let [sw (StringWriter.)]
+    (apply write-json x sw options)
     (.toString sw)))
-
-(defn print-json
-  "Write JSON-formatted output to *out*.
-
-  Valid options are:
-    :escape-unicode false
-        to turn off \\uXXXX escapes of Unicode characters."
-  [x & options]
-  (let [{:keys [escape-unicode] :or {escape-unicode true}} options]
-    (write-json x (PrintWriter. *out*) escape-unicode)))
-
 
 ;;; JSON PRETTY-PRINTER
 
 ;; Based on code by Tom Faulhaber
 
 (defn- pprint-json-array [s escape-unicode] 
-  ((formatter-out "~<[~;~@{~w~^, ~:_~}~;]~:>") s))
+  ((pprint/formatter-out "~<[~;~@{~w~^, ~:_~}~;]~:>") s))
 
 (defn- pprint-json-object [m escape-unicode]
-  ((formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
+  ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
    (for [[k v] m] [(as-str k) v])))
 
 (defn- pprint-json-generic [x escape-unicode]
@@ -380,7 +374,7 @@
         to turn off \\uXXXX escapes of Unicode characters."
   [x & options]
   (let [{:keys [escape-unicode] :or {escape-unicode true}} options]
-    (write x :dispatch #(pprint-json-dispatch % escape-unicode))))
+    (pprint/write x :dispatch #(pprint-json-dispatch % escape-unicode))))
 
 ;; Local Variables:
 ;; mode: clojure
