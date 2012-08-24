@@ -12,13 +12,14 @@
   clojure.data.json-new
   (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
-                    StringReader Reader EOFException)))
+                    StringReader EOFException)))
 
 ;;; JSON READER
 
 (def ^:dynamic ^:private *keywordize*)
+(def ^:dynamic ^:private *bigdec*)
 
-(declare do-parse)
+(declare -parse)
 
 (defmacro ^:private codepoint [c]
   (int c))
@@ -52,7 +53,7 @@
       \, (recur (.read stream) result)
       \] (persistent! result)
       (do (.unread stream c)
-          (let [element (do-parse stream true nil)]
+          (let [element (-parse stream true nil)]
             (recur (.read stream) (conj! result element)))))))
 
 (defn- parse-object [^PushbackReader stream]
@@ -74,7 +75,7 @@
              (throw (Exception. "JSON error (key missing value in object)")))
 
         (do (.unread stream c)
-            (let [element (do-parse stream true nil)]
+            (let [element (-parse stream true nil)]
               (if (nil? key)
                 (if (string? element)
                   (recur element result)
@@ -139,10 +140,12 @@
               (do (.unread stream c)
                   float?))))]
     (if floating-point?
-      (Double/valueOf (str buffer))
+      (if *bigdec*
+        (bigdec (str buffer))
+        (Double/valueOf (str buffer)))
       (Long/valueOf (str buffer)))))
 
-(defn- do-parse
+(defn- -parse
   [^PushbackReader stream eof-error? eof-value]
   (loop []
     (let [c (.read stream)]
@@ -193,17 +196,42 @@
           (throw (Exception.
                   (str "JSON error (unexpected character): " (char c)))))))))
 
-(defn parse [rdr & options]
-  (let [{:keys [keywordize eof-error? eof-value]
+(defn parse
+  "Parse a single item of JSON data from a java.io.Reader. Options are
+  key-value pairs, valid options are:
+
+     :keywordize boolean 
+
+        If true (default) convert JSON properties from strings into
+        keywords.
+
+     :bigdec boolean
+
+        If true use BigDecimal for decimal numbers instead of Double.
+        Default is false.
+
+     :eof-error? boolean
+
+        If true (default) will throw exception if the stream is empty.
+
+     :eof-value Object
+
+        Object to return if the stream is empty and eof-error? is
+        true. Default is nil."
+  [reader & options]
+  (let [{:keys [keywordize eof-error? eof-value bigdec]
          :or {keywordize false
+              bigdec false
               eof-error? true}} options]
-    (binding [*keywordize* keywordize]
-      (do-parse rdr eof-error? eof-value))))
+    (binding [*keywordize* keywordize
+              *bigdec* bigdec]
+      (-parse reader eof-error? eof-value))))
 
 (defn parse-string
-  "Reads one JSON value from input String."
-  ([string & options]
-     (apply parse (PushbackReader. (StringReader. string)) options)))
+  "Reads one JSON value from input String. Options are the same as for
+  parse."
+  [string & options]
+  (apply parse (PushbackReader. (StringReader. string)) options))
 
 ;;; JSON WRITER
 
@@ -273,7 +301,7 @@
           (recur nxt)))))
   (.print out \]))
 
-(defn- write-json-bignum [x ^PrintWriter out escape-unicode]
+(defn- write-json-bignum [x ^PrintWriter out]
   (.print out (str x)))
 
 (defn- write-json-plain [x ^PrintWriter out]
