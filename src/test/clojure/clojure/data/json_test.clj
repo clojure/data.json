@@ -68,6 +68,12 @@
 (deftest disallows-unclosed-objects
   (is (thrown? Exception (read-json "{\"a\":1,  "))))
 
+(deftest disallows-double-NaN
+  (is (thrown? Exception (json-str (Double/NaN)))))
+
+(deftest disallows-float-NaN
+  (is (thrown? Exception (json-str (Float/NaN)))))
+
 (deftest can-get-string-keys
   (is (= {"a" [1 2 {"b" [3 "four"]} 5.5]}
          (read-json "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}" false true nil))))
