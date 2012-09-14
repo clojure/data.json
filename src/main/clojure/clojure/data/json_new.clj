@@ -16,8 +16,9 @@
 
 ;;; JSON READER
 
-(def ^:dynamic ^:private *keywordize*)
 (def ^:dynamic ^:private *bigdec*)
+(def ^:dynamic ^:private *key-fn*)
+(def ^:dynamic ^:private *value-fn*)
 
 (declare -parse)
 
@@ -81,8 +82,11 @@
                   (recur element result)
                   (throw (Exception. "JSON error (non-string key in object)")))
                 (recur nil
-                       (assoc! result (if *keywordize* (keyword key) key)
-                               element)))))))))
+                       (let [out-key (*key-fn* key)
+                             out-value (*value-fn* out-key element)]
+                         (if (= *value-fn* out-value)
+                           result
+                           (assoc! result out-key out-value)))))))))))
 
 (defn- parse-hex-char [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
@@ -209,11 +213,6 @@
   "Parse a single item of JSON data from a java.io.Reader. Options are
   key-value pairs, valid options are:
 
-     :keywordize boolean 
-
-        If true (default) convert JSON property names from strings
-        into keywords.
-
      :bigdec boolean
 
         If true use BigDecimal for decimal numbers instead of Double.
@@ -226,15 +225,39 @@
      :eof-value Object
 
         Object to return if the stream is empty and eof-error? is
-        false. Default is nil."
+        false. Default is nil.
+
+     :key-fn function
+
+        Single-argument function called on JSON property names; return
+        value will replace the property names in the output. Default
+        is clojure.core/keyword.
+
+     :value-fn function
+
+        Function to transform values in the output. For each JSON
+        property, value-fn is called with two arguments: the property
+        name (transformed by key-fn) and the value. The return value
+        of value-fn will replace the value in the output. If value-fn
+        returns itself, the property will be omitted from the output.
+
+        Finally, value-fn is called with one argument, the whole
+        object, and may return any any substitute value.
+
+        The default value-fn is (fn ([v] v) ([k v] v))."
   [reader & options]
-  (let [{:keys [keywordize eof-error? eof-value bigdec]
-         :or {keywordize false
-              bigdec false
-              eof-error? true}} options]
-    (binding [*keywordize* keywordize
-              *bigdec* bigdec]
-      (-parse reader eof-error? eof-value))))
+  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
+         :or {bigdec false
+              eof-error? true
+              key-fn keyword
+              value-fn (fn ([v] v) ([k v] v))}} options]
+    (binding [*bigdec* bigdec
+              *key-fn* key-fn
+              *value-fn* value-fn]
+      (let [out-value 
+            (*value-fn* (-parse reader eof-error? eof-value))]
+        (when-not (= *value-fn* out-value)
+          out-value)))))
 
 (defn parse-string
   "Reads one JSON value from input String. Options are the same as for
