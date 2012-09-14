@@ -22,9 +22,11 @@
 
 (defn- default-write-key-fn
   [x]
-  (if (instance? clojure.lang.Named x)
-    (name x)
-    (str x)))
+  (cond (instance? clojure.lang.Named x)
+        (name x)
+        (nil? x)
+        (throw (Exception. "JSON object properties may not be nil"))
+        :else (str x)))
 
 (defn- default-value-fn [k v] v)
 
