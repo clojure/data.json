@@ -20,6 +20,14 @@
 (def ^:dynamic ^:private *key-fn*)
 (def ^:dynamic ^:private *value-fn*)
 
+(defn- default-write-key-fn
+  [x]
+  (if (instance? clojure.lang.Named x)
+    (name x)
+    (str x)))
+
+(defn- default-value-fn [k v] v)
+
 (declare -parse)
 
 (defmacro ^:private codepoint [c]
@@ -213,11 +221,6 @@
   "Parse a single item of JSON data from a java.io.Reader. Options are
   key-value pairs, valid options are:
 
-     :bigdec boolean
-
-        If true use BigDecimal for decimal numbers instead of Double.
-        Default is false.
-
      :eof-error? boolean
 
         If true (default) will throw exception if the stream is empty.
@@ -227,11 +230,17 @@
         Object to return if the stream is empty and eof-error? is
         false. Default is nil.
 
+     :bigdec boolean
+
+        If true use BigDecimal for decimal numbers instead of Double.
+        Default is false.
+
      :key-fn function
 
         Single-argument function called on JSON property names; return
         value will replace the property names in the output. Default
-        is clojure.core/keyword.
+        is clojure.core/identity, use clojure.core/keyword to get
+        keyword properties.
 
      :value-fn function
 
@@ -240,24 +249,17 @@
         name (transformed by key-fn) and the value. The return value
         of value-fn will replace the value in the output. If value-fn
         returns itself, the property will be omitted from the output.
-
-        Finally, value-fn is called with one argument, the whole
-        object, and may return any any substitute value.
-
-        The default value-fn is (fn ([v] v) ([k v] v))."
+        The default value-fn returns the value unchanged."
   [reader & options]
   (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
          :or {bigdec false
               eof-error? true
-              key-fn keyword
-              value-fn (fn ([v] v) ([k v] v))}} options]
+              key-fn identity
+              value-fn default-value-fn}} options]
     (binding [*bigdec* bigdec
               *key-fn* key-fn
               *value-fn* value-fn]
-      (let [out-value 
-            (*value-fn* (-parse reader eof-error? eof-value))]
-        (when-not (= *value-fn* out-value)
-          out-value)))))
+      (-parse reader eof-error? eof-value))))
 
 (defn parse-string
   "Reads one JSON value from input String. Options are the same as for
@@ -299,22 +301,19 @@
     (.append sb \")
     (.print out (str sb))))
 
-(defn- as-str
-  [x]
-  (if (instance? clojure.lang.Named x)
-    (name x)
-    (str x)))
-
 (defn- write-object [m ^PrintWriter out] 
   (.print out \{)
   (loop [x m]
     (when (seq m)
-      (let [[k v] (first x)]
-        (when (nil? k)
-          (throw (Exception. "JSON object keys cannot be nil/null")))
-	(write-string (as-str k) out)
-        (.print out \:)
-        (-write-json v out))
+      (let [[k v] (first x)
+            out-key (*key-fn* k)
+            out-value (*value-fn* k v)]
+        (when-not (string? out-key)
+          (throw (Exception. "JSON object keys must be strings")))
+        (when-not (= *value-fn* out-value)
+          (write-string out-key out)
+          (.print out \:)
+          (-write-json out-value out)))
       (let [nxt (next x)]
         (when (seq nxt)
           (.print out \,)
@@ -376,8 +375,8 @@
 (extend java.lang.Object       JSONWriter {:-write-json write-generic})
 
 (defn write-json
-  "Write JSON-formatted output to a java.io.Writer.
-   Options are key-value pairs, valid options are:
+  "Write JSON-formatted output to a java.io.Writer. Options are
+   key-value pairs, valid options are:
 
     :escape-unicode boolean
 
@@ -385,14 +384,41 @@
 
     :escape-slash boolean
 
-       If true (default) the slash / is escaped as \\/"
+       If true (default) the slash / is escaped as \\/
+
+    :key-fn function
+
+        Single-argument function called on map keys; return value will
+        replace the property names in the output. Must return a
+        string. Default calls clojure.core/name on symbols and
+        keywords and clojure.core/str on everything else.
+
+    :value-fn function
+
+        Function to transform values before writing. For each
+        key-value pair in the input, called with two arguments: the
+        key (BEFORE transformation by key-fn) and the value. The
+        return value of value-fn will replace the value in the output.
+        If the return value is a number, boolean, string, or nil it
+        will be included literally in the output. If the return value
+        is a non-map collection, it will be processed recursively. If
+        the return value is a map, it will be processed recursively,
+        calling value-fn again on its key-value pairs. If value-fn
+        returns itself, the key-value pair will be omitted from the
+        output."
   [x ^Writer writer & options]
-  (let [{:keys [escape-unicode escape-slash]
+  (let [{:keys [escape-unicode escape-slash key-fn value-fn]
          :or {escape-unicode true
-              escape-slash true}} options]
+              escape-slash true
+              key-fn default-write-key-fn
+              value-fn default-value-fn}} options]
     (binding [*escape-unicode* escape-unicode
-              *escape-slash* escape-slash]
-      (-write-json x (PrintWriter. writer)))))
+              *escape-slash* escape-slash
+              *key-fn* key-fn
+              *value-fn* value-fn]
+      (let [out-value (value-fn x)]
+        (when-not (= *value-fn* out-value)
+          (-write-json out-value (PrintWriter. writer)))))))
 
 (defn json-str
   "Converts x to a JSON-formatted string. Options are the same as
