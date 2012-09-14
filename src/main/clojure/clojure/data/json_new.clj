@@ -418,9 +418,7 @@
               *escape-slash* escape-slash
               *key-fn* key-fn
               *value-fn* value-fn]
-      (let [out-value (value-fn x)]
-        (when-not (= *value-fn* out-value)
-          (-write-json out-value (PrintWriter. writer)))))))
+      (-write-json x (PrintWriter. writer)))))
 
 (defn json-str
   "Converts x to a JSON-formatted string. Options are the same as
@@ -434,34 +432,38 @@
 
 ;; Based on code by Tom Faulhaber
 
-(defn- pprint-json-array [s escape-unicode] 
+(defn- pprint-json-array [s] 
   ((pprint/formatter-out "~<[~;~@{~w~^, ~:_~}~;]~:>") s))
 
-(defn- pprint-json-object [m escape-unicode]
+(defn- pprint-json-object [m]
   ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
-   (for [[k v] m] [(as-str k) v])))
+   (for [[k v] m] [(*key-fn* k) v])))
 
-(defn- pprint-json-generic [x escape-unicode]
+(defn- pprint-json-generic [x]
   (if (.isArray (class x))
-    (pprint-json-array (seq x) escape-unicode)
-    (print (json-str x :escape-unicode escape-unicode))))
+    (pprint-json-array (seq x))
+    ;; pprint proxies Writer, so we can't just wrap it
+    (print (with-out-str (-write-json x (PrintWriter. *out*))))))
 
-(defn- pprint-json-dispatch [x escape-unicode]
+(defn- pprint-json-dispatch [x]
   (cond (nil? x) (print "null")
-        (instance? java.util.Map x) (pprint-json-object x escape-unicode)
-        (instance? java.util.Collection x) (pprint-json-array x escape-unicode)
-        (instance? clojure.lang.ISeq x) (pprint-json-array x escape-unicode)
-        :else (pprint-json-generic x escape-unicode)))
+        (instance? java.util.Map x) (pprint-json-object x)
+        (instance? java.util.Collection x) (pprint-json-array x)
+        (instance? clojure.lang.ISeq x) (pprint-json-array x)
+        :else (pprint-json-generic x)))
 
 (defn pprint-json
-  "Pretty-prints JSON representation of x to *out*.
-
-  Valid options are:
-    :escape-unicode false
-        to turn off \\uXXXX escapes of Unicode characters."
+  "Pretty-prints JSON representation of x to *out*. Options are the
+  same as for write-json except :value-fn, which is not supported."
   [x & options]
-  (let [{:keys [escape-unicode] :or {escape-unicode true}} options]
-    (pprint/write x :dispatch #(pprint-json-dispatch % escape-unicode))))
+  (let [{:keys [escape-unicode escape-slash key-fn]
+         :or {escape-unicode true
+              escape-slash true
+              key-fn default-write-key-fn}} options]
+    (binding [*escape-unicode* escape-unicode
+              *escape-slash* escape-slash
+              *key-fn* key-fn]
+      (pprint/write x :dispatch pprint-json-dispatch))))
 
 ;; Local Variables:
 ;; mode: clojure
