@@ -30,16 +30,8 @@ Latest stable release: 0.1.3
 
 
 
-Example Usage
+Usage
 ========================================
-
-    (use '[clojure.data.json :only (read-json json-str)])
-
-    (json-str {:a [1 2 3], :b "Hello"})
-    ;;=> "{\"a\":[1,2,3],\"b\":\"Hello\"}"
-
-    (read-json "{\"a\":[1,2,3],\"b\":\"Hello\"}")
-    ;;=> {:a [1 2 3], :b "Hello"}
 
 Refer to docstrings in the `clojure.data.json` namespace for
 additional documentation.
