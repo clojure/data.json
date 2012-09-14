@@ -56,6 +56,13 @@ Developer Information
 Change Log
 ====================
 
+* Release 0.2.0 (in development)
+  * **Breaking API changes**
+  * New :key-fn and :value-fn permit flexible transformation
+    of values when reading & writing JSON
+  * Support for reading large integers as BigInt
+  * Optional support for reading decimals as BigDecimal
+  * Performance improvements
 * Release 0.1.3 on 2012-03-09
   * Fix writing strings containing characters outside the BMP
 * Release 0.1.2 on 2011-10-14
