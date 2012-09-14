@@ -51,12 +51,12 @@
 
 (deftest can-read-objects
   (is (= {:a 1, :b 2} (parse-string "{\"a\": 1, \"b\": 2}"
-                                    :keywordize true))))
+                                    :key-fn keyword))))
 
 (deftest can-read-nested-structures
   (is (= {:a [1 2 {:b [3 "four"]} 5.5]}
          (parse-string "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"
-                       :keywordize true))))
+                       :key-fn keyword))))
 
 (deftest disallows-non-string-keys
   (is (thrown? Exception (parse-string "{26:\"z\""))))
