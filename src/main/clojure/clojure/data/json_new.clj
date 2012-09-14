@@ -62,7 +62,7 @@
   (loop [key nil, result (transient {})]
     (let [c (.read stream)]
       (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside array)")))
+        (throw (EOFException. "JSON error (end-of-file inside object)")))
       (codepoint-case c
         :whitespace (recur key result)
 
