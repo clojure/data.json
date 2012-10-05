@@ -94,11 +94,10 @@ the key-fn. The reverse is true when writing:
                     :key-fn name) 
     ;;=> "{\"number\":42,\"date\":\"2012-06-02\"}"
 
-You can also write/read directly to/from a
-java.io.Writer/java.io.Reader with `json/read` and `json/write`.
+You can also read JSON directly from a java.io.Reader with `json/read`
+and write JSON directly to a java.io.Writer with `json/write`.
 
-Refer to the [API Documentation](http://clojure.github.com/data.json/)
-for more details.
+Other options are available. Refer to the [API Documentation](http://clojure.github.com/data.json/) for details.
 
 
 
