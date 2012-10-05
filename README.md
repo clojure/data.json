@@ -10,22 +10,24 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ========================================
 
-Latest stable release: 0.1.3
+Latest stable release is [0.2.0](https://github.com/clojure/data.json/tree/data.json-0.2.0)
 
 * [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
 
-* [Development Snapshot Versions](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
+* [Development Snapshot Versions](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~
+
+* [Development Snapshot Usage Instructions](http://dev.clojure.org/display/doc/Maven+Settings+and+Repositories)
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-    [org.clojure/data.json "0.1.3"]
+    [org.clojure/data.json "0.2.0"]
 
 [Maven](http://maven.apache.org/) dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.1.3</version>
+      <version>0.2.0</version>
     </dependency>
 
 
@@ -33,10 +35,70 @@ Latest stable release: 0.1.3
 Usage
 ========================================
 
-Refer to docstrings in the `clojure.data.json` namespace for
-additional documentation.
-
 [API Documentation](http://clojure.github.com/data.json/)
+
+Examples:
+
+    (require '[clojure.data.json :as json])
+
+To convert to/from JSON strings, use `json/write-str` and `json/read-str`:
+
+    (json/write-str {:a 1 :b 2})
+    ;;=> "{\"a\":1,\"b\":2}"
+
+    (json/read-str "{\"a\":1,\"b\":2}")
+    ;;=> {"a" 1, "b" 2}
+
+Note that these operations are not symmetric: converting Clojure data
+into JSON is lossy.
+
+You can specify a `:key-fn` to convert map keys on the way in or out:
+
+    (json/write-str {:a 1 :b 2}
+                    :key-fn #(.toUpperCase %))
+    ;;=> "{\"A\":1,\"B\":2}"
+
+    (json/read-str "{\"a\":1,\"b\":2}"
+                   :key-fn keyword)
+    ;;=> {:a 1, :b 2}
+
+    (json/read-str "{\"a\":1,\"b\":2}"
+                   :key-fn #(keyword "com.example" %))
+    ;;=> {:com.example/a 1, :com.example/b 2}
+
+You can specify a `:value-fn` to convert map values on the way in or
+out. The value-fn will be called with two arguments, the key and the
+value, and it returns the updated value.
+
+    (defn my-value-reader [key value]
+      (if (= key :date)
+        (java.sql.Date/valueOf value)
+        value))
+
+    (json/read-str "{\"number\":42,\"date\":\"2012-06-02\"}"
+                   :value-fn my-value-reader
+                   :key-fn keyword) 
+    ;;=> {:number 42, :date #inst "2012-06-02T04:00:00.000-00:00"}
+
+Note that if you specify both a `:key-fn` and a `:value-fn` when
+reading, the value-fn is called *after* the key has been processed by
+the key-fn. The reverse is true when writing:
+
+    (defn my-value-writer [key value]
+      (if (= key :date)
+        (str (java.sql.Date. (.getTime value)))
+        value))
+
+    (json/write-str {:number 42, :date (java.util.Date. 112 5 2)}
+                    :value-fn my-value-writer
+                    :key-fn name) 
+    ;;=> "{\"number\":42,\"date\":\"2012-06-02\"}"
+
+You can also write/read directly to/from a
+java.io.Writer/java.io.Reader with `json/read` and `json/write`.
+
+Refer to the [API Documentation](http://clojure.github.com/data.json/)
+for more details.
 
 
 
@@ -54,10 +116,10 @@ Developer Information
 
 
 Change Log
-====================
+========================================
 
-* Release 0.2.0 (in development)
-  * **Breaking API changes**
+* Release 0.2.0
+  * **Breaking API changes**: renamed core functions
   * New :key-fn and :value-fn permit flexible transformation
     of values when reading & writing JSON
   * Support for reading large integers as BigInt
