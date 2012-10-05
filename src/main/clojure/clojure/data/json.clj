@@ -263,7 +263,7 @@
               *value-fn* value-fn]
       (-parse reader eof-error? eof-value))))
 
-(defn parse-string
+(defn parse-str
   "Reads one JSON value from input String. Options are the same as for
   parse."
   [string & options]
