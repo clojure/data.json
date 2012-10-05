@@ -261,13 +261,13 @@
     (binding [*bigdec* bigdec
               *key-fn* key-fn
               *value-fn* value-fn]
-      (-parse reader eof-error? eof-value))))
+      (-parse (PushbackReader. reader) eof-error? eof-value))))
 
 (defn parse-str
   "Reads one JSON value from input String. Options are the same as for
   parse."
   [string & options]
-  (apply parse (PushbackReader. (StringReader. string)) options))
+  (apply parse (StringReader. string) options))
 
 ;;; JSON WRITER
 
