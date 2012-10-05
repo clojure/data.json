@@ -56,16 +56,17 @@
 (defn- parse-array [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [c (.read stream), result (transient [])]
-    (when (neg? c)
-      (throw (EOFException. "JSON error (end-of-file inside array)")))
-    (codepoint-case c
-      :whitespace (recur (.read stream) result)
-      \, (recur (.read stream) result)
-      \] (persistent! result)
-      (do (.unread stream c)
-          (let [element (-parse stream true nil)]
-            (recur (.read stream) (conj! result element)))))))
+  (loop [result (transient [])]
+    (let [c (.read stream)]
+      (when (neg? c)
+        (throw (EOFException. "JSON error (end-of-file inside array)")))
+      (codepoint-case c
+        :whitespace (recur result)
+        \, (recur result)
+        \] (persistent! result)
+        (do (.unread stream c)
+            (let [element (-parse stream true nil)]
+              (recur (conj! result element))))))))
 
 (defn- parse-object [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
