@@ -10,7 +10,7 @@
       :doc "JavaScript Object Notation (JSON) parser/generator.
   See http://www.json.org/"}
   clojure.data.json
-  (:refer-clojure :exclude (read str))
+  (:refer-clojure :exclude (read))
   (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
                     Writer StringReader EOFException)))
@@ -27,7 +27,7 @@
         (name x)
         (nil? x)
         (throw (Exception. "JSON object properties may not be nil"))
-        :else (clojure.core/str x)))
+        :else (str x)))
 
 (defn- default-value-fn [k v] v)
 
@@ -110,7 +110,7 @@
     (when (or (neg? a) (neg? b) (neg? c) (neg? d))
       (throw (EOFException.
               "JSON error (end-of-file inside Unicode character escape)")))
-    (let [s (clojure.core/str (char a) (char b) (char c) (char d))]
+    (let [s (str (char a) (char b) (char c) (char d))]
       (char (Integer/parseInt s 16)))))
 
 (defn- read-escaped-char [^PushbackReader stream]
@@ -135,7 +135,7 @@
         (when (neg? c)
           (throw (EOFException. "JSON error (end-of-file inside array)")))
         (codepoint-case c
-          \" (clojure.core/str buffer)
+          \" (str buffer)
           \\ (do (.append buffer (read-escaped-char stream))
                  (recur))
           (do (.append buffer (char c))
@@ -167,8 +167,8 @@
                        (do (.unread stream c)
                            decimal?))))]
     (if decimal?
-      (read-decimal (clojure.core/str buffer))
-      (read-integer (clojure.core/str buffer)))))
+      (read-decimal (str buffer))
+      (read-integer (str buffer)))))
 
 (defn- -read
   [^PushbackReader stream eof-error? eof-value]
@@ -219,7 +219,7 @@
           \[ (read-array stream)
 
           (throw (Exception.
-                  (clojure.core/str "JSON error (unexpected character): " (char c)))))))))
+                  (str "JSON error (unexpected character): " (char c)))))))))
 
 (defn read
   "Reads a single item of JSON data from a java.io.Reader. Options are
@@ -303,7 +303,7 @@
             (.append sb (format "\\u%04x" cp)) ; Hexadecimal-escaped
             (.appendCodePoint sb cp)))))
     (.append sb \")
-    (.print out (clojure.core/str sb))))
+    (.print out (str sb))))
 
 (defn- write-object [m ^PrintWriter out] 
   (.print out \{)
@@ -337,7 +337,7 @@
   (.print out \]))
 
 (defn- write-bignum [x ^PrintWriter out]
-  (.print out (clojure.core/str x)))
+  (.print out (str x)))
 
 (defn- write-plain [x ^PrintWriter out]
   (.print out x))
@@ -351,7 +351,7 @@
 (defn- write-generic [x out]
   (if (.isArray (class x))
     (-write (seq x) out)
-    (throw (Exception. (clojure.core/str "Don't know how to write JSON of " (class x))))))
+    (throw (Exception. (str "Don't know how to write JSON of " (class x))))))
 
 (defn- write-ratio [x out]
   (-write (double x) out))
@@ -422,12 +422,12 @@
               *value-fn* value-fn]
       (-write x (PrintWriter. writer)))))
 
-(defn str
+(defn write-str
   "Converts x to a JSON-formatted string. Options are the same as
   write."
   [x & options]
   (let [sw (StringWriter.)]
-    (apply write-json x sw options)
+    (apply write x sw options)
     (.toString sw)))
 
 ;;; JSON PRETTY-PRINTER
@@ -456,7 +456,7 @@
 
 (defn pprint
   "Pretty-prints JSON representation of x to *out*. Options are the
-  same as for write-json except :value-fn, which is not supported."
+  same as for write except :value-fn, which is not supported."
   [x & options]
   (let [{:keys [escape-unicode escape-slash key-fn]
          :or {escape-unicode true

@@ -33,9 +33,9 @@
 
 (deftest handles-unicode-outside-bmp
   (is (= "\"smiling face: \uD83D\uDE03\""
-         (json/str "smiling face: \uD83D\uDE03" :escape-unicode false)))
+         (json/write-str "smiling face: \uD83D\uDE03" :escape-unicode false)))
   (is (= "\"smiling face: \\ud83d\\ude03\""
-         (json/str "smiling face: \uD83D\uDE03" :escape-unicode true))))
+         (json/write-str "smiling face: \uD83D\uDE03" :escape-unicode true))))
 
 (deftest handles-escaped-whitespace
   (is (= "foo\nbar" (json/read-str "\"foo\\nbar\"")))
@@ -173,55 +173,55 @@
 
 
 (deftest can-print-json-strings
-  (is (= "\"Hello, World!\"" (json/str "Hello, World!")))
-  (is (= "\"\\\"Embedded\\\" Quotes\"" (json/str "\"Embedded\" Quotes"))))
+  (is (= "\"Hello, World!\"" (json/write-str "Hello, World!")))
+  (is (= "\"\\\"Embedded\\\" Quotes\"" (json/write-str "\"Embedded\" Quotes"))))
 
 (deftest can-print-unicode
-  (is (= "\"\\u1234\\u4567\"" (json/str "\u1234\u4567"))))
+  (is (= "\"\\u1234\\u4567\"" (json/write-str "\u1234\u4567"))))
 
 (deftest can-print-nonescaped-unicode
-  (is (= "\"\u1234\u4567\"" (json/str "\u1234\u4567" :escape-unicode false))))
+  (is (= "\"\u1234\u4567\"" (json/write-str "\u1234\u4567" :escape-unicode false))))
 
 (deftest can-print-json-null
-  (is (= "null" (json/str nil))))
+  (is (= "null" (json/write-str nil))))
 
 (deftest can-print-ratios-as-doubles
-  (is (= "0.75" (json/str 3/4))))
+  (is (= "0.75" (json/write-str 3/4))))
 
 (deftest can-print-bigints
-  (is (= "12345678901234567890" (json/str 12345678901234567890))))
+  (is (= "12345678901234567890" (json/write-str 12345678901234567890))))
 
 (deftest can-print-json-arrays
-  (is (= "[1,2,3]" (json/str [1 2 3])))
-  (is (= "[1,2,3]" (json/str (list 1 2 3))))
-  (is (= "[1,2,3]" (json/str (sorted-set 1 2 3))))
-  (is (= "[1,2,3]" (json/str (seq [1 2 3])))))
+  (is (= "[1,2,3]" (json/write-str [1 2 3])))
+  (is (= "[1,2,3]" (json/write-str (list 1 2 3))))
+  (is (= "[1,2,3]" (json/write-str (sorted-set 1 2 3))))
+  (is (= "[1,2,3]" (json/write-str (seq [1 2 3])))))
 
 (deftest can-print-java-arrays
- (is (= "[1,2,3]" (json/str (into-array [1 2 3])))))
+ (is (= "[1,2,3]" (json/write-str (into-array [1 2 3])))))
 
 (deftest can-print-empty-arrays
-  (is (= "[]" (json/str [])))
-  (is (= "[]" (json/str (list))))
-  (is (= "[]" (json/str #{}))))
+  (is (= "[]" (json/write-str [])))
+  (is (= "[]" (json/write-str (list))))
+  (is (= "[]" (json/write-str #{}))))
 
 (deftest can-print-json-objects
-  (is (= "{\"a\":1,\"b\":2}" (json/str (sorted-map :a 1 :b 2)))))
+  (is (= "{\"a\":1,\"b\":2}" (json/write-str (sorted-map :a 1 :b 2)))))
 
 (deftest object-keys-must-be-strings
-  (is (= "{\"1\":1,\"2\":2") (json/str (sorted-map 1 1 2 2))))
+  (is (= "{\"1\":1,\"2\":2") (json/write-str (sorted-map 1 1 2 2))))
 
 (deftest can-print-empty-objects
-  (is (= "{}" (json/str {}))))
+  (is (= "{}" (json/write-str {}))))
 
 (deftest accept-sequence-of-nils
-  (is (= "[null,null,null]" (json/str [nil nil nil]))))
+  (is (= "[null,null,null]" (json/write-str [nil nil nil]))))
 
 (deftest error-on-nil-keys
-  (is (thrown? Exception (json/str {nil 1}))))
+  (is (thrown? Exception (json/write-str {nil 1}))))
 
 (deftest characters-in-symbols-are-escaped
-  (is (= "\"foo\\u1b1b\"" (json/str (symbol "foo\u1b1b")))))
+  (is (= "\"foo\\u1b1b\"" (json/write-str (symbol "foo\u1b1b")))))
 
 (deftest default-throws-on-eof
   (is (thrown? java.io.EOFException (json/read-str ""))))
@@ -230,7 +230,7 @@
   (is (= ::eof (json/read-str "" :eof-error? false :eof-value ::eof))))
 
 (deftest characters-in-map-keys-are-escaped
-  (is (= (json/str {"\"" 42}) "{\"\\\"\":42}")))
+  (is (= (json/write-str {"\"" 42}) "{\"\\\"\":42}")))
 
 ;;; Pretty-printer
 
@@ -246,4 +246,4 @@
     (time
      (dotimes [_ 100]
        (assert (= (json/read-str pass1-string false)
-                  (json/read-str (json/str (json/read-str pass1-string false)) false)))))))
+                  (json/read-str (json/write-str (json/read-str pass1-string false)) false)))))))
