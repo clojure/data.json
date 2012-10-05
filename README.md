@@ -14,7 +14,7 @@ Latest stable release is [0.2.0](https://github.com/clojure/data.json/tree/data.
 
 * [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
 
-* [Development Snapshot Versions](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~
+* [Development Snapshot Versions](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
 
 * [Development Snapshot Usage Instructions](http://dev.clojure.org/display/doc/Maven+Settings+and+Repositories)
 
