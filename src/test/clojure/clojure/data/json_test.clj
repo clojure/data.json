@@ -1,5 +1,5 @@
 (ns clojure.data.json-test
-  (:use clojure.test clojure.data.json-new))
+  (:use clojure.test clojure.data.json))
 
 #_(deftest can-read-from-pushback-reader
   (let [s (java.io.PushbackReader. (java.io.StringReader. "42"))]

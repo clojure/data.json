@@ -9,7 +9,7 @@
 (ns ^{:author "Stuart Sierra"
       :doc "JavaScript Object Notation (JSON) parser/generator.
   See http://www.json.org/"}
-  clojure.data.json-new
+  clojure.data.json
   (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
                     Writer StringReader EOFException)))
