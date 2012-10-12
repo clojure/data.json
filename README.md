@@ -117,22 +117,22 @@ Developer Information
 Change Log
 ========================================
 
-* Release 0.2.0
+* Release 0.2.0 on 2012-Oct-12
   * **Breaking API changes**: renamed core functions
   * New :key-fn and :value-fn permit flexible transformation
     of values when reading & writing JSON
   * Support for reading large integers as BigInt
   * Optional support for reading decimals as BigDecimal
   * Performance improvements
-* Release 0.1.3 on 2012-03-09
+* Release 0.1.3 on 2012-Mar-09
   * Fix writing strings containing characters outside the BMP
-* Release 0.1.2 on 2011-10-14
+* Release 0.1.2 on 2011-Oct-14
   * Better parsing of hexadecimal character escapes
   * Fix EOF-handling bug
   * Fix reflection warnings [DJSON-1](http://dev.clojure.org/jira/browse/DJSON-1)
-* Release 0.1.1 on 2011-07-01
+* Release 0.1.1 on 2011-Jul-01
   * Ensure that printing to `*out*` always uses a PrintWriter.
-* Release 0.1.0 on 2011-03-18
+* Release 0.1.0 on 2011-Mar-18
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
