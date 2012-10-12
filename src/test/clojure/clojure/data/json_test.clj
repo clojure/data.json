@@ -16,8 +16,19 @@
   (is (= 3.14159 (json/read-str "3.14159")))
   (is (= 6.022e23 (json/read-str "6.022e23"))))
 
+(deftest can-read-bigint
+  (is (= 123456789012345678901234567890N
+         (json/read-str "123456789012345678901234567890"))))
+
+(deftest can-write-bigint
+  (is (= "123456789012345678901234567890"
+         (json/write-str 123456789012345678901234567890N))))
+
 (deftest can-read-bigdec
   (is (= 3.14159M (json/read-str "3.14159" :bigdec true))))
+
+(deftest can-write-bigdec
+  (is (= "3.14159" (json/write-str 3.14159M))))
 
 (deftest can-read-null
   (is (= nil (json/read-str "null"))))
