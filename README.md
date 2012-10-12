@@ -1,4 +1,4 @@
-clojure.data.json
+data.json
 ========================================
 
 JSON parser/generator to/from Clojure data structures.
@@ -8,15 +8,9 @@ Follows the specification on http://json.org/
 
 
 Releases and Dependency Information
-========================================
+----------------------------------------
 
 Latest stable release is [0.2.0](https://github.com/clojure/data.json/tree/data.json-0.2.0)
-
-* [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
-
-* [Development Snapshot Versions](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
-
-* [Development Snapshot Usage Instructions](http://dev.clojure.org/display/doc/Maven+Settings+and+Repositories)
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
@@ -30,10 +24,18 @@ Latest stable release is [0.2.0](https://github.com/clojure/data.json/tree/data.
       <version>0.2.0</version>
     </dependency>
 
+Other versions:
+
+* [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
+
+* [Development Snapshots](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
+
+* [Development Snapshot Repositories](http://dev.clojure.org/display/doc/Maven+Settings+and+Repositories)
+
 
 
 Usage
-========================================
+----------------------------------------
 
 [API Documentation](http://clojure.github.com/data.json/)
 
@@ -54,13 +56,13 @@ into JSON is lossy.
 
 You can specify a `:key-fn` to convert map keys on the way in or out:
 
-    (json/write-str {:a 1 :b 2}
-                    :key-fn #(.toUpperCase %))
-    ;;=> "{\"A\":1,\"B\":2}"
-
     (json/read-str "{\"a\":1,\"b\":2}"
                    :key-fn keyword)
     ;;=> {:a 1, :b 2}
+
+    (json/write-str {:a 1 :b 2}
+                    :key-fn #(.toUpperCase %))
+    ;;=> "{\"A\":1,\"B\":2}"
 
     (json/read-str "{\"a\":1,\"b\":2}"
                    :key-fn #(keyword "com.example" %))
@@ -102,7 +104,7 @@ Other options are available. Refer to the [API Documentation](http://clojure.git
 
 
 Developer Information
-========================================
+----------------------------------------
 
 * [GitHub project](https://github.com/clojure/data.json)
 
@@ -115,7 +117,7 @@ Developer Information
 
 
 Change Log
-========================================
+----------------------------------------
 
 * Release 0.2.0 on 2012-Oct-12
   * **Breaking API changes**: renamed core functions
@@ -139,7 +141,7 @@ Change Log
 
 
 Copyright and License
-========================================
+----------------------------------------
 
 Copyright (c) Stuart Sierra, 2012. All rights reserved.  The use and
 distribution terms for this software are covered by the Eclipse Public
