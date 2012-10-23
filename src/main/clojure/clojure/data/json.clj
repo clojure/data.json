@@ -17,9 +17,9 @@
 
 ;;; JSON READER
 
-(def ^:dynamic ^:private *bigdec*)
-(def ^:dynamic ^:private *key-fn*)
-(def ^:dynamic ^:private *value-fn*)
+(def ^{:dynamic true :private true} *bigdec*)
+(def ^{:dynamic true :private true} *key-fn*)
+(def ^{:dynamic true :private true} *value-fn*)
 
 (defn- default-write-key-fn
   [x]
@@ -273,8 +273,8 @@
 
 ;;; JSON WRITER
 
-(def ^:dynamic ^:private *escape-unicode*)
-(def ^:dynamic ^:private *escape-slash*)
+(def ^{:dynamic true :private true} *escape-unicode*)
+(def ^{:dynamic true :private true} *escape-slash*)
 
 (defprotocol JSONWriter
   (-write [object out]
