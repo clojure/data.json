@@ -467,6 +467,8 @@
               *key-fn* key-fn]
       (pprint/write x :dispatch pprint-dispatch))))
 
+(load "json_compat_0_1")
+
 ;; Local Variables:
 ;; mode: clojure
 ;; eval: (define-clojure-indent (codepoint-case (quote defun)))
