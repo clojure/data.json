@@ -363,9 +363,14 @@
 ;; Numbers
 (extend java.lang.Number       JSONWriter {:-write write-plain})
 (extend clojure.lang.Ratio     JSONWriter {:-write write-ratio})
-(extend clojure.lang.BigInt    JSONWriter {:-write write-bignum})
 (extend java.math.BigInteger   JSONWriter {:-write write-bignum})
 (extend java.math.BigDecimal   JSONWriter {:-write write-bignum})
+;; Attempt to support Clojure 1.2.x:
+(when (try (.. Thread currentThread getContextClassLoader
+               (loadClass "clojure.lang.BigInt"))
+           (catch ClassNotFoundException _ false))
+  (extend clojure.lang.BigInt    JSONWriter {:-write write-bignum}))
+
 
 ;; Symbols, Keywords, and Strings
 (extend clojure.lang.Named     JSONWriter {:-write write-named})
