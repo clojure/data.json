@@ -366,10 +366,10 @@
 (extend java.math.BigInteger   JSONWriter {:-write write-bignum})
 (extend java.math.BigDecimal   JSONWriter {:-write write-bignum})
 ;; Attempt to support Clojure 1.2.x:
-(when (try (.. Thread currentThread getContextClassLoader
-               (loadClass "clojure.lang.BigInt"))
-           (catch ClassNotFoundException _ false))
-  (extend clojure.lang.BigInt    JSONWriter {:-write write-bignum}))
+(when-let [class (try (.. Thread currentThread getContextClassLoader
+                          (loadClass "clojure.lang.BigInt"))
+                      (catch ClassNotFoundException _ false))]
+  (extend class JSONWriter {:-write write-bignum}))
 
 
 ;; Symbols, Keywords, and Strings
