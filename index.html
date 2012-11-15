@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <title>clojure.data.json - JSON Utilities 0.1.4 API documentation</title>
+    <title>clojure.data.json - JSON Utilities 0.2.2 API documentation</title>
     <link href="static/favicon.png" rel="icon" />
     <link href="static/favicon.png" rel="shortcut icon" />
     <link media="all" type="text/css" href="static/clojure.css" rel="stylesheet" />
@@ -25,7 +25,7 @@ namespace.
       <div id="leftcolumn"><div style="text-align: center;"></div>
 <div class="menu">
   <div class="WikiCustomNav WikiElement wiki">
-    <span class="toc-header"><span id="project-name">JSON Utilities</span> <span id="version">0.1.4</span> API</span><br />
+    <span class="toc-header"><span id="project-name">JSON Utilities</span> <span id="version">0.2.2</span> API</span><br />
     <ul>
       <li><a class="wiki_link" href="index.html">Overview</a></li>
       <li><a class="wiki_link" href="api-index.html">API Index</a></li>
@@ -48,14 +48,9 @@ namespace.
   </div><div style="margin-left: 1em;" class="toc-section">
     <a href="#proto-section" style="margin-top: 3px;">Protocols</a>
     <div style="margin-left: 1em;" class="toc-entry">
-      <a class="toc-entry-anchor" href="#clojure.data.json/Read-JSON-From">Read-JSON-From</a>
+      <a class="toc-entry-anchor" href="#clojure.data.json/JSONWriter">JSONWriter</a>
       <div style="margin-left: 1em;" class="toc-subentry">
-        <a class="toc-subentry-anchor" href="#clojure.data.json/read-json-from">read-json-from</a>
-      </div>
-    </div><div style="margin-left: 1em;" class="toc-entry">
-      <a class="toc-entry-anchor" href="#clojure.data.json/Write-JSON">Write-JSON</a>
-      <div style="margin-left: 1em;" class="toc-subentry">
-        <a class="toc-subentry-anchor" href="#clojure.data.json/write-json">write-json</a>
+        <a class="toc-subentry-anchor" href="#clojure.data.json/-write">-write</a>
       </div>
     </div>
   </div><div style="margin-left: 1em;" class="toc-section">
@@ -67,30 +62,46 @@ namespace.
       <a class="toc-entry-anchor" href="#clojure.data.json/json-str">json-str</a>
       
     </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/pprint">pprint</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
       <a class="toc-entry-anchor" href="#clojure.data.json/pprint-json">pprint-json</a>
       
     </div><div style="margin-left: 1em;" class="toc-entry">
       <a class="toc-entry-anchor" href="#clojure.data.json/print-json">print-json</a>
       
     </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/read">read</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
       <a class="toc-entry-anchor" href="#clojure.data.json/read-json">read-json</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/read-str">read-str</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/write">write</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/write-json">write-json</a>
+      
+    </div><div style="margin-left: 1em;" class="toc-entry">
+      <a class="toc-entry-anchor" href="#clojure.data.json/write-str">write-str</a>
       
     </div>
   </div>
 </div>
 </div>
                 <div id="content-tag"><h1 id="overview">API for <span id="clojure.data.json">clojure.data.json</span>
-  - <span id="header-project">JSON Utilities</span> <span id="header-version">0.1.4</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
+  - <span id="header-project">JSON Utilities</span> <span id="header-version">0.2.2</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
   </h1>
 <span id="author-line">by <span id="author-name">Stuart Sierra</span><br /></span>
 <br />Full namespace name: <span id="long-name">clojure.data.json</span>
 <p></p>
 <h2>Overview</h2>
 <div id="home-page">Project home page is <a href="http://github.com/clojure/data.json/">http://github.com/clojure/data.json/</a></div>
-<pre id="namespace-docstr">JavaScript Object Notation (JSON) parser/writer.
-See <a href="http://www.json.org/">http://www.json.org/</a>
-To write JSON, use json-str, write-json, or print-json.
-To read JSON, use read-json.</pre>
+<pre id="namespace-docstr">JavaScript Object Notation (JSON) parser/generator.
+See <a href="http://www.json.org/">http://www.json.org/</a></pre>
 
 
 <br />
@@ -101,39 +112,15 @@ To read JSON, use read-json.</pre>
   <div id="proto-entry">
     <br />
     <hr />
-    <h2 id="clojure.data.json/Read-JSON-From">Read-JSON-From</h2>
+    <h2 id="clojure.data.json/JSONWriter">JSONWriter</h2>
     <span id="proto-type">Protocol</span><br />
     <pre id="proto-docstr"></pre>
-    Known implementations: <span id="proto-impls">java.io.PushbackReader, java.io.Reader, java.lang.String</span>
+    Known implementations: <span id="proto-impls">clojure.lang.BigInt, clojure.lang.Named, clojure.lang.Ratio, java.lang.Boolean, java.lang.CharSequence, java.lang.Number, java.math.BigDecimal, java.math.BigInteger, java.util.Collection, java.util.Map, nil, Object</span>
     <div id="proto-var-entry">
       <br />
-      <h3 id="clojure.data.json/read-json-from">read-json-from</h3>
+      <h3 id="clojure.data.json/-write">-write</h3>
       <span id="var-type">function</span><br />
-      <pre id="var-usage">Usage: (read-json-from input keywordize? eof-error? eof-value)
-</pre>
-      <pre id="var-docstr">Reads one JSON value from input String or Reader.
-If keywordize? is true, object keys will be converted to keywords.
-If eof-error? is true, empty input will throw an EOFException; if
-false EOF will return eof-value. </pre>
-      
-      
-      
-    </div>
-    
-    
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L160" id="proto-source">Source</a>
-  </div><div id="proto-entry">
-    <br />
-    <hr />
-    <h2 id="clojure.data.json/Write-JSON">Write-JSON</h2>
-    <span id="proto-type">Protocol</span><br />
-    <pre id="proto-docstr"></pre>
-    Known implementations: <span id="proto-impls">clojure.lang.ISeq, clojure.lang.Named, clojure.lang.Ratio, java.lang.Boolean, java.lang.CharSequence, java.lang.Number, java.math.BigDecimal, java.math.BigInteger, java.util.Collection, java.util.Map, nil, Object</span>
-    <div id="proto-var-entry">
-      <br />
-      <h3 id="clojure.data.json/write-json">write-json</h3>
-      <span id="var-type">function</span><br />
-      <pre id="var-usage">Usage: (write-json object out escape-unicode?)
+      <pre id="var-usage">Usage: (-write object out)
 </pre>
       <pre id="var-docstr">Print object to PrintWriter out as JSON</pre>
       
@@ -142,7 +129,7 @@ false EOF will return eof-value. </pre>
     </div>
     
     
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L197" id="proto-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L279" id="proto-source">Source</a>
   </div>
 </div>
 
@@ -156,14 +143,28 @@ false EOF will return eof-value. </pre>
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (json-str x &amp; options)
 </pre>
-    <pre id="var-docstr">Converts x to a JSON-formatted string.
+    <pre id="var-docstr">DEPRECATED; replaced by 'write-str'.
+
+Converts x to a JSON-formatted string.
 
 Valid options are:
   :escape-unicode false
       to turn of \uXXXX escapes of Unicode characters.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L306" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/6ee71009946731d89ef8f98e7b659fa82443b6a2/src/main/clojure/clojure/data/json_compat_0_1.clj#L42" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/pprint">pprint</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (pprint x &amp; options)
+</pre>
+    <pre id="var-docstr">Pretty-prints JSON representation of x to *out*. Options are the
+same as for write except :value-fn, which is not supported.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L462" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -171,14 +172,16 @@ Valid options are:
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (pprint-json x &amp; options)
 </pre>
-    <pre id="var-docstr">Pretty-prints JSON representation of x to *out*.
+    <pre id="var-docstr">DEPRECATED; replaced by 'pprint'.
+
+Pretty-prints JSON representation of x to *out*.
 
 Valid options are:
   :escape-unicode false
       to turn off \uXXXX escapes of Unicode characters.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L353" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/6ee71009946731d89ef8f98e7b659fa82443b6a2/src/main/clojure/clojure/data/json_compat_0_1.clj#L64" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -186,14 +189,58 @@ Valid options are:
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (print-json x &amp; options)
 </pre>
-    <pre id="var-docstr">Write JSON-formatted output to *out*.
+    <pre id="var-docstr">DEPRECATED; replaced by 'write' to *out*.
+
+Write JSON-formatted output to *out*.
 
 Valid options are:
   :escape-unicode false
       to turn off \uXXXX escapes of Unicode characters.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L319" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/6ee71009946731d89ef8f98e7b659fa82443b6a2/src/main/clojure/clojure/data/json_compat_0_1.clj#L53" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/read">read</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (read reader &amp; options)
+</pre>
+    <pre id="var-docstr">Reads a single item of JSON data from a java.io.Reader. Options are
+key-value pairs, valid options are:
+
+   :eof-error? boolean
+
+      If true (default) will throw exception if the stream is empty.
+
+   :eof-value Object
+
+      Object to return if the stream is empty and eof-error? is
+      false. Default is nil.
+
+   :bigdec boolean
+
+      If true use BigDecimal for decimal numbers instead of Double.
+      Default is false.
+
+   :key-fn function
+
+      Single-argument function called on JSON property names; return
+      value will replace the property names in the output. Default
+      is clojure.core/identity, use clojure.core/keyword to get
+      keyword properties.
+
+   :value-fn function
+
+      Function to transform values in the output. For each JSON
+      property, value-fn is called with two arguments: the property
+      name (transformed by key-fn) and the value. The return value
+      of value-fn will replace the value in the output. If value-fn
+      returns itself, the property will be omitted from the output.
+      The default value-fn returns the value unchanged.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L224" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -203,13 +250,93 @@ Valid options are:
        (read-json input keywordize?)
        (read-json input keywordize? eof-error? eof-value)
 </pre>
-    <pre id="var-docstr">Reads one JSON value from input String or Reader.
-If keywordize? is true (default), object keys will be converted to
-keywords.  If eof-error? is true (default), empty input will throw
-an EOFException; if false EOF will return eof-value. </pre>
+    <pre id="var-docstr">DEPRECATED; replaced by read-str.
+
+Reads one JSON value from input String or Reader. If keywordize? is
+true (default), object keys will be converted to keywords. If
+eof-error? is true (default), empty input will throw an
+EOFException; if false EOF will return eof-value.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/f0dd129f31b1f7cd26c3d9483696cade74d4e832/src/main/clojure/clojure/data/json.clj#L182" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/6ee71009946731d89ef8f98e7b659fa82443b6a2/src/main/clojure/clojure/data/json_compat_0_1.clj#L10" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/read-str">read-str</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (read-str string &amp; options)
+</pre>
+    <pre id="var-docstr">Reads one JSON value from input String. Options are the same as for
+read.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L268" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/write">write</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (write x writer &amp; options)
+</pre>
+    <pre id="var-docstr">Write JSON-formatted output to a java.io.Writer. Options are
+key-value pairs, valid options are:
+
+ :escape-unicode boolean
+
+    If true (default) non-ASCII characters are escaped as \uXXXX
+
+ :escape-slash boolean
+
+    If true (default) the slash / is escaped as \/
+
+ :key-fn function
+
+     Single-argument function called on map keys; return value will
+     replace the property names in the output. Must return a
+     string. Default calls clojure.core/name on symbols and
+     keywords and clojure.core/str on everything else.
+
+ :value-fn function
+
+     Function to transform values before writing. For each
+     key-value pair in the input, called with two arguments: the
+     key (BEFORE transformation by key-fn) and the value. The
+     return value of value-fn will replace the value in the output.
+     If the return value is a number, boolean, string, or nil it
+     will be included literally in the output. If the return value
+     is a non-map collection, it will be processed recursively. If
+     the return value is a map, it will be processed recursively,
+     calling value-fn again on its key-value pairs. If value-fn
+     returns itself, the key-value pair will be omitted from the
+     output.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L386" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/write-json">write-json</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (write-json x out escape-unicode?)
+</pre>
+    <pre id="var-docstr">DEPRECATED; replaced by 'write'.
+
+Print object to PrintWriter out as JSON</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/6ee71009946731d89ef8f98e7b659fa82443b6a2/src/main/clojure/clojure/data/json_compat_0_1.clj#L35" id="var-source">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/write-str">write-str</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (write-str x &amp; options)
+</pre>
+    <pre id="var-docstr">Converts x to a JSON-formatted string. Options are the same as
+write.</pre>
+    
+    
+    <a href="https://github.com/clojure/data.json/blob/41fee9ab111798a89dc2b2782a2b838f41956e1e/src/main/clojure/clojure/data/json.clj#L430" id="var-source">Source</a>
   </div>
 </div>
 
