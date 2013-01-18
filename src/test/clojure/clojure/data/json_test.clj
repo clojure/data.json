@@ -238,11 +238,11 @@
   (is (thrown? java.io.EOFException (json/read-str ""))))
 
 (deftest throws-eof-in-unterminated-array
-  (is (thrown-with-msg? java.io.EOFException #"end-of-file inside array" 
+  (is (thrown? java.io.EOFException
         (json/read-str "[1, "))))
 
 (deftest throws-eof-in-unterminated-string
-  (is (thrown-with-msg? java.io.EOFException #"end-of-file inside string" 
+  (is (thrown? java.io.EOFException
         (json/read-str "\"missing end quote"))))
 
 (deftest accept-eof
