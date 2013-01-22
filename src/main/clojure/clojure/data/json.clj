@@ -311,16 +311,17 @@
     (when (seq m)
       (let [[k v] (first x)
             out-key (*key-fn* k)
-            out-value (*value-fn* k v)]
+            out-value (*value-fn* k v)
+            nxt (next x)]
         (when-not (string? out-key)
           (throw (Exception. "JSON object keys must be strings")))
         (when-not (= *value-fn* out-value)
           (write-string out-key out)
           (.print out \:)
-          (-write out-value out)))
-      (let [nxt (next x)]
+          (-write out-value out)
+          (when (seq nxt)
+            (.print out \,)))
         (when (seq nxt)
-          (.print out \,)
           (recur nxt)))))
   (.print out \}))
 

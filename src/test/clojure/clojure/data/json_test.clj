@@ -110,7 +110,13 @@
                     :value-fn (fn thisfn [k v]
                                 (if (= :date k)
                                   thisfn
-                                  v))))))
+                                  v)))))
+  (is (= "{\"c\":1,\"e\":2}"
+         (json/write-str {:a nil, :b nil, :c 1, :d nil, :e 2, :f nil}
+                         :value-fn (fn remove-nils [k v]
+                                     (if (nil? v)
+                                       remove-nils
+                                       v))))))
 
 (declare pass1-string)
 
