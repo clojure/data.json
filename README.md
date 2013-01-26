@@ -10,18 +10,18 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.0](https://github.com/clojure/data.json/tree/data.json-0.2.0)
+Latest stable release is [0.2.1](https://github.com/clojure/data.json/tree/data.json-0.2.1)
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-    [org.clojure/data.json "0.2.0"]
+    [org.clojure/data.json "0.2.1"]
 
 [Maven](http://maven.apache.org/) dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.0</version>
+      <version>0.2.1</version>
     </dependency>
 
 Other versions:
@@ -119,8 +119,15 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release 0.2.1 on 2012-Oct-26
+  * Restores backwards-compatibility with 0.1.x releases. The older
+    0.1.x APIs are marked as deprecated in their documentation. They
+    will be removed in a future release.
 * Release 0.2.0 on 2012-Oct-12
-  * **Breaking API changes**: renamed core functions
+  * **Not recommended for use**: this release introduced breaking API
+    changes (renaming core functions) without any path for
+    backwards-compatibility. Applications with transitive dependencies
+    on both the 0.2.x and 0.1.x APIs cannot use this version.
   * New :key-fn and :value-fn permit flexible transformation
     of values when reading & writing JSON
   * Support for reading large integers as BigInt
