@@ -103,6 +103,15 @@
                                   (java.sql.Date/valueOf v)
                                   v))))))
 
+(deftest convert-key-and-values
+  (is (= {:number 42 :created (java.sql.Date. 55 6 12)}
+         (json/read-str "{\"number\": 42, \"date\": \"1955-07-12\"}"
+                    :key-fn keyword
+                    :pair-fn (fn [k v]
+                                (if (= :date k)
+                                  [:created (java.sql.Date/valueOf v)]
+                                  [k v]))))))
+
 (deftest omit-values
   (is (= {:number 42}
          (json/read-str "{\"number\": 42, \"date\": \"1955-07-12\"}"

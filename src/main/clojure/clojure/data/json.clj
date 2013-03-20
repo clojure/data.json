@@ -20,6 +20,7 @@
 (def ^{:dynamic true :private true} *bigdec*)
 (def ^{:dynamic true :private true} *key-fn*)
 (def ^{:dynamic true :private true} *value-fn*)
+(def ^{:dynamic true :private true} *pair-fn*)
 
 (defn- default-write-key-fn
   [x]
@@ -30,6 +31,8 @@
         :else (str x)))
 
 (defn- default-value-fn [k v] v)
+
+(defn- default-pair-fn [k v] [k v])
 
 (declare -read)
 
@@ -95,7 +98,8 @@
                   (throw (Exception. "JSON error (non-string key in object)")))
                 (recur nil
                        (let [out-key (*key-fn* key)
-                             out-value (*value-fn* out-key element)]
+                             out-value (*value-fn* out-key element)
+                             [out-key out-value] (*pair-fn* out-key out-value)]
                          (if (= *value-fn* out-value)
                            result
                            (assoc! result out-key out-value)))))))))))
@@ -253,16 +257,28 @@
         name (transformed by key-fn) and the value. The return value
         of value-fn will replace the value in the output. If value-fn
         returns itself, the property will be omitted from the output.
-        The default value-fn returns the value unchanged."
+        The default value-fn returns the value unchanged.
+
+     :pair-fn  function
+
+        Function to transform key/value pairs in the output.For each JSON
+        property,pair-fn is called with two arguments: the property
+        name (transformed by key-fn) and the value (transformed by
+        value-fn).Ther return value of pair-fn must be a vector in the form
+        of [key value].The return value of pair-fn will replace the key
+        and value in the output.The default pair-fn returns the pair unchanged.
+"
   [reader & options]
-  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
+  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn pair-fn]
          :or {bigdec false
               eof-error? true
               key-fn identity
+              pair-fn default-pair-fn
               value-fn default-value-fn}} options]
     (binding [*bigdec* bigdec
               *key-fn* key-fn
-              *value-fn* value-fn]
+              *value-fn* value-fn
+              *pair-fn* pair-fn]
       (-read (PushbackReader. reader) eof-error? eof-value))))
 
 (defn read-str
