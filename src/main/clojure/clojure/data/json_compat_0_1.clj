@@ -37,7 +37,7 @@
 
   Print object to PrintWriter out as JSON"
   [x out escape-unicode?]
-  (write x *out* :escape-unicode escape-unicode?))
+  (write x out :escape-unicode escape-unicode?))
 
 (defn json-str
   "DEPRECATED; replaced by 'write-str'.
