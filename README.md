@@ -10,18 +10,18 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.1](https://github.com/clojure/data.json/tree/data.json-0.2.1)
+Latest stable release is [0.2.2](https://github.com/clojure/data.json/tree/data.json-0.2.2)
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-    [org.clojure/data.json "0.2.1"]
+    [org.clojure/data.json "0.2.2"]
 
 [Maven](http://maven.apache.org/) dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.2</version>
     </dependency>
 
 Other versions:
@@ -119,6 +119,9 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release 0.2.2 on 2013-Apr-07
+  * Fix [DJSON-7](http://dev.clojure.org/jira/browse/DJSON-7): extra commas when removing key/value pairs)
+  * Fix [DJSON-8](http://dev.clojure.org/jira/browse/DJSON-8): wrong output stream in `write-json`
 * Release 0.2.1 on 2012-Oct-26
   * Restores backwards-compatibility with 0.1.x releases. The older
     0.1.x APIs are marked as deprecated in their documentation. They
