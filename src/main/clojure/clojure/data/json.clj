@@ -307,7 +307,7 @@
 
 (defn- write-object [m ^PrintWriter out] 
   (.print out \{)
-  (loop [x m]
+  (loop [x m, have-printed-kv false]
     (when (seq m)
       (let [[k v] (first x)
             out-key (*key-fn* k)
@@ -315,14 +315,17 @@
             nxt (next x)]
         (when-not (string? out-key)
           (throw (Exception. "JSON object keys must be strings")))
-        (when-not (= *value-fn* out-value)
-          (write-string out-key out)
-          (.print out \:)
-          (-write out-value out)
+        (if-not (= *value-fn* out-value)
+          (do
+            (when have-printed-kv
+              (.print out \,))
+            (write-string out-key out)
+            (.print out \:)
+            (-write out-value out)
+            (when (seq nxt)
+              (recur nxt true)))
           (when (seq nxt)
-            (.print out \,)))
-        (when (seq nxt)
-          (recur nxt)))))
+            (recur nxt have-printed-kv))))))
   (.print out \}))
 
 (defn- write-array [s ^PrintWriter out]
