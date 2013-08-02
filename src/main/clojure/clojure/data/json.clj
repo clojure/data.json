@@ -45,6 +45,8 @@
         [(remove #{(codepoint \") (codepoint \\) (codepoint \/)}
                  (range 32 127))
          result]
+        (= test :separators)
+        ['(16r2028 16r2029) result]
         :else
         [(int test) result]))
 
@@ -274,6 +276,7 @@
 ;;; JSON WRITER
 
 (def ^{:dynamic true :private true} *escape-unicode*)
+(def ^{:dynamic true :private true} *escape-separators*)
 (def ^{:dynamic true :private true} *escape-slash*)
 
 (defprotocol JSONWriter
@@ -298,6 +301,10 @@
           \newline   (.append sb "\\n")
           \return    (.append sb "\\r")
           \tab       (.append sb "\\t")
+          ;; Unicode characters that Javascript forbids raw in strings
+          :separators (if *escape-separators*
+                        (.append sb (format "\\u%04x" cp))
+                        (.appendCodePoint sb cp))
           ;; Any other character is Unicode
           (if *escape-unicode*
             (.append sb (format "\\u%04x" cp)) ; Hexadecimal-escaped
@@ -395,6 +402,13 @@
 
        If true (default) non-ASCII characters are escaped as \\uXXXX
 
+    :escape-separators boolean
+
+       If true (default) the Unicode characters U+2028 and U+2029 will
+       be escaped as \\u2028 and \\u2029 even if :escape-unicode is
+       false. (These two characters are valid in pure JSON but are not
+       valid in JavaScript strings.)
+
     :escape-slash boolean
 
        If true (default) the slash / is escaped as \\/
@@ -420,12 +434,14 @@
         returns itself, the key-value pair will be omitted from the
         output."
   [x ^Writer writer & options]
-  (let [{:keys [escape-unicode escape-slash key-fn value-fn]
+  (let [{:keys [escape-unicode escape-separators escape-slash key-fn value-fn]
          :or {escape-unicode true
+              escape-separators true
               escape-slash true
               key-fn default-write-key-fn
               value-fn default-value-fn}} options]
     (binding [*escape-unicode* escape-unicode
+              *escape-separators* escape-separators
               *escape-slash* escape-slash
               *key-fn* key-fn
               *value-fn* value-fn]

@@ -199,6 +199,10 @@
 (deftest print-nonescaped-unicode
   (is (= "\"\u1234\u4567\"" (json/write-str "\u1234\u4567" :escape-unicode false))))
 
+(deftest escape-special-separators
+  (is (= "\"\\u2028\\u2029\"" (json/write-str "\u2028\u2029" :escape-unicode false)))
+  (is (= "\"\u2028\u2029\"" (json/write-str "\u2028\u2029" :escape-separators false))))
+
 (deftest print-json-null
   (is (= "null" (json/write-str nil))))
 
