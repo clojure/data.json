@@ -129,7 +129,7 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     </div>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L279" id="proto-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L282" id="proto-source">Source</a>
   </div>
 </div>
 
@@ -164,7 +164,7 @@ Valid options are:
 same as for write except :value-fn, which is not supported.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L463" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L482" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -240,7 +240,7 @@ key-value pairs, valid options are:
       The default value-fn returns the value unchanged.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L224" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L226" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -270,7 +270,7 @@ EOFException; if false EOF will return eof-value.</pre>
 read.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L268" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L270" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -284,6 +284,13 @@ key-value pairs, valid options are:
  :escape-unicode boolean
 
     If true (default) non-ASCII characters are escaped as \uXXXX
+
+ :escape-separators boolean
+
+    If true (default) the Unicode characters U+2028 and U+2029 will
+    be escaped as \u2028 and \u2029 even if :escape-unicode is
+    false. (These two characters are valid in pure JSON but are not
+    valid in JavaScript strings.)
 
  :escape-slash boolean
 
@@ -311,7 +318,7 @@ key-value pairs, valid options are:
      output.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L387" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L397" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -336,7 +343,7 @@ Print object to PrintWriter out as JSON</pre>
 write.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/20dac1124fbeb0723cd6d349adfd4421f7241f53/src/main/clojure/clojure/data/json.clj#L431" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L450" id="var-source">Source</a>
   </div>
 </div>
 
