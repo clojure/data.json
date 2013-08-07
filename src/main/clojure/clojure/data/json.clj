@@ -434,9 +434,7 @@
         the return value is a map, it will be processed recursively,
         calling value-fn again on its key-value pairs. If value-fn
         returns itself, the key-value pair will be omitted from the
-        output. This option does not apply to non-map collections.
-
-"
+        output. This option does not apply to non-map collections."
   [x ^Writer writer & options]
   (let [{:keys [escape-unicode escape-separators escape-slash key-fn value-fn]
          :or {escape-unicode true
