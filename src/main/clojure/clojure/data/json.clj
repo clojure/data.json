@@ -250,12 +250,14 @@
 
      :value-fn function
 
-        Function to transform values in the output. For each JSON
-        property, value-fn is called with two arguments: the property
-        name (transformed by key-fn) and the value. The return value
-        of value-fn will replace the value in the output. If value-fn
-        returns itself, the property will be omitted from the output.
-        The default value-fn returns the value unchanged."
+        Function to transform values in maps (\"objects\" in JSON) in
+        the output. For each JSON property, value-fn is called with
+        two arguments: the property name (transformed by key-fn) and
+        the value. The return value of value-fn will replace the value
+        in the output. If value-fn returns itself, the property will
+        be omitted from the output. The default value-fn returns the
+        value unchanged. This option does not apply to non-map
+        collections."
   [reader & options]
   (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
          :or {bigdec false
@@ -422,8 +424,8 @@
 
     :value-fn function
 
-        Function to transform values before writing. For each
-        key-value pair in the input, called with two arguments: the
+        Function to transform values in maps before writing. For each
+        key-value pair in an input map, called with two arguments: the
         key (BEFORE transformation by key-fn) and the value. The
         return value of value-fn will replace the value in the output.
         If the return value is a number, boolean, string, or nil it
@@ -432,7 +434,9 @@
         the return value is a map, it will be processed recursively,
         calling value-fn again on its key-value pairs. If value-fn
         returns itself, the key-value pair will be omitted from the
-        output."
+        output. This option does not apply to non-map collections.
+
+"
   [x ^Writer writer & options]
   (let [{:keys [escape-unicode escape-separators escape-slash key-fn value-fn]
          :or {escape-unicode true
