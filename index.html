@@ -129,7 +129,7 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     </div>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L282" id="proto-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L284" id="proto-source">Source</a>
   </div>
 </div>
 
@@ -164,7 +164,7 @@ Valid options are:
 same as for write except :value-fn, which is not supported.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L482" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L484" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -232,15 +232,17 @@ key-value pairs, valid options are:
 
    :value-fn function
 
-      Function to transform values in the output. For each JSON
-      property, value-fn is called with two arguments: the property
-      name (transformed by key-fn) and the value. The return value
-      of value-fn will replace the value in the output. If value-fn
-      returns itself, the property will be omitted from the output.
-      The default value-fn returns the value unchanged.</pre>
+      Function to transform values in maps ("objects" in JSON) in
+      the output. For each JSON property, value-fn is called with
+      two arguments: the property name (transformed by key-fn) and
+      the value. The return value of value-fn will replace the value
+      in the output. If value-fn returns itself, the property will
+      be omitted from the output. The default value-fn returns the
+      value unchanged. This option does not apply to non-map
+      collections.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L226" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L226" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -270,7 +272,7 @@ EOFException; if false EOF will return eof-value.</pre>
 read.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L270" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L272" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -305,8 +307,8 @@ key-value pairs, valid options are:
 
  :value-fn function
 
-     Function to transform values before writing. For each
-     key-value pair in the input, called with two arguments: the
+     Function to transform values in maps before writing. For each
+     key-value pair in an input map, called with two arguments: the
      key (BEFORE transformation by key-fn) and the value. The
      return value of value-fn will replace the value in the output.
      If the return value is a number, boolean, string, or nil it
@@ -315,10 +317,10 @@ key-value pairs, valid options are:
      the return value is a map, it will be processed recursively,
      calling value-fn again on its key-value pairs. If value-fn
      returns itself, the key-value pair will be omitted from the
-     output.</pre>
+     output. This option does not apply to non-map collections.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L397" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L399" id="var-source">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -343,7 +345,7 @@ Print object to PrintWriter out as JSON</pre>
 write.</pre>
     
     
-    <a href="https://github.com/clojure/data.json/blob/64f7d311bb5e8a5a6032ad071c675b4c257dc3fc/src/main/clojure/clojure/data/json.clj#L450" id="var-source">Source</a>
+    <a href="https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L452" id="var-source">Source</a>
   </div>
 </div>
 
