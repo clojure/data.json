@@ -1,6 +1,6 @@
 {:namespaces
  ({:source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json/clojure.data.json-api.html",
    :name "clojure.data.json",
@@ -26,9 +26,9 @@
    :name "pprint",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L484",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L484",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/pprint",
    :doc
@@ -68,9 +68,9 @@
    :name "read",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L226",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L226",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/read",
    :doc
@@ -99,9 +99,9 @@
    :name "read-str",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L272",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L272",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/read-str",
    :doc
@@ -113,13 +113,13 @@
    :name "write",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L399",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L399",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/write",
    :doc
-   "Write JSON-formatted output to a java.io.Writer. Options are\nkey-value pairs, valid options are:\n\n :escape-unicode boolean\n\n    If true (default) non-ASCII characters are escaped as \\uXXXX\n\n :escape-separators boolean\n\n    If true (default) the Unicode characters U+2028 and U+2029 will\n    be escaped as \\u2028 and \\u2029 even if :escape-unicode is\n    false. (These two characters are valid in pure JSON but are not\n    valid in JavaScript strings.)\n\n :escape-slash boolean\n\n    If true (default) the slash / is escaped as \\/\n\n :key-fn function\n\n     Single-argument function called on map keys; return value will\n     replace the property names in the output. Must return a\n     string. Default calls clojure.core/name on symbols and\n     keywords and clojure.core/str on everything else.\n\n :value-fn function\n\n     Function to transform values in maps before writing. For each\n     key-value pair in an input map, called with two arguments: the\n     key (BEFORE transformation by key-fn) and the value. The\n     return value of value-fn will replace the value in the output.\n     If the return value is a number, boolean, string, or nil it\n     will be included literally in the output. If the return value\n     is a non-map collection, it will be processed recursively. If\n     the return value is a map, it will be processed recursively,\n     calling value-fn again on its key-value pairs. If value-fn\n     returns itself, the key-value pair will be omitted from the\n     output. This option does not apply to non-map collections.",
+   "Write JSON-formatted output to a java.io.Writer. Options are\nkey-value pairs, valid options are:\n\n :escape-unicode boolean\n\n    If true (default) non-ASCII characters are escaped as \\uXXXX\n\n :escape-js-separators boolean\n\n    If true (default) the Unicode characters U+2028 and U+2029 will\n    be escaped as \\u2028 and \\u2029 even if :escape-unicode is\n    false. (These two characters are valid in pure JSON but are not\n    valid in JavaScript strings.)\n\n :escape-slash boolean\n\n    If true (default) the slash / is escaped as \\/\n\n :key-fn function\n\n     Single-argument function called on map keys; return value will\n     replace the property names in the output. Must return a\n     string. Default calls clojure.core/name on symbols and\n     keywords and clojure.core/str on everything else.\n\n :value-fn function\n\n     Function to transform values in maps before writing. For each\n     key-value pair in an input map, called with two arguments: the\n     key (BEFORE transformation by key-fn) and the value. The\n     return value of value-fn will replace the value in the output.\n     If the return value is a number, boolean, string, or nil it\n     will be included literally in the output. If the return value\n     is a non-map collection, it will be processed recursively. If\n     the return value is a map, it will be processed recursively,\n     calling value-fn again on its key-value pairs. If value-fn\n     returns itself, the key-value pair will be omitted from the\n     output. This option does not apply to non-map collections.",
    :var-type "function",
    :line 399,
    :file "src/main/clojure/clojure/data/json.clj"}
@@ -141,9 +141,9 @@
    :name "write-str",
    :namespace "clojure.data.json",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L452",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L452",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/write-str",
    :doc
@@ -153,9 +153,9 @@
    :file "src/main/clojure/clojure/data/json.clj"}
   {:file "src/main/clojure/clojure/data/json.clj",
    :raw-source-url
-   "https://github.com/clojure/data.json/raw/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj",
+   "https://github.com/clojure/data.json/raw/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj",
    :source-url
-   "https://github.com/clojure/data.json/blob/1b0d829077f607ead37269f78fd6f04a3b2462d7/src/main/clojure/clojure/data/json.clj#L284",
+   "https://github.com/clojure/data.json/blob/25a2a986490b2b2a5b84da6400fb5f2a987b9e90/src/main/clojure/clojure/data/json.clj#L284",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/JSONWriter",
    :namespace "clojure.data.json",
