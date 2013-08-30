@@ -201,7 +201,7 @@
 
 (deftest escape-special-separators
   (is (= "\"\\u2028\\u2029\"" (json/write-str "\u2028\u2029" :escape-unicode false)))
-  (is (= "\"\u2028\u2029\"" (json/write-str "\u2028\u2029" :escape-separators false))))
+  (is (= "\"\u2028\u2029\"" (json/write-str "\u2028\u2029" :escape-js-separators false))))
 
 (deftest print-json-null
   (is (= "null" (json/write-str nil))))
