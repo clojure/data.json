@@ -10,18 +10,18 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.2](https://github.com/clojure/data.json/tree/data.json-0.2.2)
+Latest stable release is [0.2.3](https://github.com/clojure/data.json/tree/data.json-0.2.3)
 
 [Leiningen](https://github.com/technomancy/leiningen) dependency information:
 
-    [org.clojure/data.json "0.2.2"]
+    [org.clojure/data.json "0.2.3"]
 
 [Maven](http://maven.apache.org/) dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.2</version>
+      <version>0.2.3</version>
     </dependency>
 
 Other versions:
@@ -119,6 +119,9 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release 0.2.3 on 2013-Aug-30
+  * Enhancement [DJSON-9](http://dev.clojure.org/jira/browse/DJSON-9): option to escape U+2028 and U+2029
+  * Fix [DJSON-11](http://dev.clojure.org/jira/browse/DJSON-11): printing unnecessary commas with value-fn
 * Release 0.2.2 on 2013-Apr-07
   * Fix [DJSON-7](http://dev.clojure.org/jira/browse/DJSON-7): extra commas when removing key/value pairs)
   * Fix [DJSON-8](http://dev.clojure.org/jira/browse/DJSON-8): wrong output stream in `write-json`
