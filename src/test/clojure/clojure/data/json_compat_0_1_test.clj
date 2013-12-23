@@ -189,7 +189,7 @@
   (is (= "{\"a\":1,\"b\":2}" (json-str (sorted-map :a 1 :b 2)))))
 
 (deftest object-keys-must-be-strings
-  (is (= "{\"1\":1,\"2\":2") (json-str (sorted-map 1 1 2 2))))
+  (is (= "{\"1\":1,\"2\":2}" (json-str (sorted-map 1 1 2 2)))))
 
 (deftest can-print-empty-objects
   (is (= "{}" (json-str {}))))
