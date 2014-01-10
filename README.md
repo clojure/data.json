@@ -10,23 +10,23 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.3]
+Latest stable release is [0.2.4]
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "0.2.3"]
+    [org.clojure/data.json "0.2.4"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.3</version>
+      <version>0.2.4</version>
     </dependency>
 
 [Gradle] dependency information:
 
-    compile "org.clojure:data.json:0.2.3"
+    compile "org.clojure:data.json:0.2.4"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
@@ -130,7 +130,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* Development version 0.2.4-SNAPSHOT (current Git `master`)
+* Development version 0.2.5-SNAPSHOT (current Git `master`)
+* Release [0.2.4] on 2014-Jan-10
   * Small change in behavior: `clojure.data.json/pprint` now adds a
     newline after its output just like `clojure.core/pprint`
   * Fix [DJSON-13]: flush output after pprint
@@ -177,6 +178,7 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
+[0.2.4](https://github.com/clojure/data.json/tree/data.json-0.2.4)
 [0.2.3](https://github.com/clojure/data.json/tree/data.json-0.2.3)
 [0.2.2](https://github.com/clojure/data.json/tree/data.json-0.2.2)
 [0.2.1](https://github.com/clojure/data.json/tree/data.json-0.2.1)
