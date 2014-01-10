@@ -26,7 +26,7 @@ Latest stable release is [0.2.3]
 
 [Gradle] dependency information:
 
-    compile "com.stuartsierra:component:0.2.1"
+    compile "org.clojure:data.json:0.2.3"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
