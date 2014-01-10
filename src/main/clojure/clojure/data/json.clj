@@ -494,7 +494,8 @@
     (binding [*escape-unicode* escape-unicode
               *escape-slash* escape-slash
               *key-fn* key-fn]
-      (pprint/write x :dispatch pprint-dispatch))))
+      (pprint/with-pprint-dispatch pprint-dispatch
+        (pprint/pprint x)))))
 
 (load "json_compat_0_1")
 

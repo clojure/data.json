@@ -218,9 +218,6 @@
   (let [x (read-json pass1-string false)]
     (is (= x (read-json (with-out-str (pprint-json x)) false)))))
 
-(deftest can-pretty-print-nonescaped-unicode
-  (is (= "\"\u1234\u4567\"" (with-out-str (pprint-json "\u1234\u4567" :escape-unicode false)))))
-
 (defn benchmark []
   (dotimes [_ 8]
     (time

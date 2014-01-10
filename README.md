@@ -120,8 +120,11 @@ Change Log
 ----------------------------------------
 
 * Release 0.2.4-SNAPSHOT (current Git `master`)
-  * Fix [DJSON-15]: bad syntax in test
+  * Small change in behavior: `clojure.data.json/pprint` now adds a
+    newline after its output just like `clojure.core/pprint`
+  * Fix [DJSON-13]: flush output after pprint
   * FIX [DJSON-14]: handle EOF inside character escape
+  * Fix [DJSON-15]: bad syntax in test
 * Release 0.2.3 on 2013-Aug-30
   * Enhancement [DJSON-9]: option to escape U+2028 and U+2029
   * Fix [DJSON-11]: printing unnecessary commas with value-fn

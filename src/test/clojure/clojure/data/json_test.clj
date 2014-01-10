@@ -272,7 +272,9 @@
     (is (= x (json/read-str (with-out-str (json/pprint x)))))))
 
 (deftest pretty-print-nonescaped-unicode
-  (is (= "\"\u1234\u4567\"" (with-out-str (json/pprint "\u1234\u4567" :escape-unicode false)))))
+  (is (= "\"\u1234\u4567\"\n"
+         (with-out-str
+           (json/pprint "\u1234\u4567" :escape-unicode false)))))
 
 (defn benchmark []
   (dotimes [_ 8]
