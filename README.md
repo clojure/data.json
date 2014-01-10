@@ -158,6 +158,8 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
+[DJSON-14]: http://dev.clojure.org/jira/browse/DJSON-14
+[DJSON-13]: http://dev.clojure.org/jira/browse/DJSON-13
 [DJSON-11]: http://dev.clojure.org/jira/browse/DJSON-11
 [DJSON-9]: http://dev.clojure.org/jira/browse/DJSON-9
 [DJSON-8]: http://dev.clojure.org/jira/browse/DJSON-8
