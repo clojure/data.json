@@ -119,12 +119,14 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release 0.2.4-SNAPSHOT (current Git `master`)
+  * Fix [DJSON-15]: bad syntax in test
 * Release 0.2.3 on 2013-Aug-30
-  * Enhancement [DJSON-9](http://dev.clojure.org/jira/browse/DJSON-9): option to escape U+2028 and U+2029
-  * Fix [DJSON-11](http://dev.clojure.org/jira/browse/DJSON-11): printing unnecessary commas with value-fn
+  * Enhancement [DJSON-9]: option to escape U+2028 and U+2029
+  * Fix [DJSON-11]: printing unnecessary commas with value-fn
 * Release 0.2.2 on 2013-Apr-07
-  * Fix [DJSON-7](http://dev.clojure.org/jira/browse/DJSON-7): extra commas when removing key/value pairs)
-  * Fix [DJSON-8](http://dev.clojure.org/jira/browse/DJSON-8): wrong output stream in `write-json`
+  * Fix [DJSON-7]: extra commas when removing key/value pairs)
+  * Fix [DJSON-8]: wrong output stream in `write-json`
 * Release 0.2.1 on 2012-Oct-26
   * Restores backwards-compatibility with 0.1.x releases. The older
     0.1.x APIs are marked as deprecated in their documentation. They
@@ -144,12 +146,20 @@ Change Log
 * Release 0.1.2 on 2011-Oct-14
   * Better parsing of hexadecimal character escapes
   * Fix EOF-handling bug
-  * Fix reflection warnings [DJSON-1](http://dev.clojure.org/jira/browse/DJSON-1)
+  * Fix [DJSON-1]: reflection warnings
 * Release 0.1.1 on 2011-Jul-01
   * Ensure that printing to `*out*` always uses a PrintWriter.
 * Release 0.1.0 on 2011-Mar-18
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
+
+[DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
+[DJSON-11]: http://dev.clojure.org/jira/browse/DJSON-11
+[DJSON-9]: http://dev.clojure.org/jira/browse/DJSON-9
+[DJSON-8]: http://dev.clojure.org/jira/browse/DJSON-8
+[DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
+[DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
+
 
 
 
