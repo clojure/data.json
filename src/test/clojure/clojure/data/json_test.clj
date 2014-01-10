@@ -255,6 +255,10 @@
   (is (thrown? java.io.EOFException
         (json/read-str "\"missing end quote"))))
 
+(deftest throws-eof-in-escaped-chars
+  (is (thrown? java.io.EOFException
+        (json/read-str "\"\\"))))
+
 (deftest accept-eof
   (is (= ::eof (json/read-str "" :eof-error? false :eof-value ::eof))))
 

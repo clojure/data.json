@@ -119,6 +119,8 @@
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial backslash.
   (let [c (.read stream)]
+    (when (neg? c)
+      (throw (EOFException. "JSON error (end-of-file inside escaped char)")))
     (codepoint-case c
       (\" \\ \/) (char c)
       \b \backspace
