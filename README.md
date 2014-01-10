@@ -117,6 +117,8 @@ Developer Information
 
 * [GitHub project](https://github.com/clojure/data.json)
 
+* [How to contribute](http://dev.clojure.org/display/community/Contributing)
+
 * [Bug Tracker](http://dev.clojure.org/jira/browse/DJSON)
 
 * [Continuous Integration](http://build.clojure.org/job/data.json/)
