@@ -178,15 +178,15 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
-[0.2.4](https://github.com/clojure/data.json/tree/data.json-0.2.4)
-[0.2.3](https://github.com/clojure/data.json/tree/data.json-0.2.3)
-[0.2.2](https://github.com/clojure/data.json/tree/data.json-0.2.2)
-[0.2.1](https://github.com/clojure/data.json/tree/data.json-0.2.1)
-[0.2.0](https://github.com/clojure/data.json/tree/data.json-0.2.0)
-[0.1.3](https://github.com/clojure/data.json/tree/data.json-0.1.3)
-[0.1.2](https://github.com/clojure/data.json/tree/data.json-0.1.2)
-[0.1.1](https://github.com/clojure/data.json/tree/data.json-0.1.1)
-[0.1.0](https://github.com/clojure/data.json/tree/data.json-0.1.0)
+[0.2.4]: https://github.com/clojure/data.json/tree/data.json-0.2.4
+[0.2.3]: https://github.com/clojure/data.json/tree/data.json-0.2.3
+[0.2.2]: https://github.com/clojure/data.json/tree/data.json-0.2.2
+[0.2.1]: https://github.com/clojure/data.json/tree/data.json-0.2.1
+[0.2.0]: https://github.com/clojure/data.json/tree/data.json-0.2.0
+[0.1.3]: https://github.com/clojure/data.json/tree/data.json-0.1.3
+[0.1.2]: https://github.com/clojure/data.json/tree/data.json-0.1.2
+[0.1.1]: https://github.com/clojure/data.json/tree/data.json-0.1.1
+[0.1.0]: https://github.com/clojure/data.json/tree/data.json-0.1.0
 
 
 Copyright and License
