@@ -13,7 +13,7 @@
   (:refer-clojure :exclude (read))
   (:require [clojure.pprint :as pprint])
   (:import (java.io PrintWriter PushbackReader StringWriter
-                    Writer StringReader EOFException)))
+                    Writer StringReader EOFException Reader)))
 
 ;;; JSON READER
 
@@ -62,26 +62,64 @@
      ~@(when (odd? (count clauses))
          [(last clauses)])))
 
-(defn- read-array [^PushbackReader stream]
+(defn- create-reader [^Reader reader]
+  {:reader (PushbackReader. reader)
+   :position (atom [1 0])})
+
+(defn- advance-line [[line _]]
+  [(inc line) 0])
+
+(defn- reverse-line [[line _]]
+  [(dec line) -1])
+
+(defn- advance-column [[line column]]
+  [line (inc column)])
+
+(defn- reverse-column [[line column]]
+  [line (dec column)])
+
+(defn- read-char [stream]
+  (let [{:keys [^PushbackReader reader position]} stream
+        c (.read reader)]
+    (when-let [c-char (when-not (neg? c) (char c))]
+      (if (#{\newline \return} c-char)
+        (swap! position advance-line)
+        (swap! position advance-column))
+      
+      (when (= c-char \return) 
+        (let [next-c (.read reader)]
+          (when-not (= (char next-c) \newline)
+            (.unread reader next-c)))))
+    c))
+
+(defn- unread-char [stream ^Integer c]
+  (let [{:keys [^PushbackReader reader position]} stream]
+    (when-let [c-char (when-not (neg? c) (char c))]
+      (if (#{\newline \return} c-char)
+        (swap! position reverse-line)
+        (swap! position reverse-column)))
+    (.unread reader c)))
+
+(defn- read-array [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [result (transient [])]
-    (let [c (.read stream)]
+    (let [c (read-char stream)]
       (when (neg? c)
         (throw (EOFException. "JSON error (end-of-file inside array)")))
       (codepoint-case c
         :whitespace (recur result)
         \, (recur result)
         \] (persistent! result)
-        (do (.unread stream c)
+        (do (unread-char stream c)
             (let [element (-read stream true nil)]
               (recur (conj! result element))))))))
 
-(defn- read-object [^PushbackReader stream]
+(defn- read-object [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [key nil, result (transient {})]
-    (let [c (.read stream)]
+    (let [c (read-char stream)]
       (when (neg? c)
         (throw (EOFException. "JSON error (end-of-file inside object)")))
       (codepoint-case c
@@ -95,7 +133,7 @@
              (persistent! result)
              (throw (Exception. "JSON error (key missing value in object)")))
 
-        (do (.unread stream c)
+        (do (unread-char stream c)
             (let [element (-read stream true nil)]
               (if (nil? key)
                 (if (string? element)
@@ -108,23 +146,23 @@
                            result
                            (assoc! result out-key out-value)))))))))))
 
-(defn- read-hex-char [^PushbackReader stream]
+(defn- read-hex-char [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial "\u".  Reads the next four characters from the stream.
-  (let [a (.read stream)
-        b (.read stream)
-        c (.read stream)
-        d (.read stream)]
+  (let [a (read-char stream)
+        b (read-char stream)
+        c (read-char stream)
+        d (read-char stream)]
     (when (or (neg? a) (neg? b) (neg? c) (neg? d))
       (throw (EOFException.
               "JSON error (end-of-file inside Unicode character escape)")))
     (let [s (str (char a) (char b) (char c) (char d))]
       (char (Integer/parseInt s 16)))))
 
-(defn- read-escaped-char [^PushbackReader stream]
+(defn- read-escaped-char [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial backslash.
-  (let [c (.read stream)]
+  (let [c (read-char stream)]
     (when (neg? c)
       (throw (EOFException. "JSON error (end-of-file inside escaped char)")))
     (codepoint-case c
@@ -136,12 +174,12 @@
       \t \tab
       \u (read-hex-char stream))))
 
-(defn- read-quoted-string [^PushbackReader stream]
+(defn- read-quoted-string [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening quotation mark.
   (let [buffer (StringBuilder.)]
     (loop []
-      (let [c (.read stream)]
+      (let [c (read-char stream)]
         (when (neg? c)
           (throw (EOFException. "JSON error (end-of-file inside string)")))
         (codepoint-case c
@@ -163,10 +201,10 @@
     (bigdec string)
     (Double/valueOf string)))
 
-(defn- read-number [^PushbackReader stream]
+(defn- read-number [stream]
   (let [buffer (StringBuilder.)
         decimal? (loop [decimal? false]
-                   (let [c (.read stream)]
+                   (let [c (read-char stream)]
                      (codepoint-case c
                        (\- \+ \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
                        (do (.append buffer (char c))
@@ -174,16 +212,16 @@
                        (\e \E \.)
                        (do (.append buffer (char c))
                            (recur true))
-                       (do (.unread stream c)
+                       (do (unread-char stream c)
                            decimal?))))]
     (if decimal?
       (read-decimal (str buffer))
       (read-integer (str buffer)))))
 
 (defn- -read
-  [^PushbackReader stream eof-error? eof-value]
+  [stream eof-error? eof-value]
   (loop []
-    (let [c (.read stream)]
+    (let [c (read-char stream)]
       (if (neg? c) ;; Handle end-of-stream
         (if eof-error?
           (throw (EOFException. "JSON error (end-of-file)"))
@@ -194,31 +232,31 @@
 
           ;; Read numbers
           (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
-          (do (.unread stream c)
+          (do (unread-char stream c)
               (read-number stream))
 
           ;; Read strings
           \" (read-quoted-string stream)
 
           ;; Read null as nil
-          \n (if (and (= (codepoint \u) (.read stream))
-                      (= (codepoint \l) (.read stream))
-                      (= (codepoint \l) (.read stream)))
+          \n (if (and (= (codepoint \u) (read-char stream))
+                      (= (codepoint \l) (read-char stream))
+                      (= (codepoint \l) (read-char stream)))
                nil
                (throw (Exception. "JSON error (expected null)")))
 
           ;; Read true
-          \t (if (and (= (codepoint \r) (.read stream))
-                      (= (codepoint \u) (.read stream))
-                      (= (codepoint \e) (.read stream)))
+          \t (if (and (= (codepoint \r) (read-char stream))
+                      (= (codepoint \u) (read-char stream))
+                      (= (codepoint \e) (read-char stream)))
                true
                (throw (Exception. "JSON error (expected true)")))
 
           ;; Read false
-          \f (if (and (= (codepoint \a) (.read stream))
-                      (= (codepoint \l) (.read stream))
-                      (= (codepoint \s) (.read stream))
-                      (= (codepoint \e) (.read stream)))
+          \f (if (and (= (codepoint \a) (read-char stream))
+                      (= (codepoint \l) (read-char stream))
+                      (= (codepoint \s) (read-char stream))
+                      (= (codepoint \e) (read-char stream)))
                false
                (throw (Exception. "JSON error (expected false)")))
 
@@ -275,7 +313,7 @@
     (binding [*bigdec* bigdec
               *key-fn* key-fn
               *value-fn* value-fn]
-      (-read (PushbackReader. reader) eof-error? eof-value))))
+      (-read (create-reader reader) eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for
