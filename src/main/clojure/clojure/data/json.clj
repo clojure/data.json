@@ -36,11 +36,17 @@
 (defmacro ^:private codepoint [c]
   (int c))
 
+(def ^:private whitespace
+  (list (codepoint \tab)
+        (codepoint \newline)
+        (codepoint \return)
+        (codepoint \space)))
+
 (defn- codepoint-clause [[test result]]
   (cond (list? test)
         [(map int test) result]
         (= test :whitespace)
-        ['(9 10 13 32) result]
+        [whitespace result]
         (= test :simple-ascii)
         [(remove #{(codepoint \") (codepoint \\) (codepoint \/)}
                  (range 32 127))
