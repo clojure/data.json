@@ -20,6 +20,7 @@
 (def ^{:dynamic true :private true} *bigdec*)
 (def ^{:dynamic true :private true} *key-fn*)
 (def ^{:dynamic true :private true} *value-fn*)
+(def ^{:dynamic true :private true} *track-pos*)
 
 (defn- default-write-key-fn
   [x]
@@ -117,57 +118,65 @@
 
 (defmacro ^:private defnested [n args & body]
   `(def ^:private ~n
-     (fn ~args
+     (fn ~args 
        (apply push-position ~args)
        (try
          (apply (fn ~args ~@body) ~args)
          (finally (apply pop-position ~args))))))
 
+(defn- track-pos [result positions]
+  (if *track-pos*
+    (vary-meta result assoc :pos positions)
+    result))
+
 (defnested read-array [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [result (transient [])]
-    (let [c (read-char stream)]
+  (loop [result (transient []) positions (transient [])]
+    (let [c (read-char stream)
+          start @(:position stream)]
       (when (neg? c)
         (throw (eof-exception stream "JSON error (end-of-file inside array)")))
       (codepoint-case c
-        :whitespace (recur result)
-        \, (recur result)
-        \] (persistent! result)
+        :whitespace (recur result positions)
+        \, (recur result positions)
+        \] (track-pos (persistent! result) (persistent! positions))
         (do (unread-char stream c)
             (let [element (-read stream true nil)]
-              (recur (conj! result element))))))))
+              (recur (conj! result element) (conj! positions start))))))))
 
 (defnested read-object [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [key nil, result (transient {})]
-    (let [c (read-char stream)]
+  (loop [key nil result (transient {}) positions (transient {})]
+    (let [c (read-char stream)
+          start @(:position stream)]
       (when (neg? c)
         (throw (eof-exception stream "JSON error (end-of-file inside object)")))
       (codepoint-case c
-        :whitespace (recur key result)
+        :whitespace (recur key result positions)
 
-        \, (recur nil result)
+        \, (recur nil result positions)
 
-        \: (recur key result)
+        \: (recur key result positions)
 
         \} (if (nil? key)
-             (persistent! result)
+             (track-pos (persistent! result) (persistent! positions))
              (throw (exception stream "JSON error (key missing value in object)")))
 
         (do (unread-char stream c)
             (let [element (-read stream true nil)]
               (if (nil? key)
                 (if (string? element)
-                  (recur element result)
+                  (recur element result positions)
                   (throw (exception stream "JSON error (non-string key in object)")))
-                (recur nil
-                       (let [out-key (*key-fn* key)
-                             out-value (*value-fn* out-key element)]
+                (let [out-key (*key-fn* key)
+                      out-value (*value-fn* out-key element)]
+                  (recur nil
                          (if (= *value-fn* out-value)
                            result
-                           (assoc! result out-key out-value)))))))))))
+                           (assoc! result out-key out-value))
+                         (assoc! positions out-key start))))))))))
 
 (defnested read-hex-char [stream]
   ;; Expects to be called with the head of the stream AFTER the
@@ -328,16 +337,34 @@
         in the output. If value-fn returns itself, the property will
         be omitted from the output. The default value-fn returns the
         value unchanged. This option does not apply to non-map
-        collections."
+        collections.
+  
+     :track-pos? boolean
+  
+        If true, positional metadata will be attached to each vector and map
+        that composes the result.  This information is attached under the
+        keyword :pos in the metadata map.  The positional data is stored as
+        two element vectors, [line column], that reflects the starting
+        position in the stream where a given member began.
+  
+        For arrays, an array of equal length is stored under :pos such
+        that the position corresponds to the data in the same index.  For 
+        maps, a map containing the same keys is store under :pos where
+        the key values correspond to the starting position of the map value.
+  
+        By default, :track-pos? is set to false."
+
   [reader & options]
-  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
+  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn track-pos?]
          :or {bigdec false
               eof-error? true
               key-fn identity
-              value-fn default-value-fn}} options]
+              value-fn default-value-fn
+              track-pos? false}} options]
     (binding [*bigdec* bigdec
               *key-fn* key-fn
-              *value-fn* value-fn]
+              *value-fn* value-fn
+              *track-pos* track-pos?]
       (-read (create-reader reader) eof-error? eof-value))))
 
 (defn read-str
