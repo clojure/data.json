@@ -64,7 +64,8 @@
 
 (defn- create-reader [^Reader reader]
   {:reader (PushbackReader. reader)
-   :position (atom [1 0])})
+   :position (atom [1 0])
+   :start (atom '())})
 
 (defn- advance-line [[line _]]
   [(inc line) 0])
@@ -105,10 +106,24 @@
     (Exception. (printf "%s: line %d, column %d" text line column))))
 
 (defn- eof-exception [stream text]
-  (let [[line column] @(:position stream)]
-    (EOFException. (printf "%s: line %d, column %d" text line column))))
+  (let [[line column] (peek @(:start stream))]
+    (EOFException. (printf "%s: starting from line %d, column %d" text line column))))
 
-(defn- read-array [stream]
+(defn- push-position [stream & _]
+  (swap! (:start stream) conj @(:position stream)))
+
+(defn- pop-position [stream & _]
+  (swap! (:start stream) pop))
+
+(defmacro ^:private defnested [n args & body]
+  `(def ^:private ~n
+     (fn ~args
+       (apply push-position ~args)
+       (try
+         (apply (fn ~args ~@body) ~args)
+         (finally (apply pop-position ~args))))))
+
+(defnested read-array [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [result (transient [])]
@@ -123,7 +138,7 @@
             (let [element (-read stream true nil)]
               (recur (conj! result element))))))))
 
-(defn- read-object [stream]
+(defnested read-object [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [key nil, result (transient {})]
@@ -154,7 +169,7 @@
                            result
                            (assoc! result out-key out-value)))))))))))
 
-(defn- read-hex-char [stream]
+(defnested read-hex-char [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial "\u".  Reads the next four characters from the stream.
   (let [a (read-char stream)
@@ -168,7 +183,7 @@
     (let [s (str (char a) (char b) (char c) (char d))]
       (char (Integer/parseInt s 16)))))
 
-(defn- read-escaped-char [stream]
+(defnested read-escaped-char [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial backslash.
   (let [c (read-char stream)]
@@ -183,7 +198,7 @@
       \t \tab
       \u (read-hex-char stream))))
 
-(defn- read-quoted-string [stream]
+(defnested read-quoted-string [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening quotation mark.
   (let [buffer (StringBuilder.)]
@@ -227,7 +242,7 @@
       (read-decimal (str buffer))
       (read-integer (str buffer)))))
 
-(defn- -read
+(defnested -read
   [stream eof-error? eof-value]
   (loop []
     (let [c (read-char stream)]
