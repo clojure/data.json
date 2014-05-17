@@ -100,13 +100,21 @@
         (swap! position reverse-column)))
     (.unread reader c)))
 
+(defn- exception [stream text]
+  (let [[line column] @(:position stream)]
+    (Exception. (printf "%s: line %d, column %d" text line column))))
+
+(defn- eof-exception [stream text]
+  (let [[line column] @(:position stream)]
+    (EOFException. (printf "%s: line %d, column %d" text line column))))
+
 (defn- read-array [stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [result (transient [])]
     (let [c (read-char stream)]
       (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside array)")))
+        (throw (eof-exception stream "JSON error (end-of-file inside array)")))
       (codepoint-case c
         :whitespace (recur result)
         \, (recur result)
@@ -121,7 +129,7 @@
   (loop [key nil, result (transient {})]
     (let [c (read-char stream)]
       (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside object)")))
+        (throw (eof-exception stream "JSON error (end-of-file inside object)")))
       (codepoint-case c
         :whitespace (recur key result)
 
@@ -131,14 +139,14 @@
 
         \} (if (nil? key)
              (persistent! result)
-             (throw (Exception. "JSON error (key missing value in object)")))
+             (throw (exception stream "JSON error (key missing value in object)")))
 
         (do (unread-char stream c)
             (let [element (-read stream true nil)]
               (if (nil? key)
                 (if (string? element)
                   (recur element result)
-                  (throw (Exception. "JSON error (non-string key in object)")))
+                  (throw (exception stream "JSON error (non-string key in object)")))
                 (recur nil
                        (let [out-key (*key-fn* key)
                              out-value (*value-fn* out-key element)]
@@ -154,8 +162,9 @@
         c (read-char stream)
         d (read-char stream)]
     (when (or (neg? a) (neg? b) (neg? c) (neg? d))
-      (throw (EOFException.
-              "JSON error (end-of-file inside Unicode character escape)")))
+      (throw (eof-exception
+               stream
+               "JSON error (end-of-file inside Unicode character escape)")))
     (let [s (str (char a) (char b) (char c) (char d))]
       (char (Integer/parseInt s 16)))))
 
@@ -164,7 +173,7 @@
   ;; initial backslash.
   (let [c (read-char stream)]
     (when (neg? c)
-      (throw (EOFException. "JSON error (end-of-file inside escaped char)")))
+      (throw (eof-exception stream "JSON error (end-of-file inside escaped char)")))
     (codepoint-case c
       (\" \\ \/) (char c)
       \b \backspace
@@ -181,7 +190,7 @@
     (loop []
       (let [c (read-char stream)]
         (when (neg? c)
-          (throw (EOFException. "JSON error (end-of-file inside string)")))
+          (throw (eof-exception stream "JSON error (end-of-file inside string)")))
         (codepoint-case c
           \" (str buffer)
           \\ (do (.append buffer (read-escaped-char stream))
@@ -224,7 +233,7 @@
     (let [c (read-char stream)]
       (if (neg? c) ;; Handle end-of-stream
         (if eof-error?
-          (throw (EOFException. "JSON error (end-of-file)"))
+          (throw (eof-exception stream "JSON error (end-of-file)"))
           eof-value)
         (codepoint-case
           c
@@ -243,14 +252,14 @@
                       (= (codepoint \l) (read-char stream))
                       (= (codepoint \l) (read-char stream)))
                nil
-               (throw (Exception. "JSON error (expected null)")))
+               (throw (exception stream "JSON error (expected null)")))
 
           ;; Read true
           \t (if (and (= (codepoint \r) (read-char stream))
                       (= (codepoint \u) (read-char stream))
                       (= (codepoint \e) (read-char stream)))
                true
-               (throw (Exception. "JSON error (expected true)")))
+               (throw (exception stream "JSON error (expected true)")))
 
           ;; Read false
           \f (if (and (= (codepoint \a) (read-char stream))
@@ -258,7 +267,7 @@
                       (= (codepoint \s) (read-char stream))
                       (= (codepoint \e) (read-char stream)))
                false
-               (throw (Exception. "JSON error (expected false)")))
+               (throw (exception stream "JSON error (expected false)")))
 
           ;; Read JSON objects
           \{ (read-object stream)
@@ -266,8 +275,9 @@
           ;; Read JSON arrays
           \[ (read-array stream)
 
-          (throw (Exception.
-                  (str "JSON error (unexpected character): " (char c)))))))))
+          (throw (exception
+                   stream
+                   (str "JSON error (unexpected character): " (char c)))))))))
 
 (defn read
   "Reads a single item of JSON data from a java.io.Reader. Options are
