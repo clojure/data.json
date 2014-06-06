@@ -354,6 +354,22 @@
 (defn- write-bignum [x ^PrintWriter out]
   (.print out (str x)))
 
+(defn- write-float [^Float x ^PrintWriter out]
+  (cond (.isInfinite x)
+        (throw (Exception. "JSON error: cannot write infinite Float"))
+        (.isNaN x)
+        (throw (Exception. "JSON error: cannot write Float NaN"))
+        :else
+        (.print out x)))
+
+(defn- write-double [^Double x ^PrintWriter out]
+  (cond (.isInfinite x)
+        (throw (Exception. "JSON error: cannot write infinite Double"))
+        (.isNaN x)
+        (throw (Exception. "JSON error: cannot write Double NaN"))
+        :else
+        (.print out x)))
+
 (defn- write-plain [x ^PrintWriter out]
   (.print out x))
 
@@ -376,10 +392,17 @@
 (extend java.lang.Boolean      JSONWriter {:-write write-plain})
 
 ;; Numbers
-(extend java.lang.Number       JSONWriter {:-write write-plain})
+(extend java.lang.Byte         JSONWriter {:-write write-plain})
+(extend java.lang.Short        JSONWriter {:-write write-plain})
+(extend java.lang.Integer      JSONWriter {:-write write-plain})
+(extend java.lang.Long         JSONWriter {:-write write-plain})
+(extend java.lang.Float        JSONWriter {:-write write-float})
+(extend java.lang.Double       JSONWriter {:-write write-double})
 (extend clojure.lang.Ratio     JSONWriter {:-write write-ratio})
 (extend java.math.BigInteger   JSONWriter {:-write write-bignum})
 (extend java.math.BigDecimal   JSONWriter {:-write write-bignum})
+(extend java.util.concurrent.atomic.AtomicInteger JSONWriter {:-write write-plain})
+(extend java.util.concurrent.atomic.AtomicLong    JSONWriter {:-write write-plain})
 ;; Attempt to support Clojure 1.2.x:
 (when-let [class (try (.. Thread currentThread getContextClassLoader
                           (loadClass "clojure.lang.BigInt"))

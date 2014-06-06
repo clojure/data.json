@@ -212,6 +212,36 @@
 (deftest print-bigints
   (is (= "12345678901234567890" (json/write-str 12345678901234567890))))
 
+(deftest error-on-NaN
+  (is (thrown? Exception (json/write-str Float/NaN)))
+  (is (thrown? Exception (json/write-str Double/NaN))))
+
+(deftest error-on-infinity
+  (is (thrown? Exception (json/write-str Float/POSITIVE_INFINITY)))
+  (is (thrown? Exception (json/write-str Float/NEGATIVE_INFINITY)))
+  (is (thrown? Exception (json/write-str Double/POSITIVE_INFINITY)))
+  (is (thrown? Exception (json/write-str Double/NEGATIVE_INFINITY))))
+
+(defn- double-value [_ v]
+  (if (and (instance? Double v)
+           (or (.isNaN ^Double v)
+               (.isInfinite ^Double v)))
+    (str v)
+    v))
+
+(deftest special-handler-for-double-NaN
+  (is (= "{\"double\":\"NaN\"}"
+         (json/write-str {:double Double/NaN}
+                         :value-fn double-value))))
+
+(deftest special-handler-for-double-infinity
+  (is (= "{\"double\":\"Infinity\"}"
+         (json/write-str {:double Double/POSITIVE_INFINITY}
+                         :value-fn double-value)))
+  (is (= "{\"double\":\"-Infinity\"}"
+         (json/write-str {:double Double/NEGATIVE_INFINITY}
+                         :value-fn double-value))))
+
 (deftest print-json-arrays
   (is (= "[1,2,3]" (json/write-str [1 2 3])))
   (is (= "[1,2,3]" (json/write-str (list 1 2 3))))
