@@ -279,6 +279,6 @@
 (defn benchmark []
   (dotimes [_ 8]
     (time
-     (dotimes [_ 100]
-       (assert (= (json/read-str pass1-string false)
-                  (json/read-str (json/write-str (json/read-str pass1-string false)) false)))))))
+     (dotimes [_ 1000]
+       (assert (= (json/read-str pass1-string)
+                  (json/read-str (json/write-str (json/read-str pass1-string)))))))))
