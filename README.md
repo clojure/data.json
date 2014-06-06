@@ -131,6 +131,8 @@ Change Log
 ----------------------------------------
 
 * Development version 0.2.5-SNAPSHOT (current Git `master`)
+  * Fix [DJSON-17]: throw exception on Infinite or NaN floating-point
+    values. Old behavior could produce invalid JSON.
 * Release [0.2.4] on 2014-Jan-10
   * Small change in behavior: `clojure.data.json/pprint` now adds a
     newline after its output just like `clojure.core/pprint`
@@ -169,6 +171,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-17]: http://dev.clojure.org/jira/browse/DJSON-17
 [DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
 [DJSON-14]: http://dev.clojure.org/jira/browse/DJSON-14
 [DJSON-13]: http://dev.clojure.org/jira/browse/DJSON-13
