@@ -10,23 +10,23 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.4]
+Latest stable release is [0.2.5]
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "0.2.4"]
+    [org.clojure/data.json "0.2.5"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.4</version>
+      <version>0.2.5</version>
     </dependency>
 
 [Gradle] dependency information:
 
-    compile "org.clojure:data.json:0.2.4"
+    compile "org.clojure:data.json:0.2.5"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
@@ -48,9 +48,10 @@ Usage
 
 [API Documentation](http://clojure.github.com/data.json/)
 
-Examples:
+Example usage:
 
-    (require '[clojure.data.json :as json])
+    (ns example
+      (:require [clojure.data.json :as json])
 
 To convert to/from JSON strings, use `json/write-str` and `json/read-str`:
 
@@ -62,6 +63,9 @@ To convert to/from JSON strings, use `json/write-str` and `json/read-str`:
 
 Note that these operations are not symmetric: converting Clojure data
 into JSON is lossy.
+
+
+### Converting Key/Value Types
 
 You can specify a `:key-fn` to convert map keys on the way in or out:
 
@@ -91,9 +95,21 @@ value, and it returns the updated value.
                    :key-fn keyword) 
     ;;=> {:number 42, :date #inst "2012-06-02T04:00:00.000-00:00"}
 
-Note that if you specify both a `:key-fn` and a `:value-fn` when
-reading, the value-fn is called *after* the key has been processed by
-the key-fn. The reverse is true when writing:
+Be aware that `:value-fn` only works on maps (JSON objects). If your
+root data structure is, for example, a vector of dates, you will need
+to pre- or post-process it outside of data.json. [clojure.walk] may be
+useful for this.
+
+[clojure.walk]: http://clojure.github.io/clojure/clojure.walk-api.html
+
+
+### Order of key-fn / value-fn
+
+If you specify both a `:key-fn` and a `:value-fn` when **reading**,
+the value-fn is called **after** the key has been processed by the
+key-fn.
+
+The **reverse** is true when **writing**:
 
     (defn my-value-writer [key value]
       (if (= key :date)
@@ -105,10 +121,18 @@ the key-fn. The reverse is true when writing:
                     :key-fn name) 
     ;;=> "{\"number\":42,\"date\":\"2012-06-02\"}"
 
+
+### Reading/Writing a Stream
+
 You can also read JSON directly from a java.io.Reader with `json/read`
 and write JSON directly to a java.io.Writer with `json/write`.
 
-Other options are available. Refer to the [API Documentation](http://clojure.github.com/data.json/) for details.
+
+### More
+
+Other options are available. Refer to the [API Documentation] for details.
+
+[API Documentation]: http://clojure.github.com/data.json/
 
 
 
@@ -130,7 +154,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* Development version 0.2.5-SNAPSHOT (current Git `master`)
+* Development version 0.2.6-SNAPSHOT (current Git `master`)
+* Release [0.2.5] on 2014-Jun-13
   * Fix [DJSON-17]: throw exception on Infinite or NaN floating-point
     values. Old behavior could produce invalid JSON.
 * Release [0.2.4] on 2014-Jan-10
@@ -181,6 +206,7 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
+[0.2.5]: https://github.com/clojure/data.json/tree/data.json-0.2.5
 [0.2.4]: https://github.com/clojure/data.json/tree/data.json-0.2.4
 [0.2.3]: https://github.com/clojure/data.json/tree/data.json-0.2.3
 [0.2.2]: https://github.com/clojure/data.json/tree/data.json-0.2.2
@@ -190,6 +216,7 @@ Change Log
 [0.1.2]: https://github.com/clojure/data.json/tree/data.json-0.1.2
 [0.1.1]: https://github.com/clojure/data.json/tree/data.json-0.1.1
 [0.1.0]: https://github.com/clojure/data.json/tree/data.json-0.1.0
+
 
 
 Copyright and License
