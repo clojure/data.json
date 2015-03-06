@@ -10,23 +10,23 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.5]
+Latest stable release is [0.2.6]
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "0.2.5"]
+    [org.clojure/data.json "0.2.6"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.5</version>
+      <version>0.2.6</version>
     </dependency>
 
 [Gradle] dependency information:
 
-    compile "org.clojure:data.json:0.2.5"
+    compile "org.clojure:data.json:0.2.6"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
@@ -154,7 +154,9 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* Development version 0.2.6-SNAPSHOT (current Git `master`)
+* Development version 0.2.7-SNAPSHOT (current Git `master`)
+* Release [0.2.6] on 2015-Mar-6
+  * Modify build to produce an AOT package with classifier "aot"
 * Release [0.2.5] on 2014-Jun-13
   * Fix [DJSON-17]: throw exception on Infinite or NaN floating-point
     values. Old behavior could produce invalid JSON.
@@ -206,6 +208,7 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
+[0.2.6]: https://github.com/clojure/data.json/tree/data.json-0.2.6
 [0.2.5]: https://github.com/clojure/data.json/tree/data.json-0.2.5
 [0.2.4]: https://github.com/clojure/data.json/tree/data.json-0.2.4
 [0.2.3]: https://github.com/clojure/data.json/tree/data.json-0.2.3
