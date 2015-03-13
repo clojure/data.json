@@ -51,7 +51,7 @@ Usage
 Example usage:
 
     (ns example
-      (:require [clojure.data.json :as json])
+      (:require [clojure.data.json :as json]))
 
 To convert to/from JSON strings, use `json/write-str` and `json/read-str`:
 
