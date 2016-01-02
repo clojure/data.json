@@ -151,23 +151,24 @@
    :namespace "clojure.data.json",
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/write-str"}
-  {:name "JSONWriter",
-   :doc nil,
-   :var-type "protocol",
-   :line 286,
-   :namespace "clojure.data.json",
-   :wiki-url
-   "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/JSONWriter",
+  {:raw-source-url
+   "https://github.com/clojure/data.json/raw/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj",
+   :name "JSONWriter",
+   :file "src/main/clojure/clojure/data/json.clj",
    :source-url
    "https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L286",
-   :raw-source-url
-   "https://github.com/clojure/data.json/raw/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj",
-   :file "src/main/clojure/clojure/data/json.clj"}
+   :line 286,
+   :var-type "protocol",
+   :arglists nil,
+   :doc nil,
+   :namespace "clojure.data.json",
+   :wiki-url
+   "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/JSONWriter"}
   {:name "-write",
    :doc "Print object to PrintWriter out as JSON",
-   :arglists ([object out]),
    :var-type "function",
    :namespace "clojure.data.json",
+   :arglists ([object out]),
    :wiki-url
    "http://clojure.github.com/data.json//clojure.data.json-api.html#clojure.data.json/-write",
    :source-url nil,
