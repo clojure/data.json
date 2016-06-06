@@ -89,6 +89,9 @@ namespace.
       <a href="#clojure.data.json/write-str" class="toc-entry-anchor">write-str</a>
       
     </div>
+  </div><div class="toc-section" style="margin-left: 1em;">
+    <a style="margin-top: 3px;" href="#"></a>
+    
   </div>
 </div>
 </div>
@@ -123,6 +126,7 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
       <pre id="var-usage">Usage: (-write object out)
 </pre>
       <pre id="var-docstr">Print object to PrintWriter out as JSON</pre>
+      <pre id="var-specs"></pre>
       
       
       
@@ -150,6 +154,7 @@ Converts x to a JSON-formatted string.
 Valid options are:
   :escape-unicode false
       to turn of \uXXXX escapes of Unicode characters.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/d3cce5b200031cf22603c13a9a39e3939651d344/src/main/clojure/clojure/data/json_compat_0_1.clj#L42">Source</a>
@@ -162,6 +167,7 @@ Valid options are:
 </pre>
     <pre id="var-docstr">Pretty-prints JSON representation of x to *out*. Options are the
 same as for write except :value-fn, which is not supported.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L509">Source</a>
@@ -179,6 +185,7 @@ Pretty-prints JSON representation of x to *out*.
 Valid options are:
   :escape-unicode false
       to turn off \uXXXX escapes of Unicode characters.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/d3cce5b200031cf22603c13a9a39e3939651d344/src/main/clojure/clojure/data/json_compat_0_1.clj#L64">Source</a>
@@ -196,6 +203,7 @@ Write JSON-formatted output to *out*.
 Valid options are:
   :escape-unicode false
       to turn off \uXXXX escapes of Unicode characters.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/d3cce5b200031cf22603c13a9a39e3939651d344/src/main/clojure/clojure/data/json_compat_0_1.clj#L53">Source</a>
@@ -240,6 +248,7 @@ key-value pairs, valid options are:
       be omitted from the output. The default value-fn returns the
       value unchanged. This option does not apply to non-map
       collections.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L228">Source</a>
@@ -258,6 +267,7 @@ Reads one JSON value from input String or Reader. If keywordize? is
 true (default), object keys will be converted to keywords. If
 eof-error? is true (default), empty input will throw an
 EOFException; if false EOF will return eof-value.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/d3cce5b200031cf22603c13a9a39e3939651d344/src/main/clojure/clojure/data/json_compat_0_1.clj#L10">Source</a>
@@ -270,6 +280,7 @@ EOFException; if false EOF will return eof-value.</pre>
 </pre>
     <pre id="var-docstr">Reads one JSON value from input String. Options are the same as for
 read.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L274">Source</a>
@@ -318,6 +329,7 @@ key-value pairs, valid options are:
      calling value-fn again on its key-value pairs. If value-fn
      returns itself, the key-value pair will be omitted from the
      output. This option does not apply to non-map collections.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L424">Source</a>
@@ -331,6 +343,7 @@ key-value pairs, valid options are:
     <pre id="var-docstr">DEPRECATED; replaced by 'write'.
 
 Print object to PrintWriter out as JSON</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/d3cce5b200031cf22603c13a9a39e3939651d344/src/main/clojure/clojure/data/json_compat_0_1.clj#L35">Source</a>
@@ -343,6 +356,7 @@ Print object to PrintWriter out as JSON</pre>
 </pre>
     <pre id="var-docstr">Converts x to a JSON-formatted string. Options are the same as
 write.</pre>
+    <pre id="var-specs"></pre>
     
     
     <a id="var-source" href="https://github.com/clojure/data.json/blob/b4ba1fc056d82b58979759f6c3ca817640c69b23/src/main/clojure/clojure/data/json.clj#L477">Source</a>
