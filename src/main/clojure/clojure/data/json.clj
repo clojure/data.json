@@ -185,6 +185,7 @@
         (codepoint-case
           c
           :whitespace (recur)
+          \u00A0 (recur)
 
           ;; Read numbers
           (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
@@ -223,7 +224,7 @@
           \[ (read-array stream)
 
           (throw (Exception.
-                  (str "JSON error (unexpected character): " (char c)))))))))
+                  (str "JSON error (unexpected character asdf): \"" (char c) "\"; Code: " (int c)))))))))
 
 (defn read
   "Reads a single item of JSON data from a java.io.Reader. Options are
