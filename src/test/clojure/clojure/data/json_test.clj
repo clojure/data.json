@@ -295,6 +295,20 @@
 (deftest characters-in-map-keys-are-escaped
   (is (= (json/write-str {"\"" 42}) "{\"\\\"\":42}")))
 
+(deftest track-positions-in-object
+  (let [obj (json/read-str "\n{ \"one\" : \n 7, \n\n  \"two\" : \"second\"}" :track-pos? true)
+        pos (:pos (meta obj))]
+    (is (= (get pos "one") [3 2]))
+    (is (= (get pos "two") [5 11]))))
+
+(deftest track-positions-in-array
+  (let [obj (json/read-str "\n\n[ 1, 2, \n, 3    , \n4\n]" :track-pos? true)
+        pos (:pos (meta obj))]
+    (is (= (get pos 0) [3 3]))
+    (is (= (get pos 1) [3 6]))
+    (is (= (get pos 2) [4 3]))
+    (is (= (get pos 3) [5 1]))))
+
 ;;; Pretty-printer
 
 (deftest pretty-printing
@@ -302,7 +316,7 @@
     (is (= x (json/read-str (with-out-str (json/pprint x)))))))
 
 (deftest pretty-print-nonescaped-unicode
-  (is (= "\"\u1234\u4567\"\n"
+    (is (= "\"\u1234\u4567\"\n"
          (with-out-str
            (json/pprint "\u1234\u4567" :escape-unicode false)))))
 
