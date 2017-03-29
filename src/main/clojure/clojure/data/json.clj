@@ -282,6 +282,16 @@
 (def ^{:dynamic true :private true} *escape-unicode*)
 (def ^{:dynamic true :private true} *escape-js-separators*)
 (def ^{:dynamic true :private true} *escape-slash*)
+(def ^{:dynamic true :private true} *indent*)
+(def ^{:dynamic true :private true} *indent-depth* 0)
+
+(defn- write-indent [^PrintWriter out]
+  (when *indent*
+    (.print out \newline)
+    (loop [i *indent-depth*]
+      (when (pos? i)
+        (.print out "  ")
+        (recur (dec i))))))
 
 (defprotocol JSONWriter
   (-write [object out]
@@ -316,39 +326,51 @@
     (.append sb \")
     (.print out (str sb))))
 
-(defn- write-object [m ^PrintWriter out] 
+(defn- write-object [m ^PrintWriter out]
   (.print out \{)
-  (loop [x m, have-printed-kv false]
-    (when (seq m)
-      (let [[k v] (first x)
-            out-key (*key-fn* k)
-            out-value (*value-fn* k v)
-            nxt (next x)]
-        (when-not (string? out-key)
-          (throw (Exception. "JSON object keys must be strings")))
-        (if-not (= *value-fn* out-value)
-          (do
-            (when have-printed-kv
-              (.print out \,))
-            (write-string out-key out)
-            (.print out \:)
-            (-write out-value out)
-            (when (seq nxt)
-              (recur nxt true)))
-          (when (seq nxt)
-            (recur nxt have-printed-kv))))))
+  (when (seq m)
+    (binding [*indent-depth* (inc *indent-depth*)]
+      (write-indent out)
+      (loop [x m, have-printed-kv false]
+        (when (seq x)
+          (let [[k v] (first x)
+                out-key (*key-fn* k)
+                out-value (*value-fn* k v)
+                nxt (next x)]
+            (when-not (string? out-key)
+              (throw (Exception. "JSON object keys must be strings")))
+            (if-not (= *value-fn* out-value)
+              (do
+                (when have-printed-kv
+                  (.print out \,)
+                  (write-indent out))
+                (write-string out-key out)
+                (.print out \:)
+                (when *indent*
+                  (.print out \space))
+                (-write out-value out)
+                (when (seq nxt)
+                  (recur nxt true)))
+              (when (seq nxt)
+                (recur nxt have-printed-kv)))))))
+    (write-indent out))
   (.print out \}))
 
 (defn- write-array [s ^PrintWriter out]
   (.print out \[)
-  (loop [x s]
-    (when (seq x)
-      (let [fst (first x)
-            nxt (next x)]
-        (-write fst out)
-        (when (seq nxt)
-          (.print out \,)
-          (recur nxt)))))
+  (when (seq s)
+    (binding [*indent-depth* (inc *indent-depth*)]
+      (write-indent out)
+      (loop [x s]
+        (when (seq x)
+          (let [fst (first x)
+                nxt (next x)]
+            (-write fst out)
+            (when (seq nxt)
+              (.print out \,)
+              (write-indent out)
+              (recur nxt))))))
+    (write-indent out))
   (.print out \]))
 
 (defn- write-bignum [x ^PrintWriter out]
@@ -425,6 +447,12 @@
   "Write JSON-formatted output to a java.io.Writer. Options are
    key-value pairs, valid options are:
 
+    :indent boolean
+
+       If true, will add additional spaces and newlines to do
+       indentation for nested objects and arrays. Works much faster
+       than pprint.
+
     :escape-unicode boolean
 
        If true (default) non-ASCII characters are escaped as \\uXXXX
@@ -461,13 +489,15 @@
         returns itself, the key-value pair will be omitted from the
         output. This option does not apply to non-map collections."
   [x ^Writer writer & options]
-  (let [{:keys [escape-unicode escape-js-separators escape-slash key-fn value-fn]
-         :or {escape-unicode true
+  (let [{:keys [indent escape-unicode escape-js-separators escape-slash key-fn value-fn]
+         :or {indent false
+              escape-unicode true
               escape-js-separators true
               escape-slash true
               key-fn default-write-key-fn
               value-fn default-value-fn}} options]
-    (binding [*escape-unicode* escape-unicode
+    (binding [*indent* indent
+              *escape-unicode* escape-unicode
               *escape-js-separators* escape-js-separators
               *escape-slash* escape-slash
               *key-fn* key-fn
@@ -508,7 +538,7 @@
 
 (defn pprint
   "Pretty-prints JSON representation of x to *out*. Options are the
-  same as for write except :value-fn, which is not supported."
+  same as for write except :indent and :value-fn, which are not supported."
   [x & options]
   (let [{:keys [escape-unicode escape-slash key-fn]
          :or {escape-unicode true

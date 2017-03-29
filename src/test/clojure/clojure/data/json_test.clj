@@ -295,6 +295,42 @@
 (deftest characters-in-map-keys-are-escaped
   (is (= (json/write-str {"\"" 42}) "{\"\\\"\":42}")))
 
+;;; Indent
+
+(deftest print-json-arrays-indent
+  (is (= "[\n  1,\n  2,\n  3\n]" (json/write-str [1 2 3] :indent true)))
+  (is (= "[\n  1,\n  2,\n  3\n]" (json/write-str (list 1 2 3) :indent true)))
+  (is (= "[\n  1,\n  2,\n  3\n]" (json/write-str (sorted-set 1 2 3) :indent true)))
+  (is (= "[\n  1,\n  2,\n  3\n]" (json/write-str (seq [1 2 3]) :indent true))))
+
+(deftest print-java-arrays-indent
+ (is (= "[\n  1,\n  2,\n  3\n]" (json/write-str (into-array [1 2 3]) :indent true))))
+
+(deftest print-empty-arrays-indent
+  (is (= "[]" (json/write-str [] :indent true)))
+  (is (= "[]" (json/write-str (list) :indent true)))
+  (is (= "[]" (json/write-str #{} :indent true))))
+
+(deftest print-json-objects-indent
+  (is (= "{\n  \"a\": 1,\n  \"b\": 2\n}" (json/write-str (sorted-map :a 1 :b 2) :indent true))))
+
+(deftest print-empty-objects-indent
+  (is (= "{}" (json/write-str {} :indent true))))
+
+(deftest print-json-nested-indent
+  (is (=
+"{
+  \"a\": {
+    \"b\": [
+      1,
+      2
+    ],
+    \"c\": [],
+    \"d\": {}
+  }
+}" (json/write-str {:a (sorted-map :b [1 2] :c [] :d {})} :indent true))))
+
+
 ;;; Pretty-printer
 
 (deftest pretty-printing
