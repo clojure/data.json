@@ -10,23 +10,23 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.6]
+Latest stable release is [0.2.7]
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "0.2.6"]
+    [org.clojure/data.json "0.2.7"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.6</version>
+      <version>0.2.7</version>
     </dependency>
 
 [Gradle] dependency information:
 
-    compile "org.clojure:data.json:0.2.6"
+    compile "org.clojure:data.json:0.2.7"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
@@ -154,7 +154,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* Development version 0.2.7-SNAPSHOT (current Git `master`)
+* Release [0.2.7] on 2019-Nov-18
+  * Fix [DJSON-29]: throw exception on missing object entries (extra commas)
 * Release [0.2.6] on 2015-Mar-6
   * Modify build to produce an AOT package with classifier "aot"
 * Release [0.2.5] on 2014-Jun-13
