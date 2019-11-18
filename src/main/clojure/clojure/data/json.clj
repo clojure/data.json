@@ -74,28 +74,32 @@
 (defn- read-object [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [key nil, result (transient {})]
+  (loop [key nil, pending? false, result (transient {})]
     (let [c (.read stream)]
       (when (neg? c)
         (throw (EOFException. "JSON error (end-of-file inside object)")))
       (codepoint-case c
-        :whitespace (recur key result)
+        :whitespace (recur key pending? result)
 
-        \, (recur nil result)
+        \, (if pending?
+             (throw (Exception. "JSON error (missing entry in object)"))
+             (recur nil true result))
 
-        \: (recur key result)
+        \: (recur key false result)
 
-        \} (if (nil? key)
-             (persistent! result)
-             (throw (Exception. "JSON error (key missing value in object)")))
+        \} (if pending?
+             (throw (Exception. "JSON error (missing entry in object)"))
+             (if (nil? key)
+              (persistent! result)
+              (throw (Exception. "JSON error (key missing value in object)"))))
 
         (do (.unread stream c)
             (let [element (-read stream true nil)]
               (if (nil? key)
                 (if (string? element)
-                  (recur element result)
+                  (recur element false result)
                   (throw (Exception. "JSON error (non-string key in object)")))
-                (recur nil
+                (recur nil false
                        (let [out-key (*key-fn* key)
                              out-value (*value-fn* out-key element)]
                          (if (= *value-fn* out-value)

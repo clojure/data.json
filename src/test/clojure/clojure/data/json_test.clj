@@ -85,6 +85,12 @@
 (deftest disallows-unclosed-objects
   (is (thrown? Exception (json/read-str "{\"a\":1,  "))))
 
+(deftest disallows-empty-entry-in-object
+  (is (thrown? Exception (json/read-str "{\"a\":1,}")))
+  (is (thrown? Exception (json/read-str "{\"a\":1, }")))
+  (is (thrown? Exception (json/read-str "{\"a\":1,,,,}")))
+  (is (thrown? Exception (json/read-str "{\"a\":1,,\"b\":2}"))))
+
 (deftest get-string-keys
   (is (= {"a" [1 2 {"b" [3 "four"]} 5.5]}
          (json/read-str "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"))))
