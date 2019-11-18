@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>data.json</artifactId>
-  <version>0.2.7-SNAPSHOT</version>
+  <version>0.2.7</version>
   <name>data.json</name>
   <description>Generating/parsing JSON from/to Clojure data structures</description>
   <url>https://github.com/clojure/data.json</url>
@@ -26,7 +26,7 @@
     <connection>scm:git:git@github.com:clojure/data.json</connection>
     <developerConnection>scm:git:git@github.com:clojure/data.json</developerConnection>
     <url>git@github.com:clojure/data.json.git</url>
-    <tag>HEAD</tag>
+    <tag>data.json-0.2.7</tag>
   </scm>
 
   <build>
