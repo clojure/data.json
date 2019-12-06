@@ -199,6 +199,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-29]: http://dev.clojure.org/jira/browse/DJSON-29
 [DJSON-17]: http://dev.clojure.org/jira/browse/DJSON-17
 [DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
 [DJSON-14]: http://dev.clojure.org/jira/browse/DJSON-14
@@ -209,6 +210,7 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
+[0.2.7]: https://github.com/clojure/data.json/tree/data.json-0.2.7
 [0.2.6]: https://github.com/clojure/data.json/tree/data.json-0.2.6
 [0.2.5]: https://github.com/clojure/data.json/tree/data.json-0.2.5
 [0.2.4]: https://github.com/clojure/data.json/tree/data.json-0.2.4
