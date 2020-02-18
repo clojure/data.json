@@ -10,27 +10,24 @@ Follows the specification on http://json.org/
 Releases and Dependency Information
 ----------------------------------------
 
-Latest stable release is [0.2.7]
+This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
+
+Latest stable release is [1.0.0]
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "0.2.7"]
+    [org.clojure/data.json "1.0.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>0.2.7</version>
+      <version>1.0.0</version>
     </dependency>
-
-[Gradle] dependency information:
-
-    compile "org.clojure:data.json:0.2.7"
 
 [Leiningen]: http://leiningen.org/
 [Maven]: http://maven.apache.org/
-[Gradle]: http://www.gradle.org/
 
 
 Other versions:
@@ -154,6 +151,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release [1.0.0] on 2020-Feb-18
 * Release [0.2.7] on 2019-Nov-18
   * Fix [DJSON-29]: throw exception on missing object entries (extra commas)
 * Release [0.2.6] on 2015-Mar-6
@@ -210,6 +208,7 @@ Change Log
 [DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
 [DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
 
+[1.0.0]: https://github.com/clojure/data.json/tree/data.json-1.0.0
 [0.2.7]: https://github.com/clojure/data.json/tree/data.json-0.2.7
 [0.2.6]: https://github.com/clojure/data.json/tree/data.json-0.2.6
 [0.2.5]: https://github.com/clojure/data.json/tree/data.json-0.2.5
@@ -228,7 +227,8 @@ Change Log
 Copyright and License
 ----------------------------------------
 
-Copyright (c) Stuart Sierra, 2012. All rights reserved.  The use and
+Copyright (c) Stuart Sierra, Rich Hickey, and contriburos 2012-2020.
+All rights reserved.  The use and
 distribution terms for this software are covered by the Eclipse Public
 License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
 be found in the file epl-v10.html at the root of this distribution.
