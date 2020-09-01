@@ -14,6 +14,11 @@ This project follows the version scheme MAJOR.MINOR.PATCH where each component p
 
 Latest stable release is [1.0.0]
 
+[CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
+```clojure
+org.clojure/data.json {:mvn/version "1.0.0"}
+```
+
 [Leiningen] dependency information:
 
     [org.clojure/data.json "1.0.0"]
