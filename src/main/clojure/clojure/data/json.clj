@@ -323,7 +323,7 @@
 (defn- write-object [m ^PrintWriter out] 
   (.print out \{)
   (loop [x m, have-printed-kv false]
-    (when (seq m)
+    (when (seq x)
       (let [[k v] (first x)
             out-key (*key-fn* k)
             out-value (*value-fn* k v)
