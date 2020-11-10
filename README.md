@@ -158,6 +158,8 @@ Change Log
 
 * next
   * Fix [DJSON-26]: write-object should check seq on loop var, not param
+  * Use latest parent pom (will bump default clojure dep to 1.8.0)
+  * Use direct linking on "aot" classifier lib
 * Release [1.0.0] on 2020-Feb-18
 * Release [0.2.7] on 2019-Nov-18
   * Fix [DJSON-29]: throw exception on missing object entries (extra commas)
