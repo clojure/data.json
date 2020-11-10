@@ -37,6 +37,7 @@
         <version>1.7.1</version>
         <configuration>
             <temporaryOutputDirectory>false</temporaryOutputDirectory>
+            <vmargs>-Dclojure.compiler.direct-linking=true</vmargs>
         </configuration>
         <executions>
           <execution>
