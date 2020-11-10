@@ -156,6 +156,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-26]: write-object should check seq on loop var, not param
 * Release [1.0.0] on 2020-Feb-18
 * Release [0.2.7] on 2019-Nov-18
   * Fix [DJSON-29]: throw exception on missing object entries (extra commas)
@@ -203,6 +205,7 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-29]: http://dev.clojure.org/jira/browse/DJSON-29
+[DJSON-26]: http://dev.clojure.org/jira/browse/DJSON-26
 [DJSON-17]: http://dev.clojure.org/jira/browse/DJSON-17
 [DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
 [DJSON-14]: http://dev.clojure.org/jira/browse/DJSON-14
