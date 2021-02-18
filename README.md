@@ -3,7 +3,7 @@ data.json
 
 JSON parser/generator to/from Clojure data structures.
 
-Follows the specification on http://json.org/
+Follows the specification on https://json.org/
 
 
 
@@ -31,24 +31,24 @@ org.clojure/data.json {:mvn/version "1.0.0"}
       <version>1.0.0</version>
     </dependency>
 
-[Leiningen]: http://leiningen.org/
-[Maven]: http://maven.apache.org/
+[Leiningen]: https://leiningen.org/
+[Maven]: https://maven.apache.org/
 
 
 Other versions:
 
-* [All Released Versions](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
+* [All Released Versions](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
 
 * [Development Snapshots](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
 
-* [Development Snapshot Repositories](http://dev.clojure.org/display/doc/Maven+Settings+and+Repositories)
+* [Development Snapshot Repositories](https://clojure.org/releases/downloads#_using_clojure_snapshot_releases)
 
 
 
 Usage
 ----------------------------------------
 
-[API Documentation](http://clojure.github.com/data.json/)
+[API Documentation](https://clojure.github.io/data.json/)
 
 Example usage:
 
@@ -102,7 +102,7 @@ root data structure is, for example, a vector of dates, you will need
 to pre- or post-process it outside of data.json. [clojure.walk] may be
 useful for this.
 
-[clojure.walk]: http://clojure.github.io/clojure/clojure.walk-api.html
+[clojure.walk]: https://clojure.github.io/clojure/clojure.walk-api.html
 
 
 ### Order of key-fn / value-fn
@@ -134,7 +134,7 @@ and write JSON directly to a java.io.Writer with `json/write`.
 
 Other options are available. Refer to the [API Documentation] for details.
 
-[API Documentation]: http://clojure.github.com/data.json/
+[API Documentation]: https://clojure.github.io/data.json/
 
 
 
@@ -142,14 +142,10 @@ Developer Information
 ----------------------------------------
 
 * [GitHub project](https://github.com/clojure/data.json)
-
-* [How to contribute](http://dev.clojure.org/display/community/Contributing)
-
-* [Bug Tracker](http://dev.clojure.org/jira/browse/DJSON)
-
-* [Continuous Integration](http://build.clojure.org/job/data.json/)
-
-* [Compatibility Test Matrix](http://build.clojure.org/job/data.json-test-matrix/)
+* [How to contribute](https://clojure.org/community/contributing)
+* [Bug Tracker](https://clojure.atlassian.net/browse/DJSON)
+* [Continuous Integration](https://build.clojure.org/job/data.json/)
+* [Compatibility Test Matrix](https://build.clojure.org/job/data.json-test-matrix/)
 
 
 
@@ -206,17 +202,17 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
-[DJSON-29]: http://dev.clojure.org/jira/browse/DJSON-29
-[DJSON-26]: http://dev.clojure.org/jira/browse/DJSON-26
-[DJSON-17]: http://dev.clojure.org/jira/browse/DJSON-17
-[DJSON-15]: http://dev.clojure.org/jira/browse/DJSON-15
-[DJSON-14]: http://dev.clojure.org/jira/browse/DJSON-14
-[DJSON-13]: http://dev.clojure.org/jira/browse/DJSON-13
-[DJSON-11]: http://dev.clojure.org/jira/browse/DJSON-11
-[DJSON-9]: http://dev.clojure.org/jira/browse/DJSON-9
-[DJSON-8]: http://dev.clojure.org/jira/browse/DJSON-8
-[DJSON-7]: http://dev.clojure.org/jira/browse/DJSON-7
-[DJSON-1]: http://dev.clojure.org/jira/browse/DJSON-1
+[DJSON-29]: https://clojure.atlassian.net/browse/DJSON-29
+[DJSON-26]: https://clojure.atlassian.net/browse/DJSON-26
+[DJSON-17]: https://clojure.atlassian.net/browse/DJSON-17
+[DJSON-15]: https://clojure.atlassian.net/browse/DJSON-15
+[DJSON-14]: https://clojure.atlassian.net/browse/DJSON-14
+[DJSON-13]: https://clojure.atlassian.net/browse/DJSON-13
+[DJSON-11]: https://clojure.atlassian.net/browse/DJSON-11
+[DJSON-9]: https://clojure.atlassian.net/browse/DJSON-9
+[DJSON-8]: https://clojure.atlassian.net/browse/DJSON-8
+[DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
+[DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
 [1.0.0]: https://github.com/clojure/data.json/tree/data.json-1.0.0
 [0.2.7]: https://github.com/clojure/data.json/tree/data.json-0.2.7
@@ -240,7 +236,7 @@ Copyright and License
 Copyright (c) Stuart Sierra, Rich Hickey, and contriburos 2012-2020.
 All rights reserved.  The use and
 distribution terms for this software are covered by the Eclipse Public
-License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
+License 1.0 (https://opensource.org/licenses/eclipse-1.0.php) which can
 be found in the file epl-v10.html at the root of this distribution.
 By using this software in any fashion, you are agreeing to be bound by
 the terms of this license.  You must not remove this notice, or any
