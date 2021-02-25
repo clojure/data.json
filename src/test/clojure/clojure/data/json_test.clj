@@ -1,6 +1,6 @@
 (ns clojure.data.json-test
-  (:use clojure.test)
-  (:require [clojure.data.json :as json]))
+  (:require [clojure.data.json :as json]
+            [clojure.test :refer :all]))
 
 (deftest read-from-pushback-reader
   (let [s (java.io.PushbackReader. (java.io.StringReader. "42"))]
@@ -266,7 +266,7 @@
   (is (= "{\"a\":1,\"b\":2}" (json/write-str (sorted-map :a 1 :b 2)))))
 
 (deftest object-keys-must-be-strings
-  (is (= "{\"1\":1,\"2\":2") (json/write-str (sorted-map 1 1 2 2))))
+  (is (= "{\"1\":1,\"2\":2}" (json/write-str (sorted-map 1 1 2 2)))))
 
 (deftest print-empty-objects
   (is (= "{}" (json/write-str {}))))
