@@ -152,6 +152,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix[DJSON-30]: Fix bad test
 * Release [1.1.0] on 2020-Mar-5
   * Fix [DJSON-26]: write-object should check seq on loop var, not param
   * Use latest parent pom (will bump default clojure dep to 1.8.0)
@@ -202,6 +204,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-30]: https://clojure.atlassian.net/browse/DJSON-30
 [DJSON-29]: https://clojure.atlassian.net/browse/DJSON-29
 [DJSON-26]: https://clojure.atlassian.net/browse/DJSON-26
 [DJSON-17]: https://clojure.atlassian.net/browse/DJSON-17
