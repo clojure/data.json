@@ -12,23 +12,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [1.0.0]
+Latest stable release is [1.1.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "1.0.0"}
+org.clojure/data.json {:mvn/version "1.1.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "1.0.0"]
+    [org.clojure/data.json "1.1.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -152,7 +152,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [1.1.0] on 2020-Mar-5
   * Fix [DJSON-26]: write-object should check seq on loop var, not param
   * Use latest parent pom (will bump default clojure dep to 1.8.0)
   * Use direct linking on "aot" classifier lib
@@ -214,6 +214,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[1.1.0]: https://github.com/clojure/data.json/tree/data.json-1.1.0
 [1.0.0]: https://github.com/clojure/data.json/tree/data.json-1.0.0
 [0.2.7]: https://github.com/clojure/data.json/tree/data.json-0.2.7
 [0.2.6]: https://github.com/clojure/data.json/tree/data.json-0.2.6
