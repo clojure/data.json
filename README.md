@@ -3,8 +3,9 @@ data.json
 
 JSON parser/generator to/from Clojure data structures.
 
-Follows the specification on https://json.org/
-
+Key goals:
+* Compliant with JSON spec per https://json.org/
+* No external dependencies
 
 
 Releases and Dependency Information
