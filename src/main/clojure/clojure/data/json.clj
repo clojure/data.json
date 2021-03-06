@@ -17,9 +17,6 @@
 
 ;;; JSON READER
 
-(def ^{:dynamic true :private true} *bigdec*)
-(def ^{:dynamic true :private true} *key-fn*)
-(def ^{:dynamic true :private true} *value-fn*)
 
 (defn- default-write-key-fn
   [x]
@@ -56,7 +53,7 @@
      ~@(when (odd? (count clauses))
          [(last clauses)])))
 
-(defn- read-array [^PushbackReader stream]
+(defn- read-array [^PushbackReader stream options]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
   (loop [result (transient [])]
@@ -68,43 +65,45 @@
         \, (recur result)
         \] (persistent! result)
         (do (.unread stream c)
-            (let [element (-read stream true nil)]
+            (let [element (-read stream true nil options)]
               (recur (conj! result element))))))))
 
-(defn- read-object [^PushbackReader stream]
+(defn- read-object [^PushbackReader stream options]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [key nil, pending? false, result (transient {})]
-    (let [c (.read stream)]
-      (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside object)")))
-      (codepoint-case c
-        :whitespace (recur key pending? result)
+  (let [key-fn (:key-fn options)
+        value-fn (:value-fn options)]
+    (loop [key nil, pending? false, result (transient {})]
+      (let [c (.read stream)]
+        (when (neg? c)
+          (throw (EOFException. "JSON error (end-of-file inside object)")))
+        (codepoint-case c
+          :whitespace (recur key pending? result)
 
-        \, (if pending?
-             (throw (Exception. "JSON error (missing entry in object)"))
-             (recur nil true result))
+          \, (if pending?
+               (throw (Exception. "JSON error (missing entry in object)"))
+               (recur nil true result))
 
-        \: (recur key false result)
+          \: (recur key false result)
 
-        \} (if pending?
-             (throw (Exception. "JSON error (missing entry in object)"))
-             (if (nil? key)
-              (persistent! result)
-              (throw (Exception. "JSON error (key missing value in object)"))))
+          \} (if pending?
+               (throw (Exception. "JSON error (missing entry in object)"))
+               (if (nil? key)
+                 (persistent! result)
+                 (throw (Exception. "JSON error (key missing value in object)"))))
 
-        (do (.unread stream c)
-            (let [element (-read stream true nil)]
-              (if (nil? key)
-                (if (string? element)
-                  (recur element false result)
-                  (throw (Exception. "JSON error (non-string key in object)")))
-                (recur nil false
-                       (let [out-key (*key-fn* key)
-                             out-value (*value-fn* out-key element)]
-                         (if (= *value-fn* out-value)
-                           result
-                           (assoc! result out-key out-value)))))))))))
+          (do (.unread stream c)
+              (let [element (-read stream true nil options)]
+                (if (nil? key)
+                  (if (string? element)
+                    (recur element false result)
+                    (throw (Exception. "JSON error (non-string key in object)")))
+                  (recur nil false
+                         (let [out-key (key-fn key)
+                               out-value (value-fn out-key element)]
+                           (if (= value-fn out-value)
+                             result
+                             (assoc! result out-key out-value))))))))))))
 
 (defn- read-hex-char [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
@@ -156,12 +155,12 @@
              (catch NumberFormatException e nil))
         (bigint string))))
 
-(defn- read-decimal [^String string]
-  (if *bigdec*
+(defn- read-decimal [^String string bigdec?]
+  (if bigdec?
     (bigdec string)
     (Double/valueOf string)))
 
-(defn- read-number [^PushbackReader stream]
+(defn- read-number [^PushbackReader stream bigdec?]
   (let [buffer (StringBuilder.)
         decimal? (loop [decimal? false]
                    (let [c (.read stream)]
@@ -175,11 +174,11 @@
                        (do (.unread stream c)
                            decimal?))))]
     (if decimal?
-      (read-decimal (str buffer))
+      (read-decimal (str buffer) bigdec?)
       (read-integer (str buffer)))))
 
 (defn- -read
-  [^PushbackReader stream eof-error? eof-value]
+  [^PushbackReader stream eof-error? eof-value options]
   (loop []
     (let [c (.read stream)]
       (if (neg? c) ;; Handle end-of-stream
@@ -193,7 +192,7 @@
           ;; Read numbers
           (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
           (do (.unread stream c)
-              (read-number stream))
+              (read-number stream (:bigdec options)))
 
           ;; Read strings
           \" (read-quoted-string stream)
@@ -221,14 +220,17 @@
                (throw (Exception. "JSON error (expected false)")))
 
           ;; Read JSON objects
-          \{ (read-object stream)
+          \{ (read-object stream options)
 
           ;; Read JSON arrays
-          \[ (read-array stream)
+          \[ (read-array stream options)
 
           (throw (Exception.
                   (str "JSON error (unexpected character): " (char c)))))))))
 
+(def default-read-options {:bigdec false
+                           :key-fn identity
+                           :value-fn default-value-fn})
 (defn read
   "Reads a single item of JSON data from a java.io.Reader. Options are
   key-value pairs, valid options are:
@@ -265,34 +267,36 @@
         value unchanged. This option does not apply to non-map
         collections."
   [reader & options]
-  (let [{:keys [eof-error? eof-value bigdec key-fn value-fn]
-         :or {bigdec false
-              eof-error? true
-              key-fn identity
-              value-fn default-value-fn}} options]
-    (binding [*bigdec* bigdec
-              *key-fn* key-fn
-              *value-fn* value-fn]
-      (-read (PushbackReader. reader) eof-error? eof-value))))
+  (let [{:keys [eof-error? eof-value]
+         :or {eof-error? true}} options]
+    (->> options
+         (apply array-map)
+         (merge default-read-options)
+         (-read (PushbackReader. reader) eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for
   read."
   [string & options]
-  (apply read (StringReader. string) options))
+  (let [{:keys [eof-error? eof-value]
+         :or {eof-error? true}} options]
+    (->> options
+         (apply array-map)
+         (merge default-read-options)
+         (-read (PushbackReader. (StringReader. string)) eof-error? eof-value))))
 
 ;;; JSON WRITER
 
-(def ^{:dynamic true :private true} *escape-unicode*)
-(def ^{:dynamic true :private true} *escape-js-separators*)
-(def ^{:dynamic true :private true} *escape-slash*)
 
 (defprotocol JSONWriter
-  (-write [object out]
+  (-write [object out options]
     "Print object to PrintWriter out as JSON"))
 
-(defn- write-string [^CharSequence s ^PrintWriter out]
-  (let [sb (StringBuilder. (count s))]
+(defn- write-string [^CharSequence s ^PrintWriter out options]
+  (let [sb (StringBuilder. (count s))
+        escape-unicode (:escape-unicode options)
+        escape-js-separators (:escape-js-separators options)
+        escape-slash (:escape-slash options)]
     (.append sb \")
     (dotimes [i (count s)]
       (let [cp (int (.charAt s i))]
@@ -300,7 +304,7 @@
           ;; Printable JSON escapes
           \" (.append sb "\\\"")
           \\ (.append sb "\\\\")
-          \/ (.append sb (if *escape-slash* "\\/" "/"))
+          \/ (.append sb (if escape-slash "\\/" "/"))
           ;; Simple ASCII characters
           :simple-ascii (.append sb (.charAt s i))
           ;; JSON escapes
@@ -310,55 +314,57 @@
           \return    (.append sb "\\r")
           \tab       (.append sb "\\t")
           ;; Unicode characters that Javascript forbids raw in strings
-          :js-separators (if *escape-js-separators*
+          :js-separators (if escape-js-separators
                            (.append sb (format "\\u%04x" cp))
                            (.appendCodePoint sb cp))
           ;; Any other character is Unicode
-          (if *escape-unicode*
+          (if escape-unicode
             (.append sb (format "\\u%04x" cp)) ; Hexadecimal-escaped
             (.appendCodePoint sb cp)))))
     (.append sb \")
     (.print out (str sb))))
 
-(defn- write-object [m ^PrintWriter out] 
-  (.print out \{)
-  (loop [x m, have-printed-kv false]
-    (when (seq x)
-      (let [[k v] (first x)
-            out-key (*key-fn* k)
-            out-value (*value-fn* k v)
-            nxt (next x)]
-        (when-not (string? out-key)
-          (throw (Exception. "JSON object keys must be strings")))
-        (if-not (= *value-fn* out-value)
-          (do
-            (when have-printed-kv
-              (.print out \,))
-            (write-string out-key out)
-            (.print out \:)
-            (-write out-value out)
+(defn- write-object [m ^PrintWriter out options]
+  (let [key-fn (:key-fn options)
+        value-fn (:value-fn options)]
+    (.print out \{)
+    (loop [x m, have-printed-kv false]
+      (when (seq x)
+        (let [[k v] (first x)
+              out-key (key-fn k)
+              out-value (value-fn k v)
+              nxt (next x)]
+          (when-not (string? out-key)
+            (throw (Exception. "JSON object keys must be strings")))
+          (if-not (= value-fn out-value)
+            (do
+              (when have-printed-kv
+                (.print out \,))
+              (write-string out-key out options)
+              (.print out \:)
+              (-write out-value out options)
+              (when (seq nxt)
+                (recur nxt true)))
             (when (seq nxt)
-              (recur nxt true)))
-          (when (seq nxt)
-            (recur nxt have-printed-kv))))))
+              (recur nxt have-printed-kv)))))))
   (.print out \}))
 
-(defn- write-array [s ^PrintWriter out]
+(defn- write-array [s ^PrintWriter out options]
   (.print out \[)
   (loop [x s]
     (when (seq x)
       (let [fst (first x)
             nxt (next x)]
-        (-write fst out)
+        (-write fst out options)
         (when (seq nxt)
           (.print out \,)
           (recur nxt)))))
   (.print out \]))
 
-(defn- write-bignum [x ^PrintWriter out]
+(defn- write-bignum [x ^PrintWriter out options]
   (.print out (str x)))
 
-(defn- write-float [^Float x ^PrintWriter out]
+(defn- write-float [^Float x ^PrintWriter out options]
   (cond (.isInfinite x)
         (throw (Exception. "JSON error: cannot write infinite Float"))
         (.isNaN x)
@@ -366,7 +372,7 @@
         :else
         (.print out x)))
 
-(defn- write-double [^Double x ^PrintWriter out]
+(defn- write-double [^Double x ^PrintWriter out options]
   (cond (.isInfinite x)
         (throw (Exception. "JSON error: cannot write infinite Double"))
         (.isNaN x)
@@ -374,22 +380,22 @@
         :else
         (.print out x)))
 
-(defn- write-plain [x ^PrintWriter out]
+(defn- write-plain [x ^PrintWriter out options]
   (.print out x))
 
-(defn- write-null [x ^PrintWriter out]
+(defn- write-null [x ^PrintWriter out options]
   (.print out "null"))
 
-(defn- write-named [x out]
-  (write-string (name x) out))
+(defn- write-named [x out options]
+  (write-string (name x) out options))
 
-(defn- write-generic [x out]
+(defn- write-generic [x out options]
   (if (.isArray (class x))
-    (-write (seq x) out)
+    (-write (seq x) out options)
     (throw (Exception. (str "Don't know how to write JSON of " (class x))))))
 
-(defn- write-ratio [x out]
-  (-write (double x) out))
+(defn- write-ratio [x out options]
+  (-write (double x) out options))
 
 ;; nil, true, false
 (extend nil                    JSONWriter {:-write write-null})
@@ -425,6 +431,11 @@
 ;; Maybe a Java array, otherwise fail
 (extend java.lang.Object       JSONWriter {:-write write-generic})
 
+(def default-write-options {:escape-unicode true
+                         :escape-js-separators true
+                         :escape-slash true
+                         :key-fn default-write-key-fn
+                         :value-fn default-value-fn})
 (defn write
   "Write JSON-formatted output to a java.io.Writer. Options are
    key-value pairs, valid options are:
@@ -465,25 +476,14 @@
         returns itself, the key-value pair will be omitted from the
         output. This option does not apply to non-map collections."
   [x ^Writer writer & options]
-  (let [{:keys [escape-unicode escape-js-separators escape-slash key-fn value-fn]
-         :or {escape-unicode true
-              escape-js-separators true
-              escape-slash true
-              key-fn default-write-key-fn
-              value-fn default-value-fn}} options]
-    (binding [*escape-unicode* escape-unicode
-              *escape-js-separators* escape-js-separators
-              *escape-slash* escape-slash
-              *key-fn* key-fn
-              *value-fn* value-fn]
-      (-write x (PrintWriter. writer)))))
+  (-write x (PrintWriter. writer) (merge default-write-options (apply array-map options))))
 
 (defn write-str
   "Converts x to a JSON-formatted string. Options are the same as
   write."
   [x & options]
   (let [sw (StringWriter.)]
-    (apply write x sw options)
+    (-write x (PrintWriter. sw) (merge default-write-options (apply array-map options)))
     (.toString sw)))
 
 ;;; JSON PRETTY-PRINTER
@@ -493,36 +493,31 @@
 (defn- pprint-array [s] 
   ((pprint/formatter-out "~<[~;~@{~w~^, ~:_~}~;]~:>") s))
 
-(defn- pprint-object [m]
-  ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
-   (for [[k v] m] [(*key-fn* k) v])))
+(defn- pprint-object [m options]
+  (let [key-fn (:key-fn options)]
+    ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
+     (for [[k v] m] [(key-fn k) v]))))
 
-(defn- pprint-generic [x]
+(defn- pprint-generic [x options]
   (if (.isArray (class x))
     (pprint-array (seq x))
     ;; pprint proxies Writer, so we can't just wrap it
-    (print (with-out-str (-write x (PrintWriter. *out*))))))
+    (print (with-out-str (-write x (PrintWriter. *out*) options)))))
 
-(defn- pprint-dispatch [x]
+(defn- pprint-dispatch [x options]
   (cond (nil? x) (print "null")
-        (instance? java.util.Map x) (pprint-object x)
+        (instance? java.util.Map x) (pprint-object x options)
         (instance? java.util.Collection x) (pprint-array x)
         (instance? clojure.lang.ISeq x) (pprint-array x)
-        :else (pprint-generic x)))
+        :else (pprint-generic x options)))
 
 (defn pprint
   "Pretty-prints JSON representation of x to *out*. Options are the
   same as for write except :value-fn, which is not supported."
   [x & options]
-  (let [{:keys [escape-unicode escape-slash key-fn]
-         :or {escape-unicode true
-              escape-slash true
-              key-fn default-write-key-fn}} options]
-    (binding [*escape-unicode* escape-unicode
-              *escape-slash* escape-slash
-              *key-fn* key-fn]
-      (pprint/with-pprint-dispatch pprint-dispatch
-        (pprint/pprint x)))))
+  (let [opts (merge default-write-options (apply hash-map options))]
+    (pprint/with-pprint-dispatch #(pprint-dispatch % opts)
+      (pprint/pprint x))))
 
 (load "json_compat_0_1")
 
