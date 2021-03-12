@@ -38,10 +38,6 @@
         [(map int test) result]
         (= test :whitespace)
         ['(9 10 13 32) result]
-        (= test :simple-ascii)
-        [(remove #{(codepoint \") (codepoint \\) (codepoint \/)}
-                 (range 32 127))
-         result]
         (= test :js-separators)
         ['(16r2028 16r2029) result]
         :else
@@ -312,37 +308,59 @@
   (-write [object out options]
     "Print object to PrintWriter out as JSON"))
 
+(defn- ->hex-string [^PrintWriter out cp]
+  (let [cpl (long cp)]
+    (.write out "\\u")
+    (cond
+      (< cpl 16)
+      (.write out "000")
+      (< cpl 256)
+      (.write out "00")
+      (< cpl 4096)
+      (.write out "0"))
+    (.write out (Integer/toHexString cp))))
+
+(def ^{:tag "[S"} codepoint-decoder
+  (let [shorts (short-array 128)]
+    (dotimes [i 128]
+      (codepoint-case i
+        \" (aset shorts i (short 1))
+        \\ (aset shorts i (short 1))
+        \/ (aset shorts i (short 2))
+        \backspace (aset shorts i (short 3))
+        \formfeed  (aset shorts i (short 4))
+        \newline   (aset shorts i (short 5))
+        \return    (aset shorts i (short 6))
+        \tab       (aset shorts i (short 7))
+        (if (< i 32)
+          (aset shorts i (short 8))
+          (aset shorts i (short 0)))))
+    shorts))
+
 (defn- write-string [^CharSequence s ^PrintWriter out options]
-  (let [sb (StringBuilder. (count s))
-        escape-unicode (:escape-unicode options)
-        escape-js-separators (:escape-js-separators options)
-        escape-slash (:escape-slash options)]
-    (.append sb \")
-    (dotimes [i (count s)]
+  (let [decoder codepoint-decoder]
+    (.write out (codepoint \"))
+    (dotimes [i (.length s)]
       (let [cp (int (.charAt s i))]
-        (codepoint-case cp
-          ;; Printable JSON escapes
-          \" (.append sb "\\\"")
-          \\ (.append sb "\\\\")
-          \/ (.append sb (if escape-slash "\\/" "/"))
-          ;; Simple ASCII characters
-          :simple-ascii (.append sb (.charAt s i))
-          ;; JSON escapes
-          \backspace (.append sb "\\b")
-          \formfeed  (.append sb "\\f")
-          \newline   (.append sb "\\n")
-          \return    (.append sb "\\r")
-          \tab       (.append sb "\\t")
-          ;; Unicode characters that Javascript forbids raw in strings
-          :js-separators (if escape-js-separators
-                           (.append sb (format "\\u%04x" cp))
-                           (.appendCodePoint sb cp))
-          ;; Any other character is Unicode
-          (if escape-unicode
-            (.append sb (format "\\u%04x" cp)) ; Hexadecimal-escaped
-            (.appendCodePoint sb cp)))))
-    (.append sb \")
-    (.print out (str sb))))
+        (if (< cp 128)
+          (case (aget decoder cp)
+            0 (.write out cp)
+            1 (do (.write out (codepoint \\)) (.write out cp))
+            2 (.write out (if (get options :escape-slash) "\\/" "/"))
+            3 (.write out "\\b")
+            4 (.write out "\\f")
+            5 (.write out "\\n")
+            6 (.write out "\\r")
+            7 (.write out "\\t")
+            8 (->hex-string out cp))
+          (codepoint-case cp
+            :js-separators (if (get options :escape-js-separators)
+                             (->hex-string out cp)
+                             (.write out cp))
+            (if (get options :escape-unicode)
+              (->hex-string out cp) ; Hexadecimal-escaped
+              (.write out cp))))))
+    (.write out (codepoint \"))))
 
 (defn- write-object [m ^PrintWriter out options]
   (let [key-fn (:key-fn options)

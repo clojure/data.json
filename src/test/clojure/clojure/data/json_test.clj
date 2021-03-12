@@ -203,6 +203,7 @@
   (is (= "\"\\u1234\\u4567\"" (json/write-str "\u1234\u4567"))))
 
 (deftest print-nonescaped-unicode
+  (is (= "\"\\u0000\\t\\u001f \"" (json/write-str "\u0000\u0009\u001f\u0020" :escape-unicode true)))
   (is (= "\"\u1234\u4567\"" (json/write-str "\u1234\u4567" :escape-unicode false))))
 
 (deftest escape-special-separators
@@ -299,7 +300,7 @@
   (is (= ::eof (json/read-str "" :eof-error? false :eof-value ::eof))))
 
 (deftest characters-in-map-keys-are-escaped
-  (is (= (json/write-str {"\"" 42}) "{\"\\\"\":42}")))
+  (is (= "{\"\\\"\":42}" (json/write-str {"\"" 42}))))
 
 ;;; Pretty-printer
 
