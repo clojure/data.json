@@ -515,7 +515,7 @@
   "Pretty-prints JSON representation of x to *out*. Options are the
   same as for write except :value-fn, which is not supported."
   [x & options]
-  (let [opts (merge default-write-options (apply hash-map options))]
+  (let [opts (merge default-write-options (apply array-map options))]
     (pprint/with-pprint-dispatch #(pprint-dispatch % opts)
       (pprint/pprint x))))
 
