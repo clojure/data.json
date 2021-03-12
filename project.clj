@@ -15,4 +15,5 @@
                                   [com.jsoniter/jsoniter "0.9.23"]]
                    :resource-paths ["dev-resources"]
                    :global-vars {*warn-on-reflection* true}}}
+  ;;:plugins [[lein-nodisassemble "0.1.3"]]
   :jvm-opts ["-Djdk.attach.allowAttachSelf=true"])
