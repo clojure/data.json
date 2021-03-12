@@ -133,10 +133,8 @@
       \t \tab
       \u (read-hex-char stream))))
 
-(defn- read-quoted-string [^PushbackReader stream]
-  ;; Expects to be called with the head of the stream AFTER the
-  ;; opening quotation mark.
-  (let [buffer (StringBuilder.)]
+(defn- slow-read-string [^PushbackReader stream ^String already-read]
+  (let [buffer (StringBuilder. already-read)]
     (loop []
       (let [c (.read stream)]
         (when (neg? c)
@@ -147,6 +145,28 @@
                  (recur))
           (do (.append buffer (char c))
               (recur)))))))
+
+(defn- read-quoted-string [^PushbackReader stream]
+  ;; Expects to be called with the head of the stream AFTER the
+  ;; opening quotation mark.
+  (let [buffer ^chars (char-array 64)
+        read (.read stream buffer 0 64)]
+    (when (neg? read)
+      (throw (EOFException. "JSON error (end-of-file inside string)")))
+    (loop [i (int 0)]
+      (let [c (int (aget buffer i))]
+        (codepoint-case c
+          \" (let [off (unchecked-inc-int i)
+                   len (unchecked-subtract-int read off)]
+               (.unread stream buffer off len)
+               (String. buffer 0 i))
+          \\ (let [off i
+                   len (unchecked-subtract-int read off)]
+               (.unread stream buffer off len)
+               (slow-read-string stream (String. buffer 0 i)))
+          (if (= i 63)
+            (slow-read-string stream (String. buffer 0 i))
+            (recur (unchecked-inc-int i))))))))
 
 (defn- read-integer [^String string]
   (if (< (count string) 18)  ; definitely fits in a Long
@@ -283,7 +303,7 @@
     (->> options
          (apply array-map)
          (merge default-read-options)
-         (-read (PushbackReader. (StringReader. string)) eof-error? eof-value))))
+         (-read (PushbackReader. (StringReader. string) 64) eof-error? eof-value))))
 
 ;;; JSON WRITER
 
