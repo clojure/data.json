@@ -495,7 +495,7 @@
 
 (defn- pprint-object [m options]
   (let [key-fn (:key-fn options)]
-    ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>") 
+    ((pprint/formatter-out "~<{~;~@{~<~w:~_~w~:>~^, ~_~}~;}~:>")
      (for [[k v] m] [(key-fn k) v]))))
 
 (defn- pprint-generic [x options]
