@@ -154,8 +154,9 @@ Change Log
 ----------------------------------------
 
 * next
+  * Perf [DJSON-32]: Use option map instead of dynamic variables (affects read+write)
+  * Perf [DJSON-33]: Improve speed of reading JSON strings
   * Fix [DJSON-30]: Fix bad test
-  * Perf [DJSON-32]: Use option map instead of dynamic variables
 * Release [1.1.0] on 2020-Mar-5
   * Fix [DJSON-26]: write-object should check seq on loop var, not param
   * Use latest parent pom (will bump default clojure dep to 1.8.0)
@@ -206,6 +207,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-33]: https://clojure.atlassian.net/browse/DJSON-33
 [DJSON-32]: https://clojure.atlassian.net/browse/DJSON-32
 [DJSON-30]: https://clojure.atlassian.net/browse/DJSON-30
 [DJSON-29]: https://clojure.atlassian.net/browse/DJSON-29
