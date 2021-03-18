@@ -154,6 +154,7 @@ Change Log
 ----------------------------------------
 
 * next
+  * Perf [DJSON-34]: More efficient writing for common path
   * Perf [DJSON-32]: Use option map instead of dynamic variables (affects read+write)
   * Perf [DJSON-33]: Improve speed of reading JSON strings
   * Fix [DJSON-30]: Fix bad test
@@ -207,6 +208,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-34]: https://clojure.atlassian.net/browse/DJSON-34
 [DJSON-33]: https://clojure.atlassian.net/browse/DJSON-33
 [DJSON-32]: https://clojure.atlassian.net/browse/DJSON-32
 [DJSON-30]: https://clojure.atlassian.net/browse/DJSON-30
