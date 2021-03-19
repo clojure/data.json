@@ -306,19 +306,19 @@
 
 (defprotocol JSONWriter
   (-write [object out options]
-    "Print object to PrintWriter out as JSON"))
+    "Print object to Appendable out as JSON"))
 
-(defn- ->hex-string [^PrintWriter out cp]
+(defn- ->hex-string [^Appendable out cp]
   (let [cpl (long cp)]
-    (.write out "\\u")
+    (.append out "\\u")
     (cond
       (< cpl 16)
-      (.write out "000")
+      (.append out "000")
       (< cpl 256)
-      (.write out "00")
+      (.append out "00")
       (< cpl 4096)
-      (.write out "0"))
-    (.write out (Integer/toHexString cp))))
+      (.append out "0"))
+    (.append out (Integer/toHexString cp))))
 
 (def ^{:tag "[S"} codepoint-decoder
   (let [shorts (short-array 128)]
@@ -337,35 +337,35 @@
           (aset shorts i (short 0)))))
     shorts))
 
-(defn- write-string [^CharSequence s ^PrintWriter out options]
+(defn- write-string [^CharSequence s ^Appendable out options]
   (let [decoder codepoint-decoder]
-    (.write out (codepoint \"))
+    (.append out (codepoint \"))
     (dotimes [i (.length s)]
       (let [cp (int (.charAt s i))]
         (if (< cp 128)
           (case (aget decoder cp)
-            0 (.write out cp)
-            1 (do (.write out (codepoint \\)) (.write out cp))
-            2 (.write out (if (get options :escape-slash) "\\/" "/"))
-            3 (.write out "\\b")
-            4 (.write out "\\f")
-            5 (.write out "\\n")
-            6 (.write out "\\r")
-            7 (.write out "\\t")
+            0 (.append out cp)
+            1 (do (.append out (codepoint \\)) (.append out cp))
+            2 (.append out (if (get options :escape-slash) "\\/" "/"))
+            3 (.append out "\\b")
+            4 (.append out "\\f")
+            5 (.append out "\\n")
+            6 (.append out "\\r")
+            7 (.append out "\\t")
             8 (->hex-string out cp))
           (codepoint-case cp
             :js-separators (if (get options :escape-js-separators)
                              (->hex-string out cp)
-                             (.write out cp))
+                             (.append out cp))
             (if (get options :escape-unicode)
               (->hex-string out cp) ; Hexadecimal-escaped
-              (.write out cp))))))
-    (.write out (codepoint \"))))
+              (.append out cp))))))
+    (.append out (codepoint \"))))
 
-(defn- write-object [m ^PrintWriter out options]
+(defn- write-object [m ^Appendable out options]
   (let [key-fn (:key-fn options)
         value-fn (:value-fn options)]
-    (.print out \{)
+    (.append out \{)
     (loop [x m, have-printed-kv false]
       (when (seq x)
         (let [[k v] (first x)
@@ -377,52 +377,52 @@
           (if-not (= value-fn out-value)
             (do
               (when have-printed-kv
-                (.print out \,))
+                (.append out \,))
               (write-string out-key out options)
-              (.print out \:)
+              (.append out \:)
               (-write out-value out options)
               (when (seq nxt)
                 (recur nxt true)))
             (when (seq nxt)
               (recur nxt have-printed-kv)))))))
-  (.print out \}))
+  (.append out \}))
 
-(defn- write-array [s ^PrintWriter out options]
-  (.print out \[)
+(defn- write-array [s ^Appendable out options]
+  (.append out \[)
   (loop [x s]
     (when (seq x)
       (let [fst (first x)
             nxt (next x)]
         (-write fst out options)
         (when (seq nxt)
-          (.print out \,)
+          (.append out \,)
           (recur nxt)))))
-  (.print out \]))
+  (.append out \]))
 
-(defn- write-bignum [x ^PrintWriter out options]
-  (.print out (str x)))
+(defn- write-bignum [x ^Appendable out options]
+  (.append out (str x)))
 
-(defn- write-float [^Float x ^PrintWriter out options]
+(defn- write-float [^Float x ^Appendable out options]
   (cond (.isInfinite x)
         (throw (Exception. "JSON error: cannot write infinite Float"))
         (.isNaN x)
         (throw (Exception. "JSON error: cannot write Float NaN"))
         :else
-        (.print out x)))
+        (.append out (str x))))
 
-(defn- write-double [^Double x ^PrintWriter out options]
+(defn- write-double [^Double x ^Appendable out options]
   (cond (.isInfinite x)
         (throw (Exception. "JSON error: cannot write infinite Double"))
         (.isNaN x)
         (throw (Exception. "JSON error: cannot write Double NaN"))
         :else
-        (.print out x)))
+        (.append out (str x))))
 
-(defn- write-plain [x ^PrintWriter out options]
-  (.print out x))
+(defn- write-plain [x ^Appendable out options]
+  (.append out (str x)))
 
-(defn- write-null [x ^PrintWriter out options]
-  (.print out "null"))
+(defn- write-null [x ^Appendable out options]
+  (.append out "null"))
 
 (defn- write-named [x out options]
   (write-string (name x) out options))
@@ -514,14 +514,14 @@
         returns itself, the key-value pair will be omitted from the
         output. This option does not apply to non-map collections."
   [x ^Writer writer & options]
-  (-write x (PrintWriter. writer) (merge default-write-options (apply array-map options))))
+  (-write x writer (merge default-write-options (apply array-map options))))
 
 (defn write-str
   "Converts x to a JSON-formatted string. Options are the same as
   write."
   [x & options]
-  (let [sw (StringWriter.)]
-    (-write x (PrintWriter. sw) (merge default-write-options (apply array-map options)))
+  (let [sw (StringBuilder.)]
+    (-write x sw (merge default-write-options (apply array-map options)))
     (.toString sw)))
 
 ;;; JSON PRETTY-PRINTER
