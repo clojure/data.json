@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.0.0] on 2021-Mar-19
   * Perf [DJSON-35]: Replace PrintWriter with more generic Appendable, reduce wrapping
   * Perf [DJSON-34]: More efficient writing for common path
   * Perf [DJSON-32]: Use option map instead of dynamic variables (affects read+write)
@@ -226,6 +226,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.0.0]: https://github.com/clojure/data.json/tree/data.json-2.0.0
 [1.1.0]: https://github.com/clojure/data.json/tree/data.json-1.1.0
 [1.0.0]: https://github.com/clojure/data.json/tree/data.json-1.0.0
 [0.2.7]: https://github.com/clojure/data.json/tree/data.json-0.2.7
