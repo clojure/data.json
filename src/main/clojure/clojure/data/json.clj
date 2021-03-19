@@ -162,7 +162,8 @@
                (.unread stream buffer off len)
                (slow-read-string stream (String. buffer 0 i)))
           (if (= i 63)
-            (slow-read-string stream (String. buffer 0 i))
+            (do (.unread stream c)
+                (slow-read-string stream (String. buffer 0 i)))
             (recur (unchecked-inc-int i))))))))
 
 (defn- read-integer [^String string]

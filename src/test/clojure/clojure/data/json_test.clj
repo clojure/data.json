@@ -1,6 +1,7 @@
 (ns clojure.data.json-test
   (:require [clojure.data.json :as json]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all]
+            [clojure.string :as str]))
 
 (deftest read-from-pushback-reader
   (let [s (java.io.PushbackReader. (java.io.StringReader. "42"))]
@@ -71,7 +72,11 @@
 (deftest read-nested-structures
   (is (= {:a [1 2 {:b [3 "four"]} 5.5]}
          (json/read-str "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"
-                       :key-fn keyword))))
+                        :key-fn keyword))))
+
+(deftest reads-long-string-correctly
+  (let [long-string (str/join "" (take 100 (cycle "abcde")))]
+    (is (= long-string (json/read-str (str "\"" long-string "\""))))))
 
 (deftest disallows-non-string-keys
   (is (thrown? Exception (json/read-str "{26:\"z\""))))
