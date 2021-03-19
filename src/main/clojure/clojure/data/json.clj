@@ -17,6 +17,7 @@
 
 ;;; JSON READER
 
+(set! *warn-on-reflection* true)
 
 (defn- default-write-key-fn
   [x]
@@ -339,13 +340,13 @@
 
 (defn- write-string [^CharSequence s ^Appendable out options]
   (let [decoder codepoint-decoder]
-    (.append out (codepoint \"))
+    (.append out \")
     (dotimes [i (.length s)]
       (let [cp (int (.charAt s i))]
         (if (< cp 128)
           (case (aget decoder cp)
-            0 (.append out cp)
-            1 (do (.append out (codepoint \\)) (.append out cp))
+            0 (.append out (char cp))
+            1 (do (.append out (char (codepoint \\))) (.append out (char cp)))
             2 (.append out (if (get options :escape-slash) "\\/" "/"))
             3 (.append out "\\b")
             4 (.append out "\\f")
@@ -356,11 +357,11 @@
           (codepoint-case cp
             :js-separators (if (get options :escape-js-separators)
                              (->hex-string out cp)
-                             (.append out cp))
+                             (.append out (char cp)))
             (if (get options :escape-unicode)
               (->hex-string out cp) ; Hexadecimal-escaped
-              (.append out cp))))))
-    (.append out (codepoint \"))))
+              (.append out (char cp)))))))
+    (.append out \")))
 
 (defn- write-object [m ^Appendable out options]
   (let [key-fn (:key-fn options)
@@ -520,7 +521,7 @@
   "Converts x to a JSON-formatted string. Options are the same as
   write."
   [x & options]
-  (let [sw (StringBuilder.)]
+  (let [sw (StringWriter.)]
     (-write x sw (merge default-write-options (apply array-map options)))
     (.toString sw)))
 
