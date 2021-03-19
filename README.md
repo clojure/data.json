@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.0.0]
+Latest stable release is [2.0.1]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.0.0"}
+org.clojure/data.json {:mvn/version "2.0.1"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.0.0"]
+    [org.clojure/data.json "2.0.1"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Release [2.0.1] on 2021-Mar-19
+  * Fix [DJSON-37]: Fix off-by-one error reading long strings, regression in 2.0.0
 * Release [2.0.0] on 2021-Mar-19
   * Perf [DJSON-35]: Replace PrintWriter with more generic Appendable, reduce wrapping
   * Perf [DJSON-34]: More efficient writing for common path
@@ -209,6 +211,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-37]: https://clojure.atlassian.net/browse/DJSON-37
 [DJSON-35]: https://clojure.atlassian.net/browse/DJSON-35
 [DJSON-34]: https://clojure.atlassian.net/browse/DJSON-34
 [DJSON-33]: https://clojure.atlassian.net/browse/DJSON-33
@@ -226,6 +229,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.0.1]: https://github.com/clojure/data.json/tree/data.json-2.0.1
 [2.0.0]: https://github.com/clojure/data.json/tree/data.json-2.0.0
 [1.1.0]: https://github.com/clojure/data.json/tree/data.json-1.1.0
 [1.0.0]: https://github.com/clojure/data.json/tree/data.json-1.0.0
