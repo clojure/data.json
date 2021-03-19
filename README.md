@@ -159,7 +159,7 @@ Change Log
   * Perf [DJSON-32]: Use option map instead of dynamic variables (affects read+write)
   * Perf [DJSON-33]: Improve speed of reading JSON strings
   * Fix [DJSON-30]: Fix bad test
-* Release [1.1.0] on 2020-Mar-5
+* Release [1.1.0] on 2021-Mar-5
   * Fix [DJSON-26]: write-object should check seq on loop var, not param
   * Use latest parent pom (will bump default clojure dep to 1.8.0)
   * Use direct linking on "aot" classifier lib
