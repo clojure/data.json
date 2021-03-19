@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [1.1.0]
+Latest stable release is [2.0.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "1.1.0"}
+org.clojure/data.json {:mvn/version "2.0.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "1.1.0"]
+    [org.clojure/data.json "2.0.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>1.1.0</version>
+      <version>2.0.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
