@@ -521,7 +521,7 @@
 (defn write-str
   "Converts x to a JSON-formatted string. Options are the same as
   write."
-  [x & options]
+  ^String [x & options]
   (let [sw (StringWriter.)]
     (-write x sw (merge default-write-options (apply array-map options)))
     (.toString sw)))
