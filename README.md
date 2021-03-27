@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.0.1]
+Latest stable release is [2.0.2]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.0.1"}
+org.clojure/data.json {:mvn/version "2.0.2"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.0.1"]
+    [org.clojure/data.json "2.0.2"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.0.2] on 2021-Mar-27
   * Fix [DJSON-38]: Type-hint return type of write-str
   * Fix [DJSON-40]: Make named argument passing compatible with new
 * Release [2.0.1] on 2021-Mar-19
@@ -234,6 +234,8 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+
+[2.0.2]: https://github.com/clojure/data.json/tree/data.json-2.0.2
 [2.0.1]: https://github.com/clojure/data.json/tree/data.json-2.0.1
 [2.0.0]: https://github.com/clojure/data.json/tree/data.json-2.0.0
 [1.1.0]: https://github.com/clojure/data.json/tree/data.json-1.1.0
