@@ -284,22 +284,20 @@
         be omitted from the output. The default value-fn returns the
         value unchanged. This option does not apply to non-map
         collections."
-  [reader & options]
+  [reader & {:as options}]
   (let [{:keys [eof-error? eof-value]
          :or {eof-error? true}} options]
     (->> options
-         (apply array-map)
          (merge default-read-options)
          (-read (PushbackReader. reader) eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for
   read."
-  [string & options]
+  [string & {:as options}]
   (let [{:keys [eof-error? eof-value]
          :or {eof-error? true}} options]
     (->> options
-         (apply array-map)
          (merge default-read-options)
          (-read (PushbackReader. (StringReader. string) 64) eof-error? eof-value))))
 
@@ -515,15 +513,15 @@
         calling value-fn again on its key-value pairs. If value-fn
         returns itself, the key-value pair will be omitted from the
         output. This option does not apply to non-map collections."
-  [x ^Writer writer & options]
-  (-write x writer (merge default-write-options (apply array-map options))))
+  [x ^Writer writer & {:as options}]
+  (-write x writer (merge default-write-options options)))
 
 (defn write-str
   "Converts x to a JSON-formatted string. Options are the same as
   write."
-  ^String [x & options]
+  ^String [x & {:as options}]
   (let [sw (StringWriter.)]
-    (-write x sw (merge default-write-options (apply array-map options)))
+    (-write x sw (merge default-write-options options))
     (.toString sw)))
 
 ;;; JSON PRETTY-PRINTER
@@ -554,8 +552,8 @@
 (defn pprint
   "Pretty-prints JSON representation of x to *out*. Options are the
   same as for write except :value-fn, which is not supported."
-  [x & options]
-  (let [opts (merge default-write-options (apply array-map options))]
+  [x & {:as options}]
+  (let [opts (merge default-write-options options)]
     (pprint/with-pprint-dispatch #(pprint-dispatch % opts)
       (pprint/pprint x))))
 
