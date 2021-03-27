@@ -155,6 +155,7 @@ Change Log
 
 * next
   * Fix [DJSON-38]: Type-hint return type of write-str
+  * Fix [DJSON-40]: Make named argument passing compatible with new
 * Release [2.0.1] on 2021-Mar-19
   * Fix [DJSON-37]: Fix off-by-one error reading long strings, regression in 2.0.0
 * Release [2.0.0] on 2021-Mar-19
@@ -213,6 +214,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-40]: https://clojure.atlassian.net/browse/DJSON-40
 [DJSON-38]: https://clojure.atlassian.net/browse/DJSON-38
 [DJSON-37]: https://clojure.atlassian.net/browse/DJSON-37
 [DJSON-35]: https://clojure.atlassian.net/browse/DJSON-35
