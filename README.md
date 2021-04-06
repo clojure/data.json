@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.1.0] on 2021-Apr-6
   * Fix [DJSON-39]: Support writing UUIDs (as strings)
 * Release [2.0.2] on 2021-Mar-27
   * Fix [DJSON-38]: Type-hint return type of write-str
@@ -217,6 +217,7 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-40]: https://clojure.atlassian.net/browse/DJSON-40
+[DJSON-39]: https://clojure.atlassian.net/browse/DJSON-39
 [DJSON-38]: https://clojure.atlassian.net/browse/DJSON-38
 [DJSON-37]: https://clojure.atlassian.net/browse/DJSON-37
 [DJSON-35]: https://clojure.atlassian.net/browse/DJSON-35
@@ -237,6 +238,7 @@ Change Log
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
 
+[2.1.0]: https://github.com/clojure/data.json/tree/data.json-2.1.0
 [2.0.2]: https://github.com/clojure/data.json/tree/data.json-2.0.2
 [2.0.1]: https://github.com/clojure/data.json/tree/data.json-2.0.1
 [2.0.0]: https://github.com/clojure/data.json/tree/data.json-2.0.0
