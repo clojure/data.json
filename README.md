@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-39]: Support writing UUIDs (as strings)
 * Release [2.0.2] on 2021-Mar-27
   * Fix [DJSON-38]: Type-hint return type of write-str
   * Fix [DJSON-40]: Make named argument passing compatible with new
