@@ -225,6 +225,11 @@
 (deftest print-bigints
   (is (= "12345678901234567890" (json/write-str 12345678901234567890))))
 
+(deftest print-uuids
+  (let [uid (java.util.UUID/randomUUID)
+        roundtripped  (java.util.UUID/fromString (json/read-str (json/write-str uid)))]
+    (is (= uid roundtripped))))
+
 (deftest error-on-NaN
   (is (thrown? Exception (json/write-str Float/NaN)))
   (is (thrown? Exception (json/write-str Double/NaN))))

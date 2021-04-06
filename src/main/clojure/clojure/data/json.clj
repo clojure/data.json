@@ -421,6 +421,11 @@
 (defn- write-plain [x ^Appendable out options]
   (.append out (str x)))
 
+(defn- write-uuid [^java.util.UUID x ^Appendable out options]
+  (.append out \")
+  (.append out (.toString x))
+  (.append out \"))
+
 (defn- write-null [x ^Appendable out options]
   (.append out "null"))
 
@@ -451,6 +456,7 @@
 (extend java.math.BigDecimal   JSONWriter {:-write write-bignum})
 (extend java.util.concurrent.atomic.AtomicInteger JSONWriter {:-write write-plain})
 (extend java.util.concurrent.atomic.AtomicLong    JSONWriter {:-write write-plain})
+(extend java.util.UUID        JSONWriter {:-write write-uuid})
 ;; Attempt to support Clojure 1.2.x:
 (when-let [class (try (.. Thread currentThread getContextClassLoader
                           (loadClass "clojure.lang.BigInt"))
