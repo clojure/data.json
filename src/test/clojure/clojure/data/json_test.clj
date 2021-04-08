@@ -235,6 +235,52 @@
         roundtripped  (java.util.UUID/fromString (json/read-str (json/write-str uid)))]
     (is (= uid roundtripped))))
 
+(def ^java.text.SimpleDateFormat date-format
+  (doto (java.text.SimpleDateFormat. "dd-MM-yyyy hh:mm:ss")
+    (.setTimeZone  (java.util.TimeZone/getDefault))))
+
+(deftest print-util-date
+  (let [date (.parse date-format "24-03-2006 15:49:00")
+        epoch-millis (.getTime date)]
+    (is (= epoch-millis (-> date
+                            json/write-str
+                            json/read-str
+                            java.time.Instant/parse
+                            .toEpochMilli)))))
+
+(deftest print-sql-date
+  (let [date (.parse date-format "24-03-2006 15:49:00")
+        sql-date (java.sql.Date. (.getTime date))
+        epoch-millis-start-of-day (.getTime (.getTime (doto (java.util.Calendar/getInstance)
+                                                        (.setTime date)
+                                                        (.set java.util.Calendar/HOUR_OF_DAY 0)
+                                                        (.set java.util.Calendar/MINUTE 0)
+                                                        (.set java.util.Calendar/SECOND 0)
+                                                        (.set java.util.Calendar/MILLISECOND 0))))]
+    (is (= epoch-millis-start-of-day (-> sql-date
+                                         json/write-str
+                                         json/read-str
+                                         java.time.Instant/parse
+                                         .toEpochMilli)))))
+
+(deftest print-time
+  (let [time (java.time.Instant/parse "2006-03-24T15:49:00.000Z")]
+    (is (= time (java.time.Instant/parse (json/read-str (json/write-str time)))))))
+
+
+(deftest print-time-supports-format
+  (let [formatter (.withZone java.time.format.DateTimeFormatter/ISO_ZONED_DATE_TIME
+                             (java.time.ZoneId/systemDefault))
+        date (.parse date-format "24-03-2006 15:49:00")
+        time (.toInstant (.atZone (java.time.LocalDateTime/parse
+                                   "2006-03-24T15:49:00.000Z"
+                                   formatter)
+                                 (java.time.ZoneId/systemDefault)))]
+    (is (= time (->> (json/write-str date :date-formatter formatter)
+                     json/read-str
+                     (.parse formatter)
+                     (java.time.Instant/from))))))
+
 (deftest error-on-NaN
   (is (thrown? Exception (json/write-str Float/NaN)))
   (is (thrown? Exception (json/write-str Double/NaN))))

@@ -426,6 +426,22 @@
   (.append out (.toString x))
   (.append out \"))
 
+(defn- write-instant [^java.time.Instant x ^Appendable out options]
+  (let [formatter ^java.time.format.DateTimeFormatter (:date-formatter options)]
+    (.append out \")
+    (.append out (.format formatter x))
+    (.append out \")))
+
+(defn- write-date [^java.util.Date x ^Appendable out options]
+  (write-instant (.toInstant x) out options))
+
+(defn- default-sql-date->instant-fn [^java.sql.Date d]
+  (.toInstant (.atStartOfDay (.toLocalDate d) (java.time.ZoneId/systemDefault))))
+
+(defn- write-sql-date [^java.sql.Date x ^Appendable out options]
+  (let [->instant (:sql-date-converter options)]
+    (write-instant (->instant x) out options)))
+
 (defn- write-null [x ^Appendable out options]
   (.append out "null"))
 
@@ -456,7 +472,10 @@
 (extend java.math.BigDecimal   JSONWriter {:-write write-bignum})
 (extend java.util.concurrent.atomic.AtomicInteger JSONWriter {:-write write-plain})
 (extend java.util.concurrent.atomic.AtomicLong    JSONWriter {:-write write-plain})
-(extend java.util.UUID        JSONWriter {:-write write-uuid})
+(extend java.util.UUID         JSONWriter {:-write write-uuid})
+(extend java.time.Instant      JSONWriter {:-write write-instant})
+(extend java.util.Date         JSONWriter {:-write write-date})
+(extend java.sql.Date          JSONWriter {:-write write-sql-date})
 ;; Attempt to support Clojure 1.2.x:
 (when-let [class (try (.. Thread currentThread getContextClassLoader
                           (loadClass "clojure.lang.BigInt"))
@@ -476,10 +495,12 @@
 (extend java.lang.Object       JSONWriter {:-write write-generic})
 
 (def default-write-options {:escape-unicode true
-                         :escape-js-separators true
-                         :escape-slash true
-                         :key-fn default-write-key-fn
-                         :value-fn default-value-fn})
+                            :escape-js-separators true
+                            :escape-slash true
+                            :sql-date-converter default-sql-date->instant-fn
+                            :date-formatter java.time.format.DateTimeFormatter/ISO_INSTANT
+                            :key-fn default-write-key-fn
+                            :value-fn default-value-fn})
 (defn write
   "Write JSON-formatted output to a java.io.Writer. Options are
    key-value pairs, valid options are:
@@ -498,6 +519,21 @@
     :escape-slash boolean
 
        If true (default) the slash / is escaped as \\/
+
+    :sql-date-converter function
+
+       Single-argument function used to convert a java.sql.Date to
+       a java.time.Instant. As java.sql.Date does not have a
+       time-component (which is required by java.time.Instant), it needs
+       to be computed. The default implementation, `default-sql-date->instant-fn`
+       uses
+       ```
+          (.toInstant (.atStartOfDay (.toLocalDate sql-date) (java.time.ZoneId/systemDefault)))
+       ```
+
+    :date-formatter
+
+        A java.time.DateTimeFormatter instance, defaults to DateTimeFormatter/ISO_INSTANT
 
     :key-fn function
 
