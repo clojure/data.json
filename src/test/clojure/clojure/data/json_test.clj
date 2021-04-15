@@ -74,6 +74,11 @@
          (json/read-str "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}"
                         :key-fn keyword))))
 
+(deftest read-nested-structures-stream
+  (is (= {:a [1 2 {:b [3 "four"]} 5.5]}
+         (json/read (java.io.StringReader. "{\"a\":[1,2,{\"b\":[3,\"four\"]},5.5]}")
+                    :key-fn keyword))))
+
 (deftest reads-long-string-correctly
   (let [long-string (str/join "" (take 100 (cycle "abcde")))]
     (is (= long-string (json/read-str (str "\"" long-string "\""))))))

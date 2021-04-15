@@ -289,7 +289,7 @@
          :or {eof-error? true}} options]
     (->> options
          (merge default-read-options)
-         (-read (PushbackReader. reader) eof-error? eof-value))))
+         (-read (PushbackReader. reader 64) eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for
