@@ -153,6 +153,9 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-43]: Fix buffer overflow in pushbackreader
+  * Update parent pom to latest (1.1.0)
 * Release [2.1.0] on 2021-Apr-6
   * Fix [DJSON-39]: Support writing UUIDs (as strings)
 * Release [2.0.2] on 2021-Mar-27
@@ -216,6 +219,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-43]: https://clojure.atlassian.net/browse/DJSON-43
 [DJSON-40]: https://clojure.atlassian.net/browse/DJSON-40
 [DJSON-39]: https://clojure.atlassian.net/browse/DJSON-39
 [DJSON-38]: https://clojure.atlassian.net/browse/DJSON-38
