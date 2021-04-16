@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>clojure.data.json - data.json 1.1.0-SNAPSHOT API documentation</title>
+    <title>clojure.data.json - data.json 2.2.1-SNAPSHOT API documentation</title>
     <link rel="icon" href="static/favicon.png" />
     <link rel="shortcut icon" href="static/favicon.png" />
     <link rel="stylesheet" href="static/clojure.css" type="text/css" media="all" />
@@ -25,7 +25,7 @@ namespace.
       <div id="leftcolumn"><div style="text-align: center;"></div>
 <div class="menu">
   <div class="WikiCustomNav WikiElement wiki">
-    <span class="toc-header"><span id="project-name">data.json</span> <span id="version">1.1.0-SNAPSHOT</span> API</span><br />
+    <span class="toc-header"><span id="project-name">data.json</span> <span id="version">2.2.1-SNAPSHOT</span> API</span><br />
     <ul>
       <li><a href="index.html" class="wiki_link">Overview</a></li>
       <li><a href="api-index.html" class="wiki_link">API Index</a></li>
@@ -96,7 +96,7 @@ namespace.
 </div>
 </div>
                 <div id="content-tag"><h1 id="overview">API for <span id="clojure.data.json">clojure.data.json</span>
-  - <span id="header-project">data.json</span> <span id="header-version">1.1.0-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
+  - <span id="header-project">data.json</span> <span id="header-version">2.2.1-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
   </h1>
 <span id="author-line">by <span id="author-name">Stuart Sierra</span><br /></span>
 <br />Full namespace name: <span id="long-name">clojure.data.json</span>
@@ -118,14 +118,14 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     <h2 id="clojure.data.json/JSONWriter">JSONWriter</h2>
     <span id="proto-type">Protocol</span><br />
     <pre id="proto-docstr"></pre>
-    Known implementations: <span id="proto-impls">clojure.lang.BigInt, clojure.lang.Named, clojure.lang.Ratio, java.lang.Boolean, java.lang.Byte, java.lang.CharSequence, java.lang.Double, java.lang.Float, java.lang.Integer, java.lang.Long, java.lang.Short, java.math.BigDecimal, java.math.BigInteger, java.util.Collection, java.util.concurrent.atomic.AtomicInteger, java.util.concurrent.atomic.AtomicLong, java.util.Map, nil, Object</span>
+    Known implementations: <span id="proto-impls">clojure.lang.BigInt, clojure.lang.Named, clojure.lang.Ratio, java.lang.Boolean, java.lang.Byte, java.lang.CharSequence, java.lang.Double, java.lang.Float, java.lang.Integer, java.lang.Long, java.lang.Short, java.math.BigDecimal, java.math.BigInteger, java.sql.Date, java.time.Instant, java.util.Collection, java.util.concurrent.atomic.AtomicInteger, java.util.concurrent.atomic.AtomicLong, java.util.Date, java.util.Map, java.util.UUID, nil, Object</span>
     <div id="proto-var-entry">
       <br />
       <h3 id="clojure.data.json/-write">-write</h3>
       <span id="var-type">function</span><br />
-      <pre id="var-usage">Usage: (-write object out)
+      <pre id="var-usage">Usage: (-write object out options)
 </pre>
-      <pre id="var-docstr">Print object to PrintWriter out as JSON</pre>
+      <pre id="var-docstr">Print object to Appendable out as JSON</pre>
       <pre id="var-specs"></pre>
       
       
@@ -133,7 +133,7 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     </div>
     
     
-    <a id="proto-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L290">Source</a>
+    <a id="proto-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L310">Source</a>
   </div>
 </div>
 
@@ -163,14 +163,14 @@ Valid options are:
     <hr />
     <h2 id="clojure.data.json/pprint">pprint</h2>
     <span id="var-type">function</span><br />
-    <pre id="var-usage">Usage: (pprint x &amp; options)
+    <pre id="var-usage">Usage: (pprint x &amp; {:as options})
 </pre>
     <pre id="var-docstr">Pretty-prints JSON representation of x to *out*. Options are the
 same as for write except :value-fn, which is not supported.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L513">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L597">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -212,7 +212,7 @@ Valid options are:
     <hr />
     <h2 id="clojure.data.json/read">read</h2>
     <span id="var-type">function</span><br />
-    <pre id="var-usage">Usage: (read reader &amp; options)
+    <pre id="var-usage">Usage: (read reader &amp; {:as options})
 </pre>
     <pre id="var-docstr">Reads a single item of JSON data from a java.io.Reader. Options are
 key-value pairs, valid options are:
@@ -251,7 +251,7 @@ key-value pairs, valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L232">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L255">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -276,20 +276,20 @@ EOFException; if false EOF will return eof-value.</pre>
     <hr />
     <h2 id="clojure.data.json/read-str">read-str</h2>
     <span id="var-type">function</span><br />
-    <pre id="var-usage">Usage: (read-str string &amp; options)
+    <pre id="var-usage">Usage: (read-str string &amp; {:as options})
 </pre>
     <pre id="var-docstr">Reads one JSON value from input String. Options are the same as for
 read.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L278">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L297">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
     <h2 id="clojure.data.json/write">write</h2>
     <span id="var-type">function</span><br />
-    <pre id="var-usage">Usage: (write x writer &amp; options)
+    <pre id="var-usage">Usage: (write x writer &amp; {:as options})
 </pre>
     <pre id="var-docstr">Write JSON-formatted output to a java.io.Writer. Options are
 key-value pairs, valid options are:
@@ -308,6 +308,21 @@ key-value pairs, valid options are:
  :escape-slash boolean
 
     If true (default) the slash / is escaped as \/
+
+ :sql-date-converter function
+
+    Single-argument function used to convert a java.sql.Date to
+    a java.time.Instant. As java.sql.Date does not have a
+    time-component (which is required by java.time.Instant), it needs
+    to be computed. The default implementation, `default-sql-date-&gt;instant-fn`
+    uses
+    ```
+       (.toInstant (.atStartOfDay (.toLocalDate sql-date) (java.time.ZoneId/systemDefault)))
+    ```
+
+ :date-formatter
+
+     A java.time.DateTimeFormatter instance, defaults to DateTimeFormatter/ISO_INSTANT
 
  :key-fn function
 
@@ -332,7 +347,7 @@ key-value pairs, valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L428">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L507">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -352,14 +367,14 @@ Print object to PrintWriter out as JSON</pre>
     <hr />
     <h2 id="clojure.data.json/write-str">write-str</h2>
     <span id="var-type">function</span><br />
-    <pre id="var-usage">Usage: (write-str x &amp; options)
+    <pre id="var-usage">Usage: (write-str x &amp; {:as options})
 </pre>
     <pre id="var-docstr">Converts x to a JSON-formatted string. Options are the same as
 write.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/f78d2dc76fc4c15ed5984b0b35b4f84f1c7dcc88/src/main/clojure/clojure/data/json.clj#L481">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/66f946edc83f59034f0c139cffe737367216c382/src/main/clojure/clojure/data/json.clj#L564">Source</a>
   </div>
 </div>
 
