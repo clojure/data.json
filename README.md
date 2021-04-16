@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.1.1]
+Latest stable release is [2.2.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.1.1"}
+org.clojure/data.json {:mvn/version "2.2.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.1.1"]
+    [org.clojure/data.json "2.2.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.1.1</version>
+      <version>2.2.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -153,8 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
-  * Add [DJSON-42]: New support for writing java.time.Instant and java.util.Date (+ subclasses)
+* Release [2.2.0] on 2021-Apr-16
+  * Add [DJSON-41]: New support for writing java.time.Instant and java.util.Date (+ subclasses)
     * New options to `write` functions:
       * `:date-formatter` - `java.time.DateTimeFormatter` to use (default `DateTimeFormatter/ISO_INSTANT`)
       * `:sql-date-converter` - fn to convert `java.sql.Date` to `java.time.Instant` (default provided)
@@ -226,10 +226,12 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-43]: https://clojure.atlassian.net/browse/DJSON-43
+[DJSON-41]: https://clojure.atlassian.net/browse/DJSON-41
 [DJSON-40]: https://clojure.atlassian.net/browse/DJSON-40
 [DJSON-39]: https://clojure.atlassian.net/browse/DJSON-39
 [DJSON-38]: https://clojure.atlassian.net/browse/DJSON-38
 [DJSON-37]: https://clojure.atlassian.net/browse/DJSON-37
+[DJSON-36]: https://clojure.atlassian.net/browse/DJSON-36
 [DJSON-35]: https://clojure.atlassian.net/browse/DJSON-35
 [DJSON-34]: https://clojure.atlassian.net/browse/DJSON-34
 [DJSON-33]: https://clojure.atlassian.net/browse/DJSON-33
@@ -247,7 +249,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
-
+[2.2.0]: https://github.com/clojure/data.json/tree/data.json-2.2.0
 [2.1.1]: https://github.com/clojure/data.json/tree/data.json-2.1.1
 [2.1.0]: https://github.com/clojure/data.json/tree/data.json-2.1.0
 [2.0.2]: https://github.com/clojure/data.json/tree/data.json-2.0.2
