@@ -153,6 +153,12 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Add [DJSON-42]: New support for writing java.time.Instant and java.util.Date (+ subclasses)
+    * New options to `write` functions:
+      * `:date-formatter` - `java.time.DateTimeFormatter` to use (default `DateTimeFormatter/ISO_INSTANT`)
+      * `:sql-date-converter` - fn to convert `java.sql.Date` to `java.time.Instant` (default provided)
+  * Perf [DJSON-36]: Refactor code in read-array and read-object
 * Release [2.1.1] on 2021-Apr-15
   * Fix [DJSON-43]: Fix buffer overflow in pushbackreader
   * Update parent pom to latest (1.1.0)
