@@ -62,12 +62,18 @@
   (is (= nil (json/read-str "\r\n   null"))))
 
 (deftest read-arrays
-  (is (= [1 2 3] (json/read-str "[1,2,3]")))
+  (is (= (vec (range 35))
+         (json/read-str "[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34]")))
   (is (= ["Ole" "Lena"] (json/read-str "[\"Ole\", \r\n \"Lena\"]"))))
 
 (deftest read-objects
-  (is (= {:a 1, :b 2} (json/read-str "{\"a\": 1, \"b\": 2}"
-                                    :key-fn keyword))))
+  (is (= {:k1 1, :k2 2, :k3 3, :k4 4, :k5 5, :k6 6, :k7 7, :k8 8
+          :k9 9, :k10 10, :k11 11, :k12 12, :k13 13, :k14 14, :k15 15, :k16 16} 
+         (json/read-str "{\"k1\": 1, \"k2\": 2, \"k3\": 3, \"k4\": 4,
+                          \"k5\": 5, \"k6\": 6, \"k7\": 7, \"k8\": 8,
+                          \"k9\": 9, \"k10\": 10, \"k11\": 11, \"k12\": 12,
+                          \"k13\": 13, \"k14\": 14, \"k15\": 15, \"k16\": 16}"
+                        :key-fn keyword))))
 
 (deftest read-nested-structures
   (is (= {:a [1 2 {:b [3 "four"]} 5.5]}
