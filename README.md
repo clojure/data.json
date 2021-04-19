@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Revert [DJSON-36]: Problem with transient batching in that change
 * Release [2.2.0] on 2021-Apr-16
   * Add [DJSON-41]: New support for writing java.time.Instant and java.util.Date (+ subclasses)
     * New options to `write` functions:
