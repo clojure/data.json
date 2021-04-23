@@ -50,58 +50,6 @@
      ~@(when (odd? (count clauses))
          [(last clauses)])))
 
-(defn- read-array [^PushbackReader stream options]
-  ;; Expects to be called with the head of the stream AFTER the
-  ;; opening bracket.
-  (loop [result (transient [])]
-    (let [c (.read stream)]
-      (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside array)")))
-      (codepoint-case c
-        :whitespace (recur result)
-        \, (recur result)
-        \] (persistent! result)
-        (do (.unread stream c)
-            (let [element (-read stream true nil options)]
-              (recur (conj! result element))))))))
-
-(defn- read-object [^PushbackReader stream options]
-  ;; Expects to be called with the head of the stream AFTER the
-  ;; opening bracket.
-  (let [key-fn (:key-fn options)
-        value-fn (:value-fn options)]
-    (loop [key nil, pending? false, result (transient {})]
-      (let [c (.read stream)]
-        (when (neg? c)
-          (throw (EOFException. "JSON error (end-of-file inside object)")))
-        (codepoint-case c
-          :whitespace (recur key pending? result)
-
-          \, (if pending?
-               (throw (Exception. "JSON error (missing entry in object)"))
-               (recur nil true result))
-
-          \: (recur key false result)
-
-          \} (if pending?
-               (throw (Exception. "JSON error (missing entry in object)"))
-               (if (nil? key)
-                 (persistent! result)
-                 (throw (Exception. "JSON error (key missing value in object)"))))
-
-          (do (.unread stream c)
-              (let [element (-read stream true nil options)]
-                (if (nil? key)
-                  (if (string? element)
-                    (recur element false result)
-                    (throw (Exception. "JSON error (non-string key in object)")))
-                  (recur nil false
-                         (let [out-key (key-fn key)
-                               out-value (value-fn out-key element)]
-                           (if (= value-fn out-value)
-                             result
-                             (assoc! result out-key out-value))))))))))))
-
 (defn- read-hex-char [^PushbackReader stream]
   ;; Expects to be called with the head of the stream AFTER the
   ;; initial "\u".  Reads the next four characters from the stream.
@@ -195,60 +143,112 @@
       (read-decimal (str buffer) bigdec?)
       (read-integer (str buffer)))))
 
+(defn- next-token [^PushbackReader stream]
+  (loop [c (.read stream)]
+    (if (< 32 c)
+      (int c)
+      (codepoint-case (int c)
+        :whitespace (recur (.read stream))
+        -1 -1))))
+
+(defn- read-array [^PushbackReader stream options]
+  ;; Expects to be called with the head of the stream AFTER the
+  ;; opening bracket.
+  (loop [result (transient [])]
+    (let [c (int (next-token stream))]
+      (when (neg? c)
+        (throw (EOFException. "JSON error (end-of-file inside array)")))
+      (codepoint-case c
+        \, (recur result)
+        \] (persistent! result)
+        (do (.unread stream c)
+            (recur (conj! result (-read stream true nil options))))))))
+
+(defn- read-key [^PushbackReader stream]
+  (let [c (int (next-token stream))]
+    (if (= c (codepoint \"))
+      (let [key (read-quoted-string stream)]
+        (if (= (codepoint \:) (int (next-token stream)))
+          key
+          (throw (Exception. "JSON error (missing `:` in object)"))))
+      (if (= c (codepoint \}))
+        nil
+        (throw (Exception. (str "JSON error (non-string key in object), found `" (char c) "`, expected `\"`")))))))
+
+(defn- read-object [^PushbackReader stream options]
+  ;; Expects to be called with the head of the stream AFTER the
+  ;; opening bracket.
+  (let [key-fn (get options :key-fn)
+        value-fn (get options :value-fn)]
+    (loop [result (transient {})]
+      (if-let [key (read-key stream)]
+        (let [key (cond-> key key-fn key-fn)
+              value (-read stream true nil options)
+              r (if value-fn
+                  (let [out-value (value-fn key value)]
+                    (if-not (= value-fn out-value)
+                      (assoc! result key out-value)
+                      result))
+                  (assoc! result key value))]
+          (codepoint-case (int (next-token stream))
+            \, (recur r)
+            \} (persistent! r)
+            (throw (Exception. "JSON error (missing entry in object)"))))
+        (let [r (persistent! result)]
+          (if (empty? r)
+            r
+            (throw (Exception. "JSON error empty entry in object is not allowed"))))))))
+
 (defn- -read
   [^PushbackReader stream eof-error? eof-value options]
-  (loop []
-    (let [c (.read stream)]
-      (if (neg? c) ;; Handle end-of-stream
-        (if eof-error?
-          (throw (EOFException. "JSON error (end-of-file)"))
-          eof-value)
-        (codepoint-case
-          c
-          :whitespace (recur)
+  (let [c (int (next-token stream))]
+    (codepoint-case c
+        ;; Read numbers
+        (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+        (do (.unread stream c)
+            (read-number stream (:bigdec options)))
 
-          ;; Read numbers
-          (\- \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
-          (do (.unread stream c)
-              (read-number stream (:bigdec options)))
+        ;; Read strings
+        \" (read-quoted-string stream)
 
-          ;; Read strings
-          \" (read-quoted-string stream)
+        ;; Read null as nil
+        \n (if (and (= (codepoint \u) (.read stream))
+                    (= (codepoint \l) (.read stream))
+                    (= (codepoint \l) (.read stream)))
+             nil
+             (throw (Exception. "JSON error (expected null)")))
 
-          ;; Read null as nil
-          \n (if (and (= (codepoint \u) (.read stream))
-                      (= (codepoint \l) (.read stream))
-                      (= (codepoint \l) (.read stream)))
-               nil
-               (throw (Exception. "JSON error (expected null)")))
+        ;; Read true
+        \t (if (and (= (codepoint \r) (.read stream))
+                    (= (codepoint \u) (.read stream))
+                    (= (codepoint \e) (.read stream)))
+             true
+             (throw (Exception. "JSON error (expected true)")))
 
-          ;; Read true
-          \t (if (and (= (codepoint \r) (.read stream))
-                      (= (codepoint \u) (.read stream))
-                      (= (codepoint \e) (.read stream)))
-               true
-               (throw (Exception. "JSON error (expected true)")))
+        ;; Read false
+        \f (if (and (= (codepoint \a) (.read stream))
+                    (= (codepoint \l) (.read stream))
+                    (= (codepoint \s) (.read stream))
+                    (= (codepoint \e) (.read stream)))
+             false
+             (throw (Exception. "JSON error (expected false)")))
 
-          ;; Read false
-          \f (if (and (= (codepoint \a) (.read stream))
-                      (= (codepoint \l) (.read stream))
-                      (= (codepoint \s) (.read stream))
-                      (= (codepoint \e) (.read stream)))
-               false
-               (throw (Exception. "JSON error (expected false)")))
+        ;; Read JSON objects
+        \{ (read-object stream options)
 
-          ;; Read JSON objects
-          \{ (read-object stream options)
+        ;; Read JSON arrays
+        \[ (read-array stream options)
 
-          ;; Read JSON arrays
-          \[ (read-array stream options)
-
+        (if (neg? c) ;; Handle end-of-stream
+          (if eof-error?
+            (throw (EOFException. "JSON error (end-of-file)"))
+            eof-value)
           (throw (Exception.
-                  (str "JSON error (unexpected character): " (char c)))))))))
+                  (str "JSON error (unexpected character): " (char c))))))))
 
 (def default-read-options {:bigdec false
-                           :key-fn identity
-                           :value-fn default-value-fn})
+                           :key-fn nil
+                           :value-fn nil})
 (defn read
   "Reads a single item of JSON data from a java.io.Reader. Options are
   key-value pairs, valid options are:

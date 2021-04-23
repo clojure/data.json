@@ -3,7 +3,8 @@
             [clj-async-profiler.core :as prof]
             [clojure.data.json :as json]
             [criterium.core :refer :all]
-            [jsonista.core :as jsonista])
+            [jsonista.core :as jsonista]
+            [clojure.string :as str])
   (:import com.jsoniter.JsonIterator))
 
 (defmacro profiling [times & body]
@@ -12,7 +13,18 @@
      (dotimes [_# ~times]
        ~@body)
      (finally
-       (println (str "file://" (:path (bean (prof/stop {}))))))))
+       (prof/stop {:transform (fn [s#]
+                                (if (or (str/index-of s# "err_codes_unix")
+                                        (str/index-of s# "["))
+                                  nil
+                                  (-> s#
+                                      (str/replace #"^.+/.*read-profiling.+?;" "START;")
+                                      (str/replace #"^.*nextToken.*" "jackson-next-token")
+                                      (str/replace #"^.*getText.*" "jackson-get-text")
+                                      (str/replace #"^.*next.token.*" "data-json-next-token")
+                                      (str/replace #"^.*read.quoted.string.*" "data-json-read_quoted_string")
+                                      (str/replace #".*assoc.*" "ASSOC;")
+                                      (str/replace #".*Map.*" "ASSOC;"))))}))))
 
 (defn json-data [size]
   (slurp (str "dev-resources/json" size ".json")))
@@ -78,3 +90,19 @@
   (doseq [size ["10b" "100b" "1k" "10k" "100k"]]
     (let [json (json-data size)]
       (profiling 10000 (json/read-str json)))))
+
+(defn cheshire-read-profiling []
+  (doseq [size ["10b" "100b" "1k" "10k" "100k"]]
+    (let [json (json-data size)]
+      (profiling 10000 (cheshire/parse-string-strict json)))))
+
+(defn jsonista-read-profiling []
+  (doseq [size ["10b" "100b" "1k" "10k" "100k"]]
+    (let [json (json-data size)]
+      (profiling 10000 (jsonista/read-value json)))))
+
+
+(defn benchit [data]
+  (let [json (json/write-str data)]
+    (quick-bench (json/read-str json))
+    (quick-bench (cheshire/parse-string-strict json))))
