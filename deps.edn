@@ -1,2 +1,2 @@
 {:paths ["src/main/clojure"]
- :deps {org.clojure/clojure {:mvn/version "1.8.0"}}}
+ :deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
