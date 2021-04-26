@@ -19,7 +19,7 @@
                           :array ::json-array
                           :scalar ::json-scalar))
 
-(s/def ::json-array (s/coll-of ::json-value))
+(s/def ::json-array (s/coll-of ::json-value :gen-max 12))
 (s/def ::json-object (s/map-of string? ::json-value
                                :gen-max 10))
 
