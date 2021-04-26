@@ -154,6 +154,7 @@ Change Log
 ----------------------------------------
 
 * next
+  * Perf [DJSON-36]: Reapplied updated refactored code in read-array and read-object
   * Add [DJSON-45]: Generative tests for read/write roundtrip
 * Release [2.2.1] on 2021-Apr-19
   * Revert [DJSON-36]: Problem with transient batching in that change
