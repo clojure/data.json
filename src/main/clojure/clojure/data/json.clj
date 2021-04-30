@@ -128,17 +128,123 @@
 
 (defn- read-number [^PushbackReader stream bigdec?]
   (let [buffer (StringBuilder.)
-        decimal? (loop [decimal? false]
+        decimal? (loop [stage :minus]
                    (let [c (.read stream)]
-                     (codepoint-case c
-                       (\- \+ \0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
-                       (do (.append buffer (char c))
-                           (recur decimal?))
-                       (\e \E \.)
-                       (do (.append buffer (char c))
-                           (recur true))
-                       (do (.unread stream c)
-                           decimal?))))]
+                     (case stage
+                       :minus
+                       (codepoint-case c
+                         \-
+                         (do (.append buffer (char c))
+                             (recur :int-zero))
+                         \0
+                         (do (.append buffer (char c))
+                             (recur :frac-point))
+                         (\1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :int-digit))
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; Number must either be a single 0 or 1-9 followed by 0-9
+                       :int-zero
+                       (codepoint-case c
+                         \0
+                         (do (.append buffer (char c))
+                             (recur :frac-point))
+                         (\1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :int-digit))
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; at this point, there is at least one digit
+                       :int-digit
+                       (codepoint-case c
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :int-digit))
+                         \.
+                         (do (.append buffer (char c))
+                             (recur :frac-first))
+                         (\e \E)
+                         (do (.append buffer (char c))
+                             (recur :exp-symbol))
+                         ;; early exit
+                         :whitespace
+                         (do (.unread stream c)
+                             false)
+                         (\, \] \} -1)
+                         (do (.unread stream c)
+                             false)
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; previous character is a "0"
+                       :frac-point
+                       (codepoint-case c
+                         \.
+                         (do (.append buffer (char c))
+                             (recur :frac-first))
+                         (\e \E)
+                         (do (.append buffer (char c))
+                             (recur :exp-symbol))
+                         ;; early exit
+                         :whitespace
+                         (do (.unread stream c)
+                             false)
+                         (\, \] \} -1)
+                         (do (.unread stream c)
+                             false)
+                         ;; Disallow zero-padded numbers or invalid characters
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; previous character is a "."
+                       :frac-first
+                       (codepoint-case c
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :frac-digit))
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; any number of following digits
+                       :frac-digit
+                       (codepoint-case c
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :frac-digit))
+                         (\e \E)
+                         (do (.append buffer (char c))
+                             (recur :exp-symbol))
+                         ;; early exit
+                         :whitespace
+                         (do (.unread stream c)
+                             true)
+                         (\, \] \} -1)
+                         (do (.unread stream c)
+                             true)
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; previous character is a "e" or "E"
+                       :exp-symbol
+                       (codepoint-case c
+                         (\- \+)
+                         (do (.append buffer (char c))
+                             (recur :exp-first))
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :exp-digit)))
+                       ;; previous character is a "-" or "+"
+                       ;; must have at least one digit
+                       :exp-first
+                       (codepoint-case c
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :exp-digit))
+                         (throw (Exception. "JSON error (invalid number literal)")))
+                       ;; any number of following digits
+                       :exp-digit
+                       (codepoint-case c
+                         (\0 \1 \2 \3 \4 \5 \6 \7 \8 \9)
+                         (do (.append buffer (char c))
+                             (recur :exp-digit))
+                         :whitespace
+                         (do (.unread stream c)
+                             true)
+                         (\, \] \} -1)
+                         (do (.unread stream c)
+                             true)
+                         (throw (Exception. "JSON error (invalid number literal)"))))))]
     (if decimal?
       (read-decimal (str buffer) bigdec?)
       (read-integer (str buffer)))))

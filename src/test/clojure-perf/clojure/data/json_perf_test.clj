@@ -106,3 +106,46 @@
   (let [json (json/write-str data)]
     (quick-bench (json/read-str json))
     (quick-bench (cheshire/parse-string-strict json))))
+
+;; Used to generate 1000-numbers.json
+(defn gen-int []
+  (str (rand-int 1000)))
+
+(defn gen-frac []
+  (str "." (rand-int 1000)))
+
+(defn gen-exp []
+  (str (rand-nth ["e" "E"]) (rand-nth ["" "-" "+"]) (rand-int 5)))
+
+(defn generate-random-json-number []
+  (case (rand-int 8)
+    ; int
+    0 (gen-int)
+    1 (str "-" (gen-int))
+    ; frac
+    2 (str (gen-int) (gen-frac))
+    3 (str "-" (gen-int) (gen-frac))
+    ; exp
+    4 (str (gen-int) (gen-exp))
+    5 (str "-" (gen-int) (gen-exp))
+    ; combo
+    6 (str (gen-int) (gen-frac) (gen-exp))
+    7 (str "-" (gen-int) (gen-frac) (gen-exp))))
+
+(defn generate-random-json-numbers [n]
+  ;; used to generate dev-resources/1000-numbers.json
+  (->> (for [x (range n)]
+         (generate-random-json-number))
+       (str/join ", ")
+       (#(str "[" % "]"))))
+
+(defn read-bench-all-sizes-numbers []
+  (let [json (slurp "dev-resources/1000-numbers.json")]
+    (println "data.json:")
+    (println (with-out-str (quick-bench (json/read-str json))))
+    (println "cheshire:")
+    (println (with-out-str (quick-bench (cheshire/parse-string-strict json))))
+    (println "jsonista:")
+    (println (with-out-str (quick-bench (jsonista/read-value json))))
+    (println "jsoniter:")
+    (println (with-out-str (quick-bench (.read (JsonIterator/parse ^String json)))))))
