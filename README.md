@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-47]: Make number parsing match spec (reject invalid numbers)
 * Release [2.2.2] on 2021-Apr-26
   * Perf [DJSON-36]: Reapplied updated refactored code in read-array and read-object
   * Add [DJSON-45]: Generative tests for read/write roundtrip
@@ -230,6 +232,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
 [DJSON-45]: https://clojure.atlassian.net/browse/DJSON-45
 [DJSON-43]: https://clojure.atlassian.net/browse/DJSON-43
 [DJSON-41]: https://clojure.atlassian.net/browse/DJSON-41
