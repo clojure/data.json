@@ -149,3 +149,15 @@
     (println (with-out-str (quick-bench (jsonista/read-value json))))
     (println "jsoniter:")
     (println (with-out-str (quick-bench (.read (JsonIterator/parse ^String json)))))))
+
+(defn read-bench-nested-arrays []
+  (let [json (slurp "dev-resources/nested-arrays.json")]
+    (println "Results for nested arrays:")
+    (println "data.json:")
+    (println (with-out-str (quick-bench (json/read-str json))))
+    (println "cheshire:")
+    (println (with-out-str (quick-bench (cheshire/parse-string-strict json))))
+    (println "jsonista:")
+    (println (with-out-str (quick-bench (jsonista/read-value json))))
+    (println "jsoniter:")
+    (println (with-out-str (quick-bench (.read (JsonIterator/parse ^String json)))))))

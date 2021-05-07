@@ -257,18 +257,28 @@
         :whitespace (recur (.read stream))
         -1 -1))))
 
+(defn invalid-array-exception []
+  (Exception. "JSON error (invalid array)"))
+
+(defn- read-array* [^PushbackReader stream options]
+  ;; Handles all array values after the first.
+  (loop [result (transient [])]
+    (let [r (conj! result (-read stream true nil options))]
+      (codepoint-case (int (next-token stream))
+        \] (persistent! r)
+        \, (recur r)
+        (throw (invalid-array-exception))))))
+
 (defn- read-array [^PushbackReader stream options]
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening bracket.
-  (loop [result (transient [])]
-    (let [c (int (next-token stream))]
-      (when (neg? c)
-        (throw (EOFException. "JSON error (end-of-file inside array)")))
-      (codepoint-case c
-        \, (recur result)
-        \] (persistent! result)
-        (do (.unread stream c)
-            (recur (conj! result (-read stream true nil options))))))))
+  ;; Only handles array value.
+  (let [c (int (next-token stream))]
+    (codepoint-case c
+      \] []
+      \, (throw (invalid-array-exception))
+      (do (.unread stream c)
+          (read-array* stream options)))))
 
 (defn- read-key [^PushbackReader stream]
   (let [c (int (next-token stream))]
