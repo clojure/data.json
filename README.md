@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.2.3] on 2021-May-6
   * Fix [DJSON-47]: Make number parsing match spec (reject invalid numbers)
 * Release [2.2.2] on 2021-Apr-26
   * Perf [DJSON-36]: Reapplied updated refactored code in read-array and read-object
@@ -258,6 +258,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.2.3]: https://github.com/clojure/data.json/tree/data.json-2.2.3
 [2.2.2]: https://github.com/clojure/data.json/tree/data.json-2.2.2
 [2.2.1]: https://github.com/clojure/data.json/tree/data.json-2.2.1
 [2.2.0]: https://github.com/clojure/data.json/tree/data.json-2.2.0
