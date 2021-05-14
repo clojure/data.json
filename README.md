@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-48]: Make array parsing match spec
 * Release [2.2.3] on 2021-May-6
   * Fix [DJSON-47]: Make number parsing match spec (reject invalid numbers)
 * Release [2.2.2] on 2021-Apr-26
@@ -232,6 +234,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-48]: https://clojure.atlassian.net/browse/DJSON-48
 [DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
 [DJSON-45]: https://clojure.atlassian.net/browse/DJSON-45
 [DJSON-43]: https://clojure.atlassian.net/browse/DJSON-43
