@@ -155,7 +155,7 @@ Change Log
 
 * Release [2.3.0] on 2021-May-14
   * Fix [DJSON-48]: Make array parsing match spec
-  * Fix [DJSON-48]: Make pprint-json much faster
+  * Fix [DJSON-18]: Make pprint-json much faster
 * Release [2.2.3] on 2021-May-6
   * Fix [DJSON-47]: Make number parsing match spec (reject invalid numbers)
 * Release [2.2.2] on 2021-Apr-26
