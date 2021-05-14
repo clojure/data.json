@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.2.2]
+Latest stable release is [2.3.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.2.2"}
+org.clojure/data.json {:mvn/version "2.3.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.2.2"]
+    [org.clojure/data.json "2.3.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.2.2</version>
+      <version>2.3.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.3.0] on 2021-May-14
   * Fix [DJSON-48]: Make array parsing match spec
   * Fix [DJSON-48]: Make pprint-json much faster
 * Release [2.2.3] on 2021-May-6
@@ -263,6 +263,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.3.0]: https://github.com/clojure/data.json/tree/data.json-2.3.0
 [2.2.3]: https://github.com/clojure/data.json/tree/data.json-2.2.3
 [2.2.2]: https://github.com/clojure/data.json/tree/data.json-2.2.2
 [2.2.1]: https://github.com/clojure/data.json/tree/data.json-2.2.1
