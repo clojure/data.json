@@ -478,10 +478,23 @@
               (.append out (char cp)))))))
     (.append out \")))
 
+(defn- write-indent [^Appendable out options]
+  (let [indent-depth (:indent-depth options)]
+    (.append out \newline)
+    (loop [i indent-depth]
+      (when (pos? i)
+        (.append out "  ")
+        (recur (dec i))))))
+
 (defn- write-object [m ^Appendable out options]
-  (let [key-fn (:key-fn options)
-        value-fn (:value-fn options)]
+  (let [key-fn (get options :key-fn)
+        value-fn (get options :value-fn)
+        indent (get options :indent)
+        opts (cond-> options
+               indent (update :indent-depth inc))]
     (.append out \{)
+    (when (and indent (seq m))
+      (write-indent out opts))
     (loop [x m, have-printed-kv false]
       (when (seq x)
         (let [[k v] (first x)
@@ -493,26 +506,41 @@
           (if-not (= value-fn out-value)
             (do
               (when have-printed-kv
-                (.append out \,))
-              (write-string out-key out options)
+                (.append out \,)
+                (when indent
+                  (write-indent out opts)))
+              (write-string out-key out opts)
               (.append out \:)
-              (-write out-value out options)
+              (when indent
+                (.append out \space))
+              (-write out-value out opts)
               (when (seq nxt)
                 (recur nxt true)))
             (when (seq nxt)
-              (recur nxt have-printed-kv)))))))
+              (recur nxt have-printed-kv))))))
+    (when (and indent (seq m))
+      (write-indent out options)))
   (.append out \}))
 
 (defn- write-array [s ^Appendable out options]
-  (.append out \[)
-  (loop [x s]
-    (when (seq x)
-      (let [fst (first x)
-            nxt (next x)]
-        (-write fst out options)
-        (when (seq nxt)
-          (.append out \,)
-          (recur nxt)))))
+  (let [indent (get options :indent)
+        opts (cond-> options
+                  indent (update :indent-depth inc))]
+    (.append out \[)
+    (when (and indent (seq s))
+      (write-indent out opts))
+    (loop [x s]
+      (when (seq x)
+        (let [fst (first x)
+              nxt (next x)]
+          (-write fst out opts)
+          (when (seq nxt)
+            (.append out \,)
+            (when indent
+              (write-indent out opts))
+            (recur nxt)))))
+    (when (and indent (seq s))
+      (write-indent out options)))
   (.append out \]))
 
 (defn- write-bignum [x ^Appendable out options]
@@ -616,7 +644,9 @@
                             :sql-date-converter default-sql-date->instant-fn
                             :date-formatter java.time.format.DateTimeFormatter/ISO_INSTANT
                             :key-fn default-write-key-fn
-                            :value-fn default-value-fn})
+                            :value-fn default-value-fn
+                            :indent false
+                            :indent-depth 0})
 (defn write
   "Write JSON-formatted output to a java.io.Writer. Options are
    key-value pairs, valid options are:
