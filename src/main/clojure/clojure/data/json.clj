@@ -95,7 +95,8 @@
   ;; Expects to be called with the head of the stream AFTER the
   ;; opening quotation mark.
   (let [buffer ^chars (char-array 64)
-        read (.read stream buffer 0 64)]
+        read (.read stream buffer 0 64)
+        end-index (unchecked-dec-int read)]
     (when (neg? read)
       (throw (EOFException. "JSON error (end-of-file inside string)")))
     (loop [i (int 0)]
@@ -109,7 +110,7 @@
                    len (unchecked-subtract-int read off)]
                (.unread stream buffer off len)
                (slow-read-string stream (String. buffer 0 i)))
-          (if (= i (dec read))
+          (if (= i end-index)
             (do (.unread stream c)
                 (slow-read-string stream (String. buffer 0 i)))
             (recur (unchecked-inc-int i))))))))
