@@ -153,6 +153,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-51]: Fix possible read of x00's in quoted strings on partial stream read 
 * Release [2.3.0] on 2021-May-14
   * Fix [DJSON-48]: Make array parsing match spec
   * Fix [DJSON-18]: Make pprint-json much faster
@@ -235,6 +237,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-51]: https://clojure.atlassian.net/browse/DJSON-51
 [DJSON-48]: https://clojure.atlassian.net/browse/DJSON-48
 [DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
 [DJSON-45]: https://clojure.atlassian.net/browse/DJSON-45
