@@ -109,7 +109,7 @@
                    len (unchecked-subtract-int read off)]
                (.unread stream buffer off len)
                (slow-read-string stream (String. buffer 0 i)))
-          (if (= i 63)
+          (if (= i (dec read))
             (do (.unread stream c)
                 (slow-read-string stream (String. buffer 0 i)))
             (recur (unchecked-inc-int i))))))))
