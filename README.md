@@ -153,6 +153,9 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
+  * Fix [DJSON-53]: Move deprecated API functions from compat ns into main ns
 * Release [2.3.1] on 2021-May-19
   * Fix [DJSON-51]: Fix possible read of x00's in quoted strings on partial stream read 
 * Release [2.3.0] on 2021-May-14
