@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.3.1]
+Latest stable release is [2.4.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.3.1"}
+org.clojure/data.json {:mvn/version "2.4.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.3.1"]
+    [org.clojure/data.json "2.4.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.3.1</version>
+      <version>2.4.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -153,7 +153,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* next
+* Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
   * Fix [DJSON-53]: Move deprecated API functions from compat ns into main ns
 * Release [2.3.1] on 2021-May-19
@@ -240,6 +240,8 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
+[DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52
 [DJSON-51]: https://clojure.atlassian.net/browse/DJSON-51
 [DJSON-48]: https://clojure.atlassian.net/browse/DJSON-48
 [DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
@@ -269,6 +271,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.4.0
 [2.3.1]: https://github.com/clojure/data.json/tree/data.json-2.3.1
 [2.3.0]: https://github.com/clojure/data.json/tree/data.json-2.3.0
 [2.2.3]: https://github.com/clojure/data.json/tree/data.json-2.2.3
