@@ -278,7 +278,6 @@
     (codepoint-case c
       \] []
       \, (throw (invalid-array-exception))
-      -1 (throw (Exception. "JSON error (end-of-file inside array)"))
       (do (.unread stream c)
           (read-array* stream options)))))
 
@@ -289,9 +288,8 @@
         (if (= (codepoint \:) (int (next-token stream)))
           key
           (throw (Exception. "JSON error (missing `:` in object)"))))
-      (codepoint-case c
-        \} nil
-        -1 (throw (Exception. "JSON error (end-of-file inside object)"))
+      (if (= c (codepoint \}))
+        nil
         (throw (Exception. (str "JSON error (non-string key in object), found `" (char c) "`, expected `\"`")))))))
 
 (defn- read-object [^PushbackReader stream options]
@@ -312,7 +310,6 @@
           (codepoint-case (int (next-token stream))
             \, (recur r)
             \} (persistent! r)
-            -1 (throw (Exception. "JSON error (end-of-file inside object)"))
             (throw (Exception. "JSON error (missing entry in object)"))))
         (let [r (persistent! result)]
           (if (empty? r)
