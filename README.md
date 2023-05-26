@@ -39,9 +39,7 @@ org.clojure/data.json {:mvn/version "2.4.0"}
 Other versions:
 
 * [All Released Versions](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.clojure%22%20AND%20a%3A%22data.json%22)
-
 * [Development Snapshots](https://oss.sonatype.org/index.html#nexus-search;gav~org.clojure~data.json~~~)
-
 * [Development Snapshot Repositories](https://clojure.org/releases/downloads#_using_clojure_snapshot_releases)
 
 
@@ -145,8 +143,7 @@ Developer Information
 * [GitHub project](https://github.com/clojure/data.json)
 * [How to contribute](https://clojure.org/community/contributing)
 * [Bug Tracker](https://clojure.atlassian.net/browse/DJSON)
-* [Continuous Integration](https://build.clojure.org/job/data.json/)
-* [Compatibility Test Matrix](https://build.clojure.org/job/data.json-test-matrix/)
+* [Continuous Integration](https://github.com/clojure/data.json/actions/workflows/test.yml)
 
 
 
