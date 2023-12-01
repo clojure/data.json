@@ -642,7 +642,8 @@
                             :key-fn default-write-key-fn
                             :value-fn default-value-fn
                             :indent false
-                            :indent-depth 0})
+                            :indent-depth 0 ;; internal, to track nesting depth
+                            })
 (defn write
   "Write JSON-formatted output to a java.io.Writer. Options are
    key-value pairs, valid options are:
@@ -696,7 +697,11 @@
         the return value is a map, it will be processed recursively,
         calling value-fn again on its key-value pairs. If value-fn
         returns itself, the key-value pair will be omitted from the
-        output. This option does not apply to non-map collections."
+        output. This option does not apply to non-map collections.
+
+    :indent boolean
+
+        If true, indent json while writing (default = false)."
   [x ^Writer writer & {:as options}]
   (-write x writer (merge default-write-options options)))
 

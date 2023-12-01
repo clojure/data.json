@@ -150,6 +150,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Next
+  * Add `:indent` to docstring for option added in [DJSON-18]
 * Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
   * Fix [DJSON-53]: Move deprecated API functions from compat ns into main ns
