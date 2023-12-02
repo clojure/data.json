@@ -133,7 +133,7 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     </div>
     
     
-    <a id="proto-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L424">Source</a>
+    <a id="proto-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L424">Source</a>
   </div>
 </div>
 
@@ -157,7 +157,7 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L778">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L783">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -165,12 +165,12 @@ Valid options are:
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (pprint x &amp; {:as options})
 </pre>
-    <pre id="var-docstr">Pretty-prints JSON representation of x to *out*. Options are the
-same as for write except :value-fn, which is not supported.</pre>
+    <pre id="var-docstr">Pretty-prints JSON representation of x to *out*. Options are the same
+as for write except :value-fn and :indent, which are not supported.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L736">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L741">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -188,7 +188,7 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L800">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L805">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -206,7 +206,7 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L789">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L794">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -251,7 +251,7 @@ key-value pairs, valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L369">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L369">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -270,7 +270,7 @@ EOFException; if false EOF will return eof-value.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L746">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L751">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -283,7 +283,7 @@ read.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L411">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L411">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -343,11 +343,15 @@ key-value pairs, valid options are:
      the return value is a map, it will be processed recursively,
      calling value-fn again on its key-value pairs. If value-fn
      returns itself, the key-value pair will be omitted from the
-     output. This option does not apply to non-map collections.</pre>
+     output. This option does not apply to non-map collections.
+
+ :indent boolean
+
+     If true, indent json while writing (default = false).</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L646">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L647">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -361,7 +365,7 @@ Print object to PrintWriter out as JSON</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L771">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L776">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -374,7 +378,7 @@ write.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/0b491b25e61d108951c64d33d28a90080758a271/src/main/clojure/clojure/data/json.clj#L703">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L708">Source</a>
   </div>
 </div>
 
