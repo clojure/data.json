@@ -454,9 +454,8 @@
           (aset shorts i (short 0)))))
     shorts))
 
-(defn- write-string [^CharSequence s ^Appendable out options]
+(defn- slow-write-string [^CharSequence s ^Appendable out options]
   (let [decoder codepoint-decoder]
-    (.append out \")
     (dotimes [i (.length s)]
       (let [cp (int (.charAt s i))]
         (if (< cp 128)
@@ -476,7 +475,22 @@
                              (.append out (char cp)))
             (if (get options :escape-unicode)
               (->hex-string out cp) ; Hexadecimal-escaped
-              (.append out (char cp)))))))
+              (.append out (char cp)))))))))
+
+(defn- write-string [^CharSequence s ^Appendable out options]
+  (let [decoder codepoint-decoder
+        l (.length s)]
+    (.append out \")
+    (loop [i 0]
+      (if (= i l)
+        (.append out s)
+        (let [cp (int (.charAt s i))]
+          (if (and (< cp 128)
+                   (zero? (aget decoder cp)))
+            (recur (unchecked-inc i))
+            (do
+              (.append out s 0 i)
+              (slow-write-string (.subSequence s i l) out options))))))
     (.append out \")))
 
 (defn- write-indent [^Appendable out options]
