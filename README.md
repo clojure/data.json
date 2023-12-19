@@ -151,6 +151,7 @@ Change Log
 ----------------------------------------
 
 * Next
+  * Perf [DJSON-61]: Faster string writing when string is "simple"
   * Add `:indent` to docstring for option added in [DJSON-18]
 * Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
@@ -239,6 +240,7 @@ Change Log
   * Initial release.
   * Source-compatible with clojure.contrib.json, except for the name change.
 
+[DJSON-61]: https://clojure.atlassian.net/browse/DJSON-61
 [DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
 [DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52
 [DJSON-51]: https://clojure.atlassian.net/browse/DJSON-51
@@ -302,7 +304,7 @@ Change Log
 Copyright and License
 ----------------------------------------
 
-Copyright (c) Stuart Sierra, Rich Hickey, and contriburos 2012-2020.
+Copyright (c) Stuart Sierra, Rich Hickey, and contributors.
 All rights reserved.  The use and
 distribution terms for this software are covered by the Eclipse Public
 License 1.0 (https://opensource.org/license/epl-1-0/) witch can
