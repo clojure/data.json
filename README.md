@@ -152,6 +152,7 @@ Change Log
 
 * Next
   * Perf [DJSON-61]: Faster string writing when string is "simple"
+  * Add [DJSON-54]: Add custom fallback fn for writing unknown types
   * Add `:indent` to docstring for option added in [DJSON-18]
 * Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
@@ -241,6 +242,7 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-61]: https://clojure.atlassian.net/browse/DJSON-61
+[DJSON-54]: https://clojure.atlassian.net/browse/DJSON-54
 [DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
 [DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52
 [DJSON-51]: https://clojure.atlassian.net/browse/DJSON-51
