@@ -247,6 +247,7 @@ Change Log
 [DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
 [DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52
 [DJSON-51]: https://clojure.atlassian.net/browse/DJSON-51
+[DJSON-50]: https://clojure.atlassian.net/browse/DJSON-50
 [DJSON-48]: https://clojure.atlassian.net/browse/DJSON-48
 [DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
 [DJSON-45]: https://clojure.atlassian.net/browse/DJSON-45
