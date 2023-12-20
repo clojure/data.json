@@ -151,9 +151,9 @@ Change Log
 ----------------------------------------
 
 * Next
-  * Fix [DJSON-50]: read can take a PushbackReader for repeated read use case
-  * Add [DJSON-54]: Add custom fallback fn for writing unknown types
-  * Add `:indent` to docstring for option added in [DJSON-18]
+  * Fix [DJSON-50]: `read` can take a PushbackReader for repeated read use case
+  * Fix `write` docstring to add `:indent` option added in [DJSON-18]
+  * Add [DJSON-54]: In `write`, add custom fallback fn for writing unknown types
   * Perf [DJSON-61]: Faster string writing when string is "simple"
 * Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
