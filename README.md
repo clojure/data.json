@@ -153,6 +153,7 @@ Change Log
 * Next
   * Fix [DJSON-50]: `read` can take a PushbackReader for repeated read use case
   * Fix `write` docstring to add `:indent` option added in [DJSON-18]
+  * Add [DJSON-46]: In `read`, add `:extra-data-fn` that can be provided to cause an eof check after value is read
   * Add [DJSON-54]: In `write`, add custom fallback fn for writing unknown types
   * Perf [DJSON-61]: Faster string writing when string is "simple"
 * Release [2.4.0] on 2021-Jul-12
