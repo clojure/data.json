@@ -367,8 +367,12 @@
                            :key-fn nil
                            :value-fn nil})
 (defn read
-  "Reads a single item of JSON data from a java.io.Reader. Options are
-  key-value pairs, valid options are:
+  "Reads a single item of JSON data from a java.io.Reader.
+
+  If you wish to repeatedly read items from the same reader, you must
+  supply a PushbackReader and reuse it on subsequent calls.
+
+  Options are key-value pairs, valid options are:
 
      :eof-error? boolean
 
@@ -403,10 +407,13 @@
         collections."
   [reader & {:as options}]
   (let [{:keys [eof-error? eof-value]
-         :or {eof-error? true}} options]
+         :or {eof-error? true}} options
+        pbr (if (instance? PushbackReader reader)
+              reader
+              (PushbackReader. reader 64))]
     (->> options
          (merge default-read-options)
-         (-read (PushbackReader. reader 64) eof-error? eof-value))))
+         (-read pbr eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for

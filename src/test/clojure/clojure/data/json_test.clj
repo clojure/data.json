@@ -7,6 +7,20 @@
   (let [s (java.io.PushbackReader. (java.io.StringReader. "42"))]
     (is (= 42 (json/read s)))))
 
+;; DJSON-50 - pass PBR to safely do reapeated read
+(deftest read-multiple
+  (let [st "{\"foo\":\"some string\"}{\"foo\":\"another string\"}"
+        srdr (java.io.StringReader. st)
+        pbr (java.io.PushbackReader. srdr 64)]
+    (is (= {"foo" "some string"} (json/read pbr)))
+    (is (= {"foo" "another string"} (json/read pbr))))
+
+  (let [st "{\"foo\":\"some string\"}{\"foo\":\"another long ......................................................... string\"}"
+        srdr (java.io.StringReader. st)
+        pbr (java.io.PushbackReader. srdr 64)]
+    (is (= {"foo" "some string"} (json/read pbr)))
+    (is (= {"foo" "another long ......................................................... string"} (json/read pbr)))))
+
 (deftest read-from-reader
   (let [s (java.io.StringReader. "42")]
     (is (= 42 (json/read s)))))
