@@ -136,7 +136,7 @@
                     :key-fn keyword
                     :value-fn (fn [k v]
                                 (if (= :date k)
-                                  (java.sql.Date/valueOf v)
+                                  (java.sql.Date/valueOf ^String v)
                                   v))))))
 
 (deftest omit-values
