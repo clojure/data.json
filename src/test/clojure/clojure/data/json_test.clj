@@ -423,3 +423,13 @@
      (dotimes [_ 1000]
        (assert (= (json/read-str pass1-string)
                   (json/read-str (json/write-str (json/read-str pass1-string)))))))))
+
+(defn djson-54-default-write-fn [x out options]
+  (#'json/write-string (str x) out options))
+
+(deftest DJSON-54-test
+  (is (thrown? Exception (json/write-str {:foo (java.net.URI. "http://clojure.org")})))
+  (try (json/write-str {:foo (java.net.URI. "http://clojure.org")})
+       (catch Exception e
+         (is (= "Don't know how to write JSON of class java.net.URI" (.getMessage e)))))
+  (is (= "{\"foo\":\"http:\\/\\/clojure.org\"}" (json/write-str {:foo (java.net.URI. "http://clojure.org")} :default-write-fn djson-54-default-write-fn))))

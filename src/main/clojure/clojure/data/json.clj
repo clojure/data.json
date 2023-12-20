@@ -610,7 +610,7 @@
 (defn- write-generic [x out options]
   (if (.isArray (class x))
     (-write (seq x) out options)
-    (throw (Exception. (str "Don't know how to write JSON of " (class x))))))
+    ((:default-write-fn options) x out options)))
 
 (defn- write-ratio [x out options]
   (-write (double x) out options))
@@ -648,6 +648,9 @@
 ;; Maybe a Java array, otherwise fail
 (extend java.lang.Object       JSONWriter {:-write write-generic})
 
+(defn- default-write-fn [x out options]
+  (throw (Exception. (str "Don't know how to write JSON of " (class x)))))
+
 (def default-write-options {:escape-unicode true
                             :escape-js-separators true
                             :escape-slash true
@@ -655,6 +658,7 @@
                             :date-formatter java.time.format.DateTimeFormatter/ISO_INSTANT
                             :key-fn default-write-key-fn
                             :value-fn default-value-fn
+                            :default-write-fn default-write-fn
                             :indent false
                             :indent-depth 0 ;; internal, to track nesting depth
                             })
@@ -712,6 +716,13 @@
         calling value-fn again on its key-value pairs. If value-fn
         returns itself, the key-value pair will be omitted from the
         output. This option does not apply to non-map collections.
+
+     :default-write-fn function
+
+        Function to handle types which are unknown to data.json. Defaults
+        to a function which throws an exception. Expects to be called with
+        three args, the value to be serialized, the output stream, and the
+        options map.
 
     :indent boolean
 
