@@ -35,6 +35,35 @@
   (is (= 123456789012345678901234567890N
          (json/read-str "123456789012345678901234567890"))))
 
+(deftest lenient-on-extra-data
+  (is (= [42] (json/read-str "[42],abc")))
+  (is (= [42] (json/read (java.io.StringReader. "[42],abc")))))
+
+(deftest strict-on-extra-data
+  ;; on-extra-throw
+  (is (thrown? clojure.lang.ExceptionInfo
+        (json/read-str "[42],abc" :extra-data-fn json/on-extra-throw)))
+  (is (thrown? clojure.lang.ExceptionInfo
+        (json/read (java.io.StringReader. "[42],abc") :extra-data-fn json/on-extra-throw)))
+
+  ;; on-extra-throw-remaining
+  (try
+    (json/read-str "[42],abc" :extra-data-fn json/on-extra-throw-remaining)
+    (is false "expected exception to be thrown")
+    (catch clojure.lang.ExceptionInfo e
+      (is (= ",abc" (:remaining (ex-data e))))))
+  (try
+    (json/read-str "[1], 1]" :extra-data-fn json/on-extra-throw-remaining)
+    (is false "expected exception to be thrown")
+    (catch clojure.lang.ExceptionInfo e
+      (is (= ", 1]" (:remaining (ex-data e))))))
+
+  ;; check that empty input behavior not modified when :extra-data-fn specified
+  (is (= :hi (json/read-str ""
+               :eof-error? false, :eof-value :hi, :extra-data-fn json/on-extra-throw)))
+  (is (= :hi (json/read (java.io.StringReader. "")
+               :eof-error? false, :eof-value :hi, :extra-data-fn json/on-extra-throw))))
+
 (deftest write-bigint
   (is (= "123456789012345678901234567890"
          (json/write-str 123456789012345678901234567890N))))

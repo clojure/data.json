@@ -363,6 +363,34 @@
           (throw (Exception.
                   (str "JSON error (unexpected character): " (char c))))))))
 
+(defn- -read1
+  [^PushbackReader stream eof-error? eof-value options]
+  (let [val (-read stream eof-error? eof-value options)]
+    (if-let [extra-data-fn (:extra-data-fn options)]
+      (if (or eof-error? (not (identical? eof-value val)))
+        (let [c (.read stream)]
+          (if (neg? c)
+            val
+            (do
+              (.unread stream c)
+              (extra-data-fn val stream))))
+        val)
+      val)))
+
+(defn on-extra-throw
+  "Pass as :extra-data-fn to `read` or `read-str` to throw if data is found
+  after the first object."
+  [val rdr]
+  (throw (ex-info "Found extra data after json object" {:val val})))
+
+(defn on-extra-throw-remaining
+  "Pass as :extra-data-fn to `read` or `read-str` to throw if data is found
+  after the first object and return the remaining data in ex-data :remaining."
+  [val ^java.io.PushbackReader rdr]
+  (let [remaining (slurp rdr)]
+    (throw (ex-info (str "Found extra data after json object: " remaining)
+             {:val val, :remaining remaining}))))
+
 (def default-read-options {:bigdec false
                            :key-fn nil
                            :value-fn nil})
@@ -404,7 +432,14 @@
         in the output. If value-fn returns itself, the property will
         be omitted from the output. The default value-fn returns the
         value unchanged. This option does not apply to non-map
-        collections."
+        collections.
+
+     :extra-data-fn function
+
+       If :extra-data-fn is not nil, then the reader will be checked
+       for extra data after the read. If found, the extra-data-fn will
+       be invoked with the read value and the reader. The result of
+       the extra-data-fn will be returned."
   [reader & {:as options}]
   (let [{:keys [eof-error? eof-value]
          :or {eof-error? true}} options
@@ -413,7 +448,7 @@
               (PushbackReader. reader 64))]
     (->> options
          (merge default-read-options)
-         (-read pbr eof-error? eof-value))))
+         (-read1 pbr eof-error? eof-value))))
 
 (defn read-str
   "Reads one JSON value from input String. Options are the same as for
@@ -423,7 +458,7 @@
          :or {eof-error? true}} options]
     (->> options
          (merge default-read-options)
-         (-read (PushbackReader. (StringReader. string) 64) eof-error? eof-value))))
+         (-read1 (PushbackReader. (StringReader. string) 64) eof-error? eof-value))))
 
 ;;; JSON WRITER
 
