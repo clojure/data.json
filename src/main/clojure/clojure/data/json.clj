@@ -753,8 +753,8 @@
         :else (pprint-generic x options)))
 
 (defn pprint
-  "Pretty-prints JSON representation of x to *out*. Options are the
-  same as for write except :value-fn, which is not supported."
+  "Pretty-prints JSON representation of x to *out*. Options are the same
+  as for write except :value-fn and :indent, which are not supported."
   [x & {:as options}]
   (let [opts (merge default-write-options options)]
     (pprint/with-pprint-dispatch #(pprint-dispatch % opts)
