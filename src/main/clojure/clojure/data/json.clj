@@ -562,14 +562,17 @@
     shorts))
 
 (defn- slow-write-string [^CharSequence s ^Appendable out options]
-  (let [decoder codepoint-decoder]
+  (let [decoder codepoint-decoder
+        slash (get options :escape-slash)
+        escape-js-separators (get options :escape-js-separators)
+        escape-unicode (get options :escape-unicode)]
     (dotimes [i (.length s)]
       (let [cp (int (.charAt s i))]
         (if (< cp 128)
           (case (aget decoder cp)
             0 (.append out (char cp))
             1 (do (.append out (char (codepoint \\))) (.append out (char cp)))
-            2 (.append out (if (get options :escape-slash) "\\/" "/"))
+            2 (.append out (if slash "\\/" "/"))
             3 (.append out "\\b")
             4 (.append out "\\f")
             5 (.append out "\\n")
@@ -577,10 +580,10 @@
             7 (.append out "\\t")
             8 (->hex-string out cp))
           (codepoint-case cp
-            :js-separators (if (get options :escape-js-separators)
+            :js-separators (if escape-js-separators
                              (->hex-string out cp)
                              (.append out (char cp)))
-            (if (get options :escape-unicode)
+            (if escape-unicode
               (->hex-string out cp) ; Hexadecimal-escaped
               (.append out (char cp)))))))))
 

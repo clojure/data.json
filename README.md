@@ -156,6 +156,8 @@ Change Log
   * Add [DJSON-46]: In `read`, add `:extra-data-fn` that can be provided to cause an eof check after value is read
   * Add [DJSON-54]: In `write`, add custom fallback fn for writing unknown types
   * Perf [DJSON-61]: Faster string writing when string is "simple"
+  * Perf: Faster string writing when string is not simple
+  * Perf: Faster `read-str`
 * Release [2.4.0] on 2021-Jul-12
   * Fix [DJSON-52]: Remove Classloader workaround to support Clojure 1.2.x and below
   * Fix [DJSON-53]: Move deprecated API functions from compat ns into main ns
