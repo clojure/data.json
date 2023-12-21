@@ -153,6 +153,7 @@ Change Log
 * Next
   * Fix [DJSON-50]: `read` can take a PushbackReader for repeated read use case
   * Fix `write` docstring to add `:indent` option added in [DJSON-18]
+  * Fix [DJSON-57]: Throw better exception when EOF encountered while reading array or object
   * Add [DJSON-46]: In `read`, add `:extra-data-fn` that can be provided to cause an eof check after value is read
   * Add [DJSON-54]: In `write`, add custom fallback fn for writing unknown types
   * Perf [DJSON-61]: Faster string writing when string is "simple"
@@ -246,6 +247,7 @@ Change Log
   * Source-compatible with clojure.contrib.json, except for the name change.
 
 [DJSON-61]: https://clojure.atlassian.net/browse/DJSON-61
+[DJSON-57]: https://clojure.atlassian.net/browse/DJSON-57
 [DJSON-54]: https://clojure.atlassian.net/browse/DJSON-54
 [DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
 [DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52

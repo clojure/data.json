@@ -407,6 +407,18 @@
   (is (thrown? java.io.EOFException
         (json/read-str "\"\\"))))
 
+(deftest throws-eof-in-arrays
+  (is (thrown? java.io.EOFException
+        (json/read-str "[1,")))
+  (is (thrown? java.io.EOFException
+        (json/read-str "[1,2,"))))
+
+(deftest throws-eof-in-objects
+  (is (thrown? java.io.EOFException
+        (json/read-str "{")))
+  (is (thrown? java.io.EOFException
+        (json/read-str "{\"\":1,"))))
+
 (deftest accept-eof
   (is (= ::eof (json/read-str "" :eof-error? false :eof-value ::eof))))
 
