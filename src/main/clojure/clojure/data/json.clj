@@ -65,7 +65,7 @@
   (unreadChar [_ _c]
     (set! pos (unchecked-dec pos))
     nil)
-  (unreadChars [_ buffer start bufflen]
+  (unreadChars [_ _buffer _start bufflen]
     (set! pos (unchecked-subtract pos bufflen))
     nil)
   (toReader [_]
