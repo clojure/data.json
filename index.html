@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>clojure.data.json - data.json 2.4.1-SNAPSHOT API documentation</title>
+    <title>clojure.data.json - data.json 2.5.1-SNAPSHOT API documentation</title>
     <link rel="icon" href="static/favicon.png" />
     <link rel="shortcut icon" href="static/favicon.png" />
     <link rel="stylesheet" href="static/clojure.css" type="text/css" media="all" />
@@ -25,7 +25,7 @@ namespace.
       <div id="leftcolumn"><div style="text-align: center;"></div>
 <div class="menu">
   <div class="WikiCustomNav WikiElement wiki">
-    <span class="toc-header"><span id="project-name">data.json</span> <span id="version">2.4.1-SNAPSHOT</span> API</span><br />
+    <span class="toc-header"><span id="project-name">data.json</span> <span id="version">2.5.1-SNAPSHOT</span> API</span><br />
     <ul>
       <li><a href="index.html" class="wiki_link">Overview</a></li>
       <li><a href="api-index.html" class="wiki_link">API Index</a></li>
@@ -54,12 +54,30 @@ namespace.
       </div>
     </div>
   </div><div class="toc-section" style="margin-left: 1em;">
-    <a style="margin-top: 3px;" href="#"></a>
-    
+    <a style="margin-top: 3px;" href="#type-section">Types</a>
+    <div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/ReaderPBR" class="toc-entry-anchor">ReaderPBR</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/StringPBR" class="toc-entry-anchor">StringPBR</a>
+      
+    </div>
   </div><div class="toc-section" style="margin-left: 1em;">
     <a style="margin-top: 3px;" href="#var-section">Vars and Functions</a>
     <div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/-&gt;ReaderPBR" class="toc-entry-anchor">-&gt;ReaderPBR</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/-&gt;StringPBR" class="toc-entry-anchor">-&gt;StringPBR</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
       <a href="#clojure.data.json/json-str" class="toc-entry-anchor">json-str</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/on-extra-throw" class="toc-entry-anchor">on-extra-throw</a>
+      
+    </div><div class="toc-entry" style="margin-left: 1em;">
+      <a href="#clojure.data.json/on-extra-throw-remaining" class="toc-entry-anchor">on-extra-throw-remaining</a>
       
     </div><div class="toc-entry" style="margin-left: 1em;">
       <a href="#clojure.data.json/pprint" class="toc-entry-anchor">pprint</a>
@@ -96,7 +114,7 @@ namespace.
 </div>
 </div>
                 <div id="content-tag"><h1 id="overview">API for <span id="clojure.data.json">clojure.data.json</span>
-  - <span id="header-project">data.json</span> <span id="header-version">2.4.1-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
+  - <span id="header-project">data.json</span> <span id="header-version">2.5.1-SNAPSHOT</span><span id="header-status-block"> (<span id="header-status">in development</span>)</span>
   </h1>
 <span id="author-line">by <span id="author-name">Stuart Sierra</span><br /></span>
 <br />Full namespace name: <span id="long-name">clojure.data.json</span>
@@ -133,14 +151,60 @@ See <a href="http://www.json.org/">http://www.json.org/</a></pre>
     </div>
     
     
-    <a id="proto-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L424">Source</a>
+    <a id="proto-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L552">Source</a>
   </div>
 </div>
-
+<div id="type-section">
+  <p></p>
+  <h2>Types</h2>
+  <div id="type-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/ReaderPBR">ReaderPBR</h2>
+    <span id="type-type">type</span><br />
+    <pre id="type-docstr"></pre>
+    Fields: <span id="type-fields">[rdr]</span><br />
+    Protocols: <span id="type-protocols"></span><br />
+    Interfaces: <span id="type-interfaces">clojure.data.json.InternalPBR</span><br />
+  </div><div id="type-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/StringPBR">StringPBR</h2>
+    <span id="type-type">type</span><br />
+    <pre id="type-docstr"></pre>
+    Fields: <span id="type-fields">[s pos len]</span><br />
+    Protocols: <span id="type-protocols"></span><br />
+    Interfaces: <span id="type-interfaces">clojure.data.json.InternalPBR</span><br />
+  </div>
+</div>
 <div id="var-section">
   <p></p>
   <h2>Public Variables and Functions</h2>
   <div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/-&gt;ReaderPBR">-&gt;ReaderPBR</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (-&gt;ReaderPBR rdr)
+</pre>
+    <pre id="var-docstr">Positional factory function for class clojure.data.json.ReaderPBR.</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L29">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/-&gt;StringPBR">-&gt;StringPBR</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (-&gt;StringPBR s pos len)
+</pre>
+    <pre id="var-docstr">Positional factory function for class clojure.data.json.StringPBR.</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L46">Source</a>
+  </div><div id="var-entry">
     <br />
     <hr />
     <h2 id="clojure.data.json/json-str">json-str</h2>
@@ -157,7 +221,33 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L783">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L939">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/on-extra-throw">on-extra-throw</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (on-extra-throw val rdr)
+</pre>
+    <pre id="var-docstr">Pass as :extra-data-fn to `read` or `read-str` to throw if data is found
+after the first object.</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L465">Source</a>
+  </div><div id="var-entry">
+    <br />
+    <hr />
+    <h2 id="clojure.data.json/on-extra-throw-remaining">on-extra-throw-remaining</h2>
+    <span id="var-type">function</span><br />
+    <pre id="var-usage">Usage: (on-extra-throw-remaining val rdr)
+</pre>
+    <pre id="var-docstr">Pass as :extra-data-fn to `read` or `read-str` to throw if data is found
+after the first object and return the remaining data in ex-data :remaining.</pre>
+    <pre id="var-specs"></pre>
+    
+    
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L471">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -170,7 +260,7 @@ as for write except :value-fn and :indent, which are not supported.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L741">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L897">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -188,7 +278,7 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L805">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L961">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -206,7 +296,7 @@ Valid options are:
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L794">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L950">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -214,8 +304,12 @@ Valid options are:
     <span id="var-type">function</span><br />
     <pre id="var-usage">Usage: (read reader &amp; {:as options})
 </pre>
-    <pre id="var-docstr">Reads a single item of JSON data from a java.io.Reader. Options are
-key-value pairs, valid options are:
+    <pre id="var-docstr">Reads a single item of JSON data from a java.io.Reader.
+
+If you wish to repeatedly read items from the same reader, you must
+supply a PushbackReader and reuse it on subsequent calls.
+
+Options are key-value pairs, valid options are:
 
    :eof-error? boolean
 
@@ -247,11 +341,18 @@ key-value pairs, valid options are:
       in the output. If value-fn returns itself, the property will
       be omitted from the output. The default value-fn returns the
       value unchanged. This option does not apply to non-map
-      collections.</pre>
+      collections.
+
+   :extra-data-fn function
+
+     If :extra-data-fn is not nil, then the reader will be checked
+     for extra data after the read. If found, the extra-data-fn will
+     be invoked with the read value and the reader. The result of
+     the extra-data-fn will be returned.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L369">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L482">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -270,7 +371,7 @@ EOFException; if false EOF will return eof-value.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L751">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L907">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -283,7 +384,7 @@ read.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L411">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L539">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -345,13 +446,20 @@ key-value pairs, valid options are:
      returns itself, the key-value pair will be omitted from the
      output. This option does not apply to non-map collections.
 
+  :default-write-fn function
+
+     Function to handle types which are unknown to data.json. Defaults
+     to a function which throws an exception. Expects to be called with
+     three args, the value to be serialized, the output stream, and the
+     options map.
+
  :indent boolean
 
      If true, indent json while writing (default = false).</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L647">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L796">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -365,7 +473,7 @@ Print object to PrintWriter out as JSON</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L776">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L932">Source</a>
   </div><div id="var-entry">
     <br />
     <hr />
@@ -378,7 +486,7 @@ write.</pre>
     <pre id="var-specs"></pre>
     
     
-    <a id="var-source" href="https://github.com/clojure/data.json/blob/d51234eb52044326b27baf6b6cab6389568cc8cf/src/main/clojure/clojure/data/json.clj#L708">Source</a>
+    <a id="var-source" href="https://github.com/clojure/data.json/blob/8661733068cc29df83ce9e97f781193577541b5f/src/main/clojure/clojure/data/json.clj#L864">Source</a>
   </div>
 </div>
 
