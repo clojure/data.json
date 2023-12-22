@@ -13,23 +13,23 @@ Releases and Dependency Information
 
 This project follows the version scheme MAJOR.MINOR.PATCH where each component provides some relative indication of the size of the change, but does not follow semantic versioning. In general, all changes endeavor to be non-breaking (by moving to new names rather than by breaking existing names).
 
-Latest stable release is [2.4.0]
+Latest stable release is [2.5.0]
 
 [CLI/`deps.edn`](https://clojure.org/reference/deps_and_cli) dependency information:
 ```clojure
-org.clojure/data.json {:mvn/version "2.4.0"}
+org.clojure/data.json {:mvn/version "2.5.0"}
 ```
 
 [Leiningen] dependency information:
 
-    [org.clojure/data.json "2.4.0"]
+    [org.clojure/data.json "2.5.0"]
 
 [Maven] dependency information:
 
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>data.json</artifactId>
-      <version>2.4.0</version>
+      <version>2.5.0</version>
     </dependency>
 
 [Leiningen]: https://leiningen.org/
@@ -150,7 +150,7 @@ Developer Information
 Change Log
 ----------------------------------------
 
-* Next
+* Release [2.5.0] on 2023-Dec-21
   * Fix [DJSON-50]: `read` can take a PushbackReader for repeated read use case
   * Fix `write` docstring to add `:indent` option added in [DJSON-18]
   * Fix [DJSON-57]: Throw better exception when EOF encountered while reading array or object
@@ -281,6 +281,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
+[2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.5.0
 [2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.4.0
 [2.3.1]: https://github.com/clojure/data.json/tree/data.json-2.3.1
 [2.3.0]: https://github.com/clojure/data.json/tree/data.json-2.3.0
