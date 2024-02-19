@@ -7,7 +7,7 @@
   :test-paths ["src/test/clojure" "src/test/clojure-perf"]
   :profiles {:dev {:dependencies [[com.clojure-goes-fast/clj-async-profiler "0.5.0"]
                                   [com.clojure-goes-fast/clj-java-decompiler "0.3.0"]
-                                  [org.clojure/test.check "1.1.0"]
+                                  [org.clojure/test.check "1.1.1"]
                                   [criterium/criterium "0.4.6"]
                                   [metosin/jsonista "0.3.1"]
                                   [cheshire/cheshire "5.10.0"]
