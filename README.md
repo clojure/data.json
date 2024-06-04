@@ -255,6 +255,7 @@ Change Log
 [DJSON-50]: https://clojure.atlassian.net/browse/DJSON-50
 [DJSON-48]: https://clojure.atlassian.net/browse/DJSON-48
 [DJSON-47]: https://clojure.atlassian.net/browse/DJSON-47
+[DJSON-46]: https://clojure.atlassian.net/browse/DJSON-46
 [DJSON-45]: https://clojure.atlassian.net/browse/DJSON-45
 [DJSON-43]: https://clojure.atlassian.net/browse/DJSON-43
 [DJSON-41]: https://clojure.atlassian.net/browse/DJSON-41
@@ -281,7 +282,7 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
-[2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.5.0
+[2.5.0]: https://github.com/clojure/data.json/tree/data.json-2.5.0
 [2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.4.0
 [2.3.1]: https://github.com/clojure/data.json/tree/data.json-2.3.1
 [2.3.0]: https://github.com/clojure/data.json/tree/data.json-2.3.0
