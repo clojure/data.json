@@ -27,6 +27,24 @@
     (is (= {"foo" "some string"} (json/read pbr)))
     (is (= {"foo" "another long ......................................................... string"} (json/read pbr)))))
 
+(defn read-then-eof [s]
+  (let [r (pbr s)
+        val (json/read r :eof-error? false :eof-value :EOF)]
+    (is (= :EOF (json/read r :eof-error? false :eof-value :EOF)))
+    val))
+
+(deftest read-multiple-eof
+  (are [expected s] (= expected (read-then-eof s))
+    1.2 "1.2"
+    0 "0"
+    1 "1"
+    1.0 "1.0"
+    "abc" "\"abc\""
+    "\u2202" "\"\u2202\""
+    [] "[]"
+    [1 2] "[1, 2]")
+  )
+
 (deftest read-from-reader
   (let [s (java.io.StringReader. "42")]
     (is (= 42 (json/read s)))))
