@@ -150,6 +150,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* next
+  * In `read`, update docstring to specify minimum buffer size if PushbackReader supplied
 * Release [2.5.0] on 2023-Dec-21
   * Fix [DJSON-50]: `read` can take a PushbackReader for repeated read use case
   * Fix `write` docstring to add `:indent` option added in [DJSON-18]
