@@ -285,16 +285,16 @@ Change Log
 [DJSON-7]: https://clojure.atlassian.net/browse/DJSON-7
 [DJSON-1]: https://clojure.atlassian.net/browse/DJSON-1
 
-[2.5.1]: https://github.com/clojure/data.json/tree/data.json-2.5.1
-[2.5.0]: https://github.com/clojure/data.json/tree/data.json-2.5.0
-[2.4.0]: https://github.com/clojure/data.json/tree/data.json-2.4.0
-[2.3.1]: https://github.com/clojure/data.json/tree/data.json-2.3.1
-[2.3.0]: https://github.com/clojure/data.json/tree/data.json-2.3.0
-[2.2.3]: https://github.com/clojure/data.json/tree/data.json-2.2.3
-[2.2.2]: https://github.com/clojure/data.json/tree/data.json-2.2.2
-[2.2.1]: https://github.com/clojure/data.json/tree/data.json-2.2.1
-[2.2.0]: https://github.com/clojure/data.json/tree/data.json-2.2.0
-[2.1.1]: https://github.com/clojure/data.json/tree/data.json-2.1.1
+[2.5.1]: https://github.com/clojure/data.json/tree/v2.5.1
+[2.5.0]: https://github.com/clojure/data.json/tree/v2.5.0
+[2.4.0]: https://github.com/clojure/data.json/tree/v2.4.0
+[2.3.1]: https://github.com/clojure/data.json/tree/v2.3.1
+[2.3.0]: https://github.com/clojure/data.json/tree/v2.3.0
+[2.2.3]: https://github.com/clojure/data.json/tree/v2.2.3
+[2.2.2]: https://github.com/clojure/data.json/tree/v2.2.2
+[2.2.1]: https://github.com/clojure/data.json/tree/v2.2.1
+[2.2.0]: https://github.com/clojure/data.json/tree/v2.2.0
+[2.1.1]: https://github.com/clojure/data.json/tree/v2.1.1
 [2.1.0]: https://github.com/clojure/data.json/tree/data.json-2.1.0
 [2.0.2]: https://github.com/clojure/data.json/tree/data.json-2.0.2
 [2.0.1]: https://github.com/clojure/data.json/tree/data.json-2.0.1
