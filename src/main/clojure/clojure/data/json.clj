@@ -483,7 +483,8 @@
   "Reads a single item of JSON data from a java.io.Reader.
 
   If you wish to repeatedly read items from the same reader, you must
-  supply a PushbackReader and reuse it on subsequent calls.
+  supply a PushbackReader with buffer size >= 64, and reuse it on
+  subsequent calls.
 
   Options are key-value pairs, valid options are:
 
