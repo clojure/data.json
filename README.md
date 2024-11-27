@@ -150,6 +150,8 @@ Developer Information
 Change Log
 ----------------------------------------
 
+* Next
+  * Fix: [DJSON-56] During `read`, better error messages for chars < 32
 * Release [2.5.1] on 2024-Nov-26
   * Fix: `read` of JSON number followed by EOF can break subsequent read on supplier PBR from seeing EOF
   * Fix: `read` docstring updated to specify minimum buffer size when PushbackReader supplied (64)
@@ -251,6 +253,7 @@ Change Log
 
 [DJSON-61]: https://clojure.atlassian.net/browse/DJSON-61
 [DJSON-57]: https://clojure.atlassian.net/browse/DJSON-57
+[DJSON-56]: https://clojure.atlassian.net/browse/DJSON-56
 [DJSON-54]: https://clojure.atlassian.net/browse/DJSON-54
 [DJSON-53]: https://clojure.atlassian.net/browse/DJSON-53
 [DJSON-52]: https://clojure.atlassian.net/browse/DJSON-52

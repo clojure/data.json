@@ -330,7 +330,7 @@
       (int c)
       (codepoint-case (int c)
         :whitespace (recur (.readChar stream))
-        -1 -1))))
+        c))))
 
 (defn invalid-array-exception []
   (Exception. "JSON error (invalid array)"))
