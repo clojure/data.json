@@ -199,6 +199,7 @@ Change Log
   * Perf [DJSON-35]: Replace PrintWriter with more generic Appendable, reduce wrapping
   * Perf [DJSON-34]: More efficient writing for common path
   * Perf [DJSON-32]: Use option map instead of dynamic variables (affects read+write)
+    * NOTE: Includes a breaking change in the internal JSONWriter protocol method signature
   * Perf [DJSON-33]: Improve speed of reading JSON strings
   * Fix [DJSON-30]: Fix bad test
 * Release [1.1.0] on 2021-Mar-5
