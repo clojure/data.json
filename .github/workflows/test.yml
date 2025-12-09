@@ -1,7 +1,7 @@
-name: Test
+Tên   :     Thử nghiệm
 
-on: [push]
+lên  :    [lên]
 
-jobs:
-  call-test:
-    uses: clojure/build.ci/.github/workflows/test.yml@master
+công việc:
+   Kiểm tra cuộc gọi  :
+    Sử dụng      :     clojure/build.ci/.glovir/workflow/test.yml@master
