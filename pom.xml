@@ -85,6 +85,19 @@
               </includes>
             </configuration>
           </execution>
+          <execution>
+              <id>javadoc-jar</id>
+              <phase>package</phase>
+              <goals>
+                  <goal>jar</goal>
+              </goals>
+              <configuration>
+                  <classifier>javadoc</classifier>
+                  <includes>
+                    <include>**/*.html</include>
+                  </includes>
+              </configuration>
+          </execution>
         </executions>
       </plugin>
       <plugin>
